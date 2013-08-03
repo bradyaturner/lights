@@ -4,7 +4,11 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-require './huebulb'
+if __FILE__==$0
+  require './rubyhue/huebulb.rb'
+else
+  require 'rubyhue/huebulb.rb'
+end
 
 HUE_IP    = "192.168.1.28"
 USERNAME  = "tatersnakes"
@@ -13,7 +17,7 @@ def jp( s )
   puts JSON.pretty_generate( s )
 end
 
-class PhillipsHueClient
+class Hue
 
   attr_reader :bulbs
   def initialize(ip,username)
@@ -53,7 +57,7 @@ private
 end
 
 if __FILE__==$0
-  client = PhillipsHueClient.new(HUE_IP,USERNAME)
+  client = Hue.new(HUE_IP,USERNAME)
   bulbs_response = client.request_bulb_list
 
   bulbs_response.each do |id,value|
