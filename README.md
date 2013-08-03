@@ -2,6 +2,8 @@ ruby-hue
 ========
 A Ruby library for controlling Phillips Hue lightbulbs.
 
+Phillips Hue API Documentation: http://developers.meethue.com/index.html
+
 Installation
 ----
 ```
