@@ -74,27 +74,27 @@ if __FILE__==$0
 
   client = Hue.new(HUE_IP,USERNAME)
 
-#  bulbs_response = client.request_bulb_list
-#  bulbs_response.each do |id,value|
-#    info = client.request_bulb_info( id )
-#    client.add_bulb(id,info)
-#  end
-
-  groups_response = client.request_group_list
-  puts groups_response
-  groups_response.each do |id,value|
-    puts id
+  bulbs_response = client.request_bulb_list
+  bulbs_response.each do |id,value|
+    info = client.request_bulb_info( id )
+    client.add_bulb(id,info)
   end
 
-#  i = 0
-#  while i < 10 
-#    on = (i%2==0) ? true : false
-#    state = HueBulbState.new( {"on"=>on} )
-#    client.bulbs.each do |bulb|
-#      client.set_bulb_state( bulb.id, state )  
-#    end
-#    sleep 3
-#    i += 1
+#  groups_response = client.request_group_list
+#  puts groups_response
+#  groups_response.each do |id,value|
+#    puts id
 #  end
+
+  i = 0
+  while i < 10 
+    on = (i%2==0) ? true : false
+    state = HueBulbState.new( {"on"=>on} )
+    client.bulbs.each do |bulb|
+      client.set_bulb_state( bulb.id, state )  
+    end
+    sleep 3
+    i += 1
+  end
 
 end
