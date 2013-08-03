@@ -28,7 +28,7 @@ class Hue
   end
 
   def register_username
-    data = { "devicetype"=>"test user",
+    data = { "devicetype"=>"rubyhue",
               "username"=>@username }
     response = @http.post "/api", data.to_json
     JSON.parse response.body
