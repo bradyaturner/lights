@@ -73,10 +73,13 @@ private
 end
 
 if __FILE__==$0
-  HUE_IP    = ARGV[0] || "192.168.1.28"
-  USERNAME  = ARGV[1] || "tatersnakes"
+  if ARGV.length < 2
+    STDERR.puts "Invaid args."
+    STDERR.puts "Usage: #{__FILE__} ip username"
+    exit
+  end
 
-  client = Hue.new(HUE_IP,USERNAME)
+  client = Hue.new(ARGV[0],ARGV[1])
 
   bulbs_response = client.request_bulb_list
   bulbs_response.each do |id,value|
