@@ -69,8 +69,8 @@ private
 end
 
 if __FILE__==$0
-  HUE_IP    = "192.168.1.28"
-  USERNAME  = "tatersnakes"
+  HUE_IP    = ARGV[0] || "192.168.1.28"
+  USERNAME  = ARGV[1] || "tatersnakes"
 
   client = Hue.new(HUE_IP,USERNAME)
 
