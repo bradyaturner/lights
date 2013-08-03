@@ -15,10 +15,16 @@ end
 
 class PhillipsHueClient
 
+  attr_reader :bulbs
   def initialize(ip,username)
     @ip = ip 
     @username = username
     @http = Net::HTTP.new(ip,80)
+    @bulbs = []
+  end
+
+  def add_bulb(id,bulb_data)
+    @bulbs << HueBulb.new(id,bulb_data)
   end
 
   def hue_http_get( path )
@@ -43,6 +49,9 @@ if __FILE__==$0
   jp bulbs_response
 
   bulbs_response.each do |key,value|
-    jp hue_client.request_bulb_info key
+    info = hue_client.request_bulb_info( key )
+    hue_client.add_bulb(key,info)
+    puts hue_client.bulbs.last.state
   end
+
 end
