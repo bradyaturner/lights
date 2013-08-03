@@ -3,9 +3,10 @@
 class HueBulb
 
   attr_reader :id, :name, :type, :swversion,
-              :state
+              :state, :data
 
   def initialize(id,data = {})
+    @data = data
     @id = id
     @name = data["name"]
     @type = data["type"]
@@ -19,9 +20,11 @@ end
 class HueBulbState
 
   attr_reader :on, :bri, :hue, :sat, :xy, :ct, 
-              :alert, :effect, :colormode, :reachable
+              :alert, :effect, :colormode,
+              :reachable, :data
 
   def initialize( data = {} )
+    @data = data
     @on = data["on"]
     @bri = data["bri"]
     @hue = data["hue"]
