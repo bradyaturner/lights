@@ -34,6 +34,10 @@ class Hue
     JSON.parse response.body
   end
 
+  def request_config
+    hue_http_get "config"
+  end
+
   def add_bulb(id,bulb_data)
     @bulbs << HueBulb.new( id, bulb_data )
   end
@@ -73,6 +77,10 @@ if __FILE__==$0
   USERNAME  = ARGV[1] || "tatersnakes"
 
   client = Hue.new(HUE_IP,USERNAME)
+
+  jp client.request_config
+
+exit
 
   bulbs_response = client.request_bulb_list
   bulbs_response.each do |id,value|
