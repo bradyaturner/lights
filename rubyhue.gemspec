@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.email       = 'bradyaturner@gmail.com'
   s.files       = ["lib/rubyhue.rb",
                     "lib/rubyhue/huebulb.rb",
-                    "lig/rubyhue/huegroup.rb"]
+                    "lib/rubyhue/huegroup.rb"]
   s.homepage    =
     'http://rubygems.org/gems/rubyhue'
   s.license       = 'BAT'
