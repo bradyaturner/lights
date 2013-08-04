@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'rubyhue'
-  s.version     = '0.0.1'
-  s.date        = '2013-08-03'
+  s.version     = '0.0.2'
+  s.date        = '2013-08-04'
   s.summary     = "rubyhue"
   s.description = "Client library for controlling Phillips Hue lights."
   s.authors     = ["Brady Turner"]
