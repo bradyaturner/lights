@@ -16,12 +16,6 @@ class HueBulb
 
 end
 
-class Object
-  def instance_variables_hash
-    Hash[instance_variables.map { |name| [name, instance_variable_get(name)] } ]
-  end
-end
-
 class HueBulbState
 
   attr_accessor :on, :bri, :hue, :sat, :xy, :ct, 
