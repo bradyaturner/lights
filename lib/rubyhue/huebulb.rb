@@ -16,15 +16,19 @@ class HueBulb
 
 end
 
+class Object
+  def instance_variables_hash
+    Hash[instance_variables.map { |name| [name, instance_variable_get(name)] } ]
+  end
+end
 
 class HueBulbState
 
-  attr_reader :on, :bri, :hue, :sat, :xy, :ct, 
+  attr_accessor :on, :bri, :hue, :sat, :xy, :ct, 
               :alert, :effect, :colormode,
-              :reachable, :data
+              :reachable
 
   def initialize( data = {} )
-    @data = data
     @on = data["on"]
     @bri = data["bri"]
     @hue = data["hue"]
@@ -36,5 +40,31 @@ class HueBulbState
     @colormode = data["colormode"]
     @reachable = data["reachable"]
   end
+
+  def bri=(value)
+    if value > 254
+      STDERR.puts "Brightness value too big, no change."
+    elsif value < 0
+      STDERR.puts "Brightness value too small, no change."
+    else
+      @bri = value
+    end
+  end
+
+  def data
+    {
+      "on" => @on,
+      "bri" => @bri,
+      "hue" => @hue,
+      "sat" => @sat,
+      "xy" => @xy,
+      "ct" => @ct,
+      "alert" => @alert,
+      "effect" => @effect,
+      "colormode" => @colormode,
+      "reachable" => @reachable
+    }
+  end
+
 
 end

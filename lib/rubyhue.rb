@@ -85,6 +85,31 @@ if __FILE__==$0
   bulbs_response.each do |id,value|
     info = client.request_bulb_info( id )
     client.add_bulb(id,info)
-    puts client.bulbs.last.name
   end
+
+  brightness = 0 
+  brightness_max = 254
+  direction = 1
+  stepsize = 10
+
+  while TRUE
+    puts "[#{Time.now}] Brightness: #{brightness}"
+    client.bulbs.each do |bulb|
+      state = HueBulbState.new
+      state.bri = brightness
+      client.set_bulb_state bulb.id, state
+      if brightness >= brightness_max
+        direction = -1
+      elsif brightness <= 0
+        direction =1
+      end
+    end
+    brightness += direction * stepsize
+  end
+
 end
+
+
+
+
+
