@@ -54,6 +54,10 @@ class Hue
     hue_get "groups"
   end
 
+  def request_schedule_list
+    hue_get "schedules"
+  end
+
   def set_bulb_state( id, state )
     hue_put "lights/#{id}/state", state.data
   end
@@ -84,28 +88,12 @@ if __FILE__==$0
   bulbs_response = client.request_bulb_list
   bulbs_response.each do |id,value|
     info = client.request_bulb_info( id )
+    jp info
     client.add_bulb(id,info)
   end
 
-  brightness = 0 
-  brightness_max = 254
-  direction = 1
-  stepsize = 10
-
-  while TRUE
-    puts "[#{Time.now}] Brightness: #{brightness}"
-    client.bulbs.each do |bulb|
-      state = HueBulbState.new
-      state.bri = brightness
-      client.set_bulb_state bulb.id, state
-      if brightness >= brightness_max
-        direction = -1
-      elsif brightness <= 0
-        direction =1
-      end
-    end
-    brightness += direction * stepsize
-  end
+  jp client.request_group_list
+  jp client.request_schedule_list
 
 end
 
