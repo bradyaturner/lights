@@ -70,6 +70,11 @@ private
     JSON.parse response.body
   end
 
+  def hue_post(path, data)
+    response = @http.post("/api/#{@username}/#{path}", data.to_json)
+    JSON.parse response.body
+  end
+
 end
 
 if __FILE__==$0
