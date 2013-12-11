@@ -75,6 +75,10 @@ private
     JSON.parse response.body
   end
 
+  def hue_delete(path)
+    response = @http.delete("/api/#{@username}/#{path}")
+    JSON.parse response.body
+  end
 end
 
 if __FILE__==$0
