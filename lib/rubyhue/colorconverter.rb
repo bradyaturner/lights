@@ -8,8 +8,8 @@ module ColorConverter
 		z = r * 0.0193 + g * 0.1192 + b * 0.9505
 
 		return{
-			x: X/(X+Y+Z),
-			y: Y/(X+Y+Z)
+			x => x/(x+y+z),
+			y => y/(z+y+z)
 		}
 	end
 
