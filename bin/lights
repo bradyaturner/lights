@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+require 'rubyhue'
+require 'optparse'
+
+HUE_CONFIG_PATH = "/Users/bradyaturner/.hueconfig"
+
+if File.exists? HUE_CONFIG_PATH
+  saved_data = JSON.parse( IO.read( HUE_CONFIG_PATH ) )
+  username = saved_data["username"]
+  ip = saved_data["bridge_ip"]
+end
+
+if !ARGV[0]
+  STDERR.puts "Must specify a command. (list)"
+  exit 1
+end
+
+command = ARGV.shift
+if command == "config"
+  puts "TODO: #{command}"
+elsif !username || !ip
+  STDERR.puts "Please run lights config before using."
+  exit 1
+elsif command == "list"
+  hue = Hue.new ip, username 
+  bulbs_response = hue.request_bulb_list
+  bulbs_response.each do |id,value|
+    info = hue.request_bulb_info( id )
+    puts info["name"]
+  end
+else
+  puts "Cannot find command #{command}."
+end

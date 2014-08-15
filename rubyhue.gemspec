@@ -12,4 +12,5 @@ Gem::Specification.new do |s|
   s.homepage    =
     'http://rubygems.org/gems/rubyhue'
   s.license       = 'BAT'
+  s.executables = ["lights"]
 end
