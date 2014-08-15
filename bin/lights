@@ -3,7 +3,7 @@
 require 'rubyhue'
 require 'optparse'
 
-HUE_CONFIG_PATH = "/Users/bradyaturner/.hueconfig"
+HUE_CONFIG_PATH = "#{ENV["HOME"]}/.hueconfig"
 
 if File.exists? HUE_CONFIG_PATH
   saved_data = JSON.parse( IO.read( HUE_CONFIG_PATH ) )
@@ -11,16 +11,66 @@ if File.exists? HUE_CONFIG_PATH
   ip = saved_data["bridge_ip"]
 end
 
+def set_config
+  @opts = {}
+  OptionParser.new do |opts|
+    opts.banner = "Usage: #{__FILE__} list --ip ip --user username"
+
+    opts.on("-u", "--user <username>", String, "Username") do |url|
+      @opts[:user] = url
+    end
+    opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address") do |ip|
+      @opts[:ip] = ip
+    end
+  end.parse!
+ 
+  bad_args = false
+  if !@opts[:user]
+    bad_args = true
+    STDERR.puts "Must specify username: --user <username>"
+  end
+  if !@opts[:ip]
+    bad_args = true
+    STDERR.puts "Must specify bridge ip: --ip <IP addr. of bridge>"
+  end
+
+  if bad_args
+    puts "Invalid args. Exiting."
+    exit 1
+  end
+
+  config = {
+    "username" => @opts[:user],
+    "bridge_ip" => @opts[:ip]
+  }
+  File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
+end
+
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (list)"
+  STDERR.puts "Must specify a command. (config, list)"
   exit 1
 end
 
 command = ARGV.shift
 if command == "config"
-  puts "TODO: #{command}"
+  if File.exists? HUE_CONFIG_PATH
+    overwrite = ""
+    while overwrite[0] != "y" \
+            && overwrite[0] != "Y" \
+            && overwrite[0] != "n" \
+            && overwrite[0] != "N" \
+            && overwrite[0] != "\n"
+      print "Hue config already exists. Overwrite? [Y/n]: "
+      overwrite = STDIN.gets
+    end
+    overwrite.upcase!
+    if overwrite[0] == "N"
+      exit
+    end
+  end
+  set_config
 elsif !username || !ip
-  STDERR.puts "Please run lights config before using."
+  STDERR.puts "Please run 'lights config' before using."
   exit 1
 elsif command == "list"
   hue = Hue.new ip, username 
@@ -32,3 +82,5 @@ elsif command == "list"
 else
   puts "Cannot find command #{command}."
 end
+
+
