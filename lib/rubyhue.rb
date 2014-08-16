@@ -70,7 +70,6 @@ class Hue
 private
 
   def process_error(result)
-    puts "PROCESS ERROR: #{result}"
     type = result["error"]["type"]
     case type
     when 1
