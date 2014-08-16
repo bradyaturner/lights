@@ -7,9 +7,11 @@ require 'json'
 if __FILE__==$0
   require './rubyhue/huebulb.rb'
   require './rubyhue/huegroup.rb'
+  require './hueexception.rb'
 else
   require 'rubyhue/huebulb.rb'
   require 'rubyhue/huegroup.rb'
+  require 'rubyhue/hueexception.rb'
 end
 
 def jp( s )
@@ -31,7 +33,16 @@ class Hue
     data = { "devicetype"=>"rubyhue",
               "username"=>@username }
     response = @http.post "/api", data.to_json
-    JSON.parse response.body
+    result = JSON.parse(response.body).first
+    if result.has_key? "error"
+      type = result["error"]["type"]
+      case type
+      when 101
+        raise HueBridgeConnectException, "Press the button on the Hue bridge and try again."
+      else
+        puts "Unknown Error."
+      end
+    end
   end
 
   def request_config
