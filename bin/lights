@@ -56,7 +56,7 @@ class HueCli
       "bridge_ip" => options[:ip] || @ip
     }
     File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
-    puts "Username and bridge IP saved to file."
+    puts "Configuration settings saved."
   end
   
   def list
@@ -88,7 +88,7 @@ end
 
   
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (config, list)"
+  STDERR.puts "Must specify a command. (config, list, register)"
   exit 1
 end
 
