@@ -12,6 +12,22 @@ if File.exists? HUE_CONFIG_PATH
 end
 
 def set_config
+  if File.exists? HUE_CONFIG_PATH
+    overwrite = ""
+    while overwrite[0] != "y" \
+            && overwrite[0] != "Y" \
+            && overwrite[0] != "n" \
+            && overwrite[0] != "N" \
+            && overwrite[0] != "\n"
+      print "Hue config already exists. Overwrite? [Y/n]: "
+      overwrite = STDIN.gets
+    end
+    overwrite.upcase!
+    if overwrite[0] == "N"
+      exit
+    end
+  end
+
   @opts = {}
   OptionParser.new do |opts|
     opts.on("-u", "--user <username>", String, "Username") do |url|
@@ -75,21 +91,7 @@ end
 
 command = ARGV.shift
 if command == "config"
-  if File.exists? HUE_CONFIG_PATH
-    overwrite = ""
-    while overwrite[0] != "y" \
-            && overwrite[0] != "Y" \
-            && overwrite[0] != "n" \
-            && overwrite[0] != "N" \
-            && overwrite[0] != "\n"
-      print "Hue config already exists. Overwrite? [Y/n]: "
-      overwrite = STDIN.gets
-    end
-    overwrite.upcase!
-    if overwrite[0] == "N"
-      exit
-    end
-  end
+
   set_config
 elsif !@username || !@ip
   puts "Please run 'lights config' before using."
