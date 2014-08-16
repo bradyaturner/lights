@@ -60,29 +60,17 @@ class HueCli
   end
   
   def list
-    begin
-      hue = Hue.new @ip, @username 
-      bulbs_response = hue.request_bulb_list
-      bulbs_response.each do |id,value|
-        info = hue.request_bulb_info( id )
-        puts "[#{id}] #{info["name"]}"
-      end
-    rescue HueUsernameException => e
-      puts e.message
-    rescue Errno::ENETUNREACH
-      puts "Please check your internet connection and try again."
+    hue = Hue.new @ip, @username 
+    bulbs_response = hue.request_bulb_list
+    bulbs_response.each do |id,value|
+      info = hue.request_bulb_info( id )
+      puts "[#{id}] #{info["name"]}"
     end
   end
   
   def register
     hue = Hue.new @ip, @username
-    begin
-      response = hue.register_username
-    rescue HueBridgeConnectException => e
-      puts e.message
-    rescue Errno::ENETUNREACH
-      puts "Please check your internet connection and try again."
-    end
+    response = hue.register_username
   end
 end
 
@@ -92,18 +80,25 @@ if !ARGV[0]
   exit 1
 end
 
-cli = HueCli.new
-command = ARGV.shift
-if command == "config"
-  cli.config
-elsif !cli.username || !cli.ip
-  puts "Please run 'lights config' before using."
-elsif command == "list"
-  cli.list
-elsif command == "register"
-  cli.register
-else
-  puts "Cannot find command #{command}."
+begin
+  cli = HueCli.new
+  command = ARGV.shift
+  if command == "config"
+    cli.config
+  elsif !cli.username || !cli.ip
+    puts "Please run 'lights config' before using."
+  elsif command == "list"
+    cli.list
+  elsif command == "register"
+    cli.register
+  else
+    puts "Cannot find command #{command}."
+  end
+rescue HueBridgeConnectException,
+        HueUsernameException => e
+  puts e.message
+rescue Errno::ENETUNREACH, Errno::ENETDOWN
+  puts "Please check your internet connection and try again."
 end
 
 
