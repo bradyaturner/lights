@@ -14,8 +14,6 @@ end
 def set_config
   @opts = {}
   OptionParser.new do |opts|
-    opts.banner = "Usage: #{__FILE__} list --ip ip --user username"
-
     opts.on("-u", "--user <username>", String, "Username") do |url|
       @opts[:user] = url
     end

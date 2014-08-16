@@ -81,28 +81,3 @@ private
 
 end
 
-if __FILE__==$0
-  if ARGV.length < 2
-    STDERR.puts "Invaid args."
-    STDERR.puts "Usage: #{__FILE__} ip username"
-    exit
-  end
-
-  client = Hue.new(ARGV[0],ARGV[1])
-
-  bulbs_response = client.request_bulb_list
-  bulbs_response.each do |id,value|
-    info = client.request_bulb_info( id )
-    jp info
-    client.add_bulb(id,info)
-  end
-
-  jp client.request_group_list
-  jp client.request_schedule_list
-
-end
-
-
-
-
-
