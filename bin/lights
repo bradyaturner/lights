@@ -91,7 +91,6 @@ end
 
 command = ARGV.shift
 if command == "config"
-
   set_config
 elsif !@username || !@ip
   puts "Please run 'lights config' before using."
