@@ -73,9 +73,9 @@ private
     type = result["error"]["type"]
     case type
     when 1
-      raise HueUsernameException, "Please register username '#{@username}' and try again."
+      raise HueUsernameException
     when 101
-      raise HueBridgeConnectException, "Press the button on the Hue bridge and try again."
+      raise HueBridgeConnectException
     else
       puts "Unknown Error."
     end
