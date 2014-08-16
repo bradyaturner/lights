@@ -19,7 +19,7 @@ client.register_username
 client.request_bulb_list
 ```
 
-CLI
+CLI Usage
 ----
 ```
 lights config --user <username> --ip <bridge ip>
