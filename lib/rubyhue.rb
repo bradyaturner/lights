@@ -7,9 +7,11 @@ require 'json'
 if __FILE__==$0
   require './rubyhue/huebulb.rb'
   require './rubyhue/huegroup.rb'
+  require './hueexception.rb'
 else
   require 'rubyhue/huebulb.rb'
   require 'rubyhue/huegroup.rb'
+  require 'rubyhue/hueexception.rb'
 end
 
 def jp( s )
@@ -31,7 +33,10 @@ class Hue
     data = { "devicetype"=>"rubyhue",
               "username"=>@username }
     response = @http.post "/api", data.to_json
-    JSON.parse response.body
+    result = JSON.parse(response.body).first
+    if result.has_key? "error"
+      process_error result
+    end
   end
 
   def request_config
@@ -63,10 +68,27 @@ class Hue
   end
 
 private
+
+  def process_error(result)
+    type = result["error"]["type"]
+    case type
+    when 1
+      raise HueUsernameException, "Please register username '#{@username}' and try again."
+    when 101
+      raise HueBridgeConnectException, "Press the button on the Hue bridge and try again."
+    else
+      puts "Unknown Error."
+    end
+  end
+
   def hue_get( path )
     request = Net::HTTP::Get.new( "/api/#{@username}/#{path}" )
     response = @http.request request
-    JSON.parse response.body
+    result = JSON.parse( response.body )
+    if result.first.kind_of?(Hash) && result.first.has_key?("error")
+      process_error result.first
+    end
+    result
   end
 
   def hue_put( path, data )

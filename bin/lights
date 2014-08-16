@@ -5,100 +5,113 @@ require 'optparse'
 
 HUE_CONFIG_PATH = "#{ENV["HOME"]}/.hueconfig"
 
-if File.exists? HUE_CONFIG_PATH
-  saved_data = JSON.parse( IO.read( HUE_CONFIG_PATH ) )
-  @username = saved_data["username"]
-  @ip = saved_data["bridge_ip"]
+class HueCli
+
+  attr_reader :username, :ip
+  def initialize
+    if File.exists? HUE_CONFIG_PATH
+      saved_data = JSON.parse( IO.read( HUE_CONFIG_PATH ) )
+      @username = saved_data["username"]
+      @ip = saved_data["bridge_ip"]
+    end
+  end
+  
+  def config
+    options = {}
+    OptionParser.new do |opts|
+      opts.on("-u", "--user <username>", String, "Username") do |url|
+        options[:user] = url
+      end
+      opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address") do |ip|
+        options[:ip] = ip
+      end
+      opts.on("-f", "--force", "Force write to config file") do |f|
+        options[:force] = f
+      end
+    end.parse!
+   
+    bad_args = false
+    if !options[:user]
+      bad_args = true
+      STDERR.puts "Must specify username: --user <username>"
+    end
+    if !options[:ip]
+      bad_args = true
+      STDERR.puts "Must specify bridge ip: --ip <IP addr. of bridge>"
+    end
+  
+    if bad_args
+      puts "Invalid args. Exiting."
+      exit 1
+    end
+  
+    if !options[:force] && File.exists?(HUE_CONFIG_PATH)
+      overwrite = ""
+      while overwrite[0] != "y" \
+              && overwrite[0] != "Y" \
+              && overwrite[0] != "n" \
+              && overwrite[0] != "N" \
+              && overwrite[0] != "\n"
+        print "Hue config already exists. Overwrite? [Y/n]: "
+        overwrite = STDIN.gets
+      end
+      overwrite.upcase!
+      if overwrite[0] == "N"
+        exit
+      end
+    end
+  
+    config = {
+      "username" => options[:user],
+      "bridge_ip" => options[:ip]
+    }
+    File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
+    puts "Username and bridge IP saved to file."
+  end
+  
+  def list
+    begin
+      hue = Hue.new @ip, @username 
+      bulbs_response = hue.request_bulb_list
+      bulbs_response.each do |id,value|
+        info = hue.request_bulb_info( id )
+        puts "[#{id}] #{info["name"]}"
+      end
+    rescue HueUsernameException => e
+      puts e.message
+    rescue Errno::ENETUNREACH
+      puts "Please check your internet connection and try again."
+    end
+  end
+  
+  def register
+    hue = Hue.new @ip, @username
+    begin
+      response = hue.register_username
+    rescue HueBridgeConnectException => e
+      puts e.message
+    rescue Errno::ENETUNREACH
+      puts "Please check your internet connection and try again."
+    end
+  end
 end
 
-def config
-  options = {}
-  OptionParser.new do |opts|
-    opts.on("-u", "--user <username>", String, "Username") do |url|
-      options[:user] = url
-    end
-    opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address") do |ip|
-      options[:ip] = ip
-    end
-  end.parse!
- 
-  bad_args = false
-  if !options[:user]
-    bad_args = true
-    STDERR.puts "Must specify username: --user <username>"
-  end
-  if !options[:ip]
-    bad_args = true
-    STDERR.puts "Must specify bridge ip: --ip <IP addr. of bridge>"
-  end
-
-  if bad_args
-    puts "Invalid args. Exiting."
-    exit 1
-  end
-
-  if File.exists? HUE_CONFIG_PATH
-    overwrite = ""
-    while overwrite[0] != "y" \
-            && overwrite[0] != "Y" \
-            && overwrite[0] != "n" \
-            && overwrite[0] != "N" \
-            && overwrite[0] != "\n"
-      print "Hue config already exists. Overwrite? [Y/n]: "
-      overwrite = STDIN.gets
-    end
-    overwrite.upcase!
-    if overwrite[0] == "N"
-      exit
-    end
-  end
-
-  config = {
-    "username" => options[:user],
-    "bridge_ip" => options[:ip]
-  }
-  File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
-  puts "Username and bridge IP saved to file."
-end
-
-def list
-  hue = Hue.new @ip, @username 
-  bulbs_response = hue.request_bulb_list
-  bulbs_response.each do |id,value|
-    info = hue.request_bulb_info( id )
-    puts "[#{id}] #{info["name"]}"
-  end
-end
-
-def register
-  hue = Hue.new @ip, @username
-  response = hue.register_username
-  result = response.first
-  if result.has_key? "error"
-    type = result["error"]["type"]
-    case type
-    when 101
-      puts "Press the button on the Hue bridge and try again."
-    else
-      puts "Unknown Error." 
-    end
-  end
-end
-
+  
 if !ARGV[0]
   STDERR.puts "Must specify a command. (config, list)"
   exit 1
 end
 
+cli = HueCli.new
 command = ARGV.shift
 if command == "config"
-  config
-elsif !@username || !@ip
+  cli.config
+elsif !cli.username || !cli.ip
   puts "Please run 'lights config' before using."
 elsif command == "list"
-  list
+  cli.list
 elsif command == "register"
-  register
+  cli.register
 else
   puts "Cannot find command #{command}."
 end
