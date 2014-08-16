@@ -11,7 +11,7 @@ if File.exists? HUE_CONFIG_PATH
   @ip = saved_data["bridge_ip"]
 end
 
-def set_config
+def config
   if File.exists? HUE_CONFIG_PATH
     overwrite = ""
     while overwrite[0] != "y" \
@@ -91,7 +91,7 @@ end
 
 command = ARGV.shift
 if command == "config"
-  set_config
+  config
 elsif !@username || !@ip
   puts "Please run 'lights config' before using."
 elsif command == "list"
