@@ -24,6 +24,7 @@ CLI Usage
 ```
 lights config --user <username> --ip <bridge ip>
 lights list
+lights register
 ```
 
 Development
