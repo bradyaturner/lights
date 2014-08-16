@@ -22,6 +22,7 @@ client.request_bulb_list
 CLI Usage
 ----
 ```
+lights discover
 lights config --user <username> --ip <bridge ip>
 lights register
 lights list
