@@ -18,3 +18,22 @@ client = Hue.new( '192.168.x.x', 'username' )
 client.register_username
 client.request_bulb_list
 ```
+
+CLI
+----
+```
+lights config --user <username> --ip <bridge ip>
+lights list
+```
+
+Development
+-----
+Building:
+```
+gem build rubyhue.gemspec
+```
+
+Install development gem:
+```
+gem install rubyhue-0.0.3.gem
+```
