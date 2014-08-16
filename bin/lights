@@ -25,6 +25,9 @@ class HueCli
       opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address") do |ip|
         options[:ip] = ip
       end
+      opts.on("-f", "--force", "Force write to config file") do |f|
+        options[:force] = f
+      end
     end.parse!
    
     bad_args = false
@@ -42,7 +45,7 @@ class HueCli
       exit 1
     end
   
-    if File.exists? HUE_CONFIG_PATH
+    if !options[:force] && File.exists?(HUE_CONFIG_PATH)
       overwrite = ""
       while overwrite[0] != "y" \
               && overwrite[0] != "Y" \
