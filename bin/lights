@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'rubyhue.rb'
+require 'rubyhue'
 require 'optparse'
 
 HUE_CONFIG_PATH = "#{ENV["HOME"]}/.hueconfig"
