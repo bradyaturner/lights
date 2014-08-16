@@ -1,4 +1,4 @@
-ruby-hue
+rubyhue
 ========
 A Ruby library & CLI for controlling Phillips Hue lightbulbs.
 
