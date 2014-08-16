@@ -7,8 +7,8 @@ HUE_CONFIG_PATH = "#{ENV["HOME"]}/.hueconfig"
 
 if File.exists? HUE_CONFIG_PATH
   saved_data = JSON.parse( IO.read( HUE_CONFIG_PATH ) )
-  username = saved_data["username"]
-  ip = saved_data["bridge_ip"]
+  @username = saved_data["username"]
+  @ip = saved_data["bridge_ip"]
 end
 
 def set_config
@@ -46,6 +46,30 @@ def set_config
   File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
 end
 
+def list
+  hue = Hue.new @ip, @username 
+  bulbs_response = hue.request_bulb_list
+  bulbs_response.each do |id,value|
+    info = hue.request_bulb_info( id )
+    puts "[#{id}] #{info["name"]}"
+  end
+end
+
+def register
+  hue = Hue.new @ip, @username
+  response = hue.register_username
+  result = response.first
+  if result.has_key? "error"
+    type = result["error"]["type"]
+    case type
+    when 101
+      puts "Press the button on the Hue bridge and try again."
+    else
+      puts "Unknown Error." 
+    end
+  end
+end
+
 if !ARGV[0]
   STDERR.puts "Must specify a command. (config, list)"
   exit 1
@@ -69,16 +93,12 @@ if command == "config"
     end
   end
   set_config
-elsif !username || !ip
-  STDERR.puts "Please run 'lights config' before using."
-  exit 1
+elsif !@username || !@ip
+  puts "Please run 'lights config' before using."
 elsif command == "list"
-  hue = Hue.new ip, username 
-  bulbs_response = hue.request_bulb_list
-  bulbs_response.each do |id,value|
-    info = hue.request_bulb_info( id )
-    puts info["name"]
-  end
+  list
+elsif command == "register"
+  register
 else
   puts "Cannot find command #{command}."
 end
