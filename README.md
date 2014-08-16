@@ -35,5 +35,5 @@ gem build rubyhue.gemspec
 
 Install development gem:
 ```
-gem install rubyhue-0.0.3.gem
+gem install rubyhue-0.0.4.gem
 ```
