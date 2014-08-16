@@ -23,6 +23,7 @@ CLI Usage
 ----
 ```
 lights config --user <username> --ip <bridge ip>
+lights register
 lights list
 ```
 
@@ -35,5 +36,5 @@ gem build rubyhue.gemspec
 
 Install development gem:
 ```
-gem install rubyhue-0.0.3.gem
+gem install rubyhue-0.0.4.gem
 ```
