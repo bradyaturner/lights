@@ -12,6 +12,31 @@ if File.exists? HUE_CONFIG_PATH
 end
 
 def config
+  options = {}
+  OptionParser.new do |opts|
+    opts.on("-u", "--user <username>", String, "Username") do |url|
+      options[:user] = url
+    end
+    opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address") do |ip|
+      options[:ip] = ip
+    end
+  end.parse!
+ 
+  bad_args = false
+  if !options[:user]
+    bad_args = true
+    STDERR.puts "Must specify username: --user <username>"
+  end
+  if !options[:ip]
+    bad_args = true
+    STDERR.puts "Must specify bridge ip: --ip <IP addr. of bridge>"
+  end
+
+  if bad_args
+    puts "Invalid args. Exiting."
+    exit 1
+  end
+
   if File.exists? HUE_CONFIG_PATH
     overwrite = ""
     while overwrite[0] != "y" \
@@ -28,36 +53,12 @@ def config
     end
   end
 
-  @opts = {}
-  OptionParser.new do |opts|
-    opts.on("-u", "--user <username>", String, "Username") do |url|
-      @opts[:user] = url
-    end
-    opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address") do |ip|
-      @opts[:ip] = ip
-    end
-  end.parse!
- 
-  bad_args = false
-  if !@opts[:user]
-    bad_args = true
-    STDERR.puts "Must specify username: --user <username>"
-  end
-  if !@opts[:ip]
-    bad_args = true
-    STDERR.puts "Must specify bridge ip: --ip <IP addr. of bridge>"
-  end
-
-  if bad_args
-    puts "Invalid args. Exiting."
-    exit 1
-  end
-
   config = {
-    "username" => @opts[:user],
-    "bridge_ip" => @opts[:ip]
+    "username" => options[:user],
+    "bridge_ip" => options[:ip]
   }
   File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
+  puts "Username and bridge IP saved to file."
 end
 
 def list
