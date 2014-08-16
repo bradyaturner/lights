@@ -74,6 +74,8 @@ class HueCli
         info = hue.request_bulb_info( id )
         puts "[#{id}] #{info["name"]}"
       end
+    rescue HueUsernameException => e
+      puts e.message
     rescue Errno::ENETUNREACH
       puts "Please check your internet connection and try again."
     end
