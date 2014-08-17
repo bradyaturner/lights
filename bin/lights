@@ -72,11 +72,34 @@ class HueCli
     hue = Hue.new @ip, @username
     response = hue.register_username
   end
+
+  def discover 
+    options = {}
+    OptionParser.new do |opts|
+      opts.on("-s", "--save", "Save discovered bridge to configuration file") do |s|
+        options[:save] = s
+      end
+    end.parse!
+
+    hue = Hue.new @ip, @username
+    bridges = hue.discover_hubs
+    bridges.each { |b| puts "#{b["name"]}: #{b["internalipaddress"]}" }
+
+    if options[:save] && bridges.length >= 1
+      config = {
+        "username" => @username,
+        "bridge_ip" => bridges.first["internalipaddress"]
+      }
+      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
+      puts "Discovered bridge IP saved."
+    end
+  end
+
 end
 
   
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (config, list, register)"
+  STDERR.puts "Must specify a command. (config, list, register, discover)"
   exit 1
 end
 
@@ -91,6 +114,8 @@ begin
     cli.list
   elsif command == "register"
     cli.register
+  elsif command == "discover"
+    cli.discover
   else
     puts "Cannot find command #{command}."
   end
