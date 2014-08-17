@@ -81,6 +81,10 @@ class Hue
     hue_put "lights/#{id}/state", state.data
   end
 
+  def set_group_state( id, state )
+    hue_put "groups/#{id}/action", state.data
+  end
+
 private
 
   def process_error(result)

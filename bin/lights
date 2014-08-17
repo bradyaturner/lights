@@ -103,11 +103,45 @@ class HueCli
     end
   end
 
+  def on
+    set_on true
+  end
+
+  def off
+    set_on false
+  end
+
+private
+  def set_on(is_on)
+    options = {}
+    OptionParser.new do |opts|
+      opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
+        options[:lights] = l 
+      end
+    end.parse!
+
+    if !options[:lights]
+      puts "Must specify which lights to control."
+      exit 1
+    end
+
+    on_state = {
+      "on" => is_on
+    }
+    state = HueBulbState.new(on_state)
+
+    hue = Hue.new @ip, @username
+    if options[:lights].first == "all"
+      hue.set_group_state 0,state
+    else
+      options[:lights].each { |l| hue.set_bulb_state(l,state) }
+    end
+  end
 end
 
   
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (config, list, register, discover)"
+  STDERR.puts "Must specify a command. (config, list, register, discover, on, off)"
   exit 1
 end
 
@@ -124,6 +158,10 @@ begin
     cli.register
   elsif command == "discover"
     cli.discover
+  elsif command == "on"
+    cli.on
+  elsif command == "off"
+    cli.off
   else
     puts "Cannot find command #{command}."
   end
