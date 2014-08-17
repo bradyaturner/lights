@@ -74,10 +74,27 @@ class HueCli
   end
 
   def discover 
+    options = {}
+    OptionParser.new do |opts|
+      opts.on("-s", "--save", "Save discovered bridge to configuration file") do |s|
+        options[:save] = s
+      end
+    end.parse!
+
     hue = Hue.new @ip, @username
     bridges = hue.discover_hubs
     bridges.each { |b| puts "#{b["name"]}: #{b["internalipaddress"]}" }
-  end 
+
+    if options[:save] && bridges.length >= 1
+      config = {
+        "username" => @username,
+        "bridge_ip" => bridges.first["internalipaddress"]
+      }
+      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
+      puts "Discovered bridge IP saved."
+    end
+  end
+
 end
 
   
