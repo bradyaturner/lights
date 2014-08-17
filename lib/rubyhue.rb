@@ -7,10 +7,12 @@ require 'json'
 if __FILE__==$0
   require './rubyhue/huebulb.rb'
   require './rubyhue/huegroup.rb'
-  require './hueexception.rb'
+  require './rubyhue/huebridge.rb'
+  require './rubyhue/hueexception.rb'
 else
   require 'rubyhue/huebulb.rb'
   require 'rubyhue/huegroup.rb'
+  require 'rubyhue/huebridge.rb'
   require 'rubyhue/hueexception.rb'
 end
 

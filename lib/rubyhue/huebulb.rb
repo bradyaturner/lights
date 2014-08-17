@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 class HueBulb
 
   attr_reader :id, :name, :type, :swversion,
