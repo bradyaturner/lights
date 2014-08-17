@@ -91,12 +91,23 @@ class HueCli
 
     hue = Hue.new @config["bridge_ip"], @config["username"]
     bridges = hue.discover_hubs
-    bridges.each { |b| puts "#{b.name}: #{b.ip}" }
+    bridges.each_with_index { |b,i| puts "[#{i+1}] #{b.name}: #{b.ip}" }
 
     if options[:save] && bridges.length >= 1
-      @config["bridge_ip"] = bridges.first.ip
-      write_config
-      puts "Discovered bridge IP saved."
+      if bridges.length > 1
+        which_bridge = -1
+        while !(which_bridge >=0 && which_bridge <= bridges.length)
+          print "Which bridge would you like to save? (0 for none): "
+          which_bridge = Integer( gets ) rescue -1 
+        end
+      else
+        which_bridge = 1
+      end
+      if which_bridge != 0
+        @config["bridge_ip"] = bridges[which_bridge.to_i-1].ip
+        write_config
+        puts "Discovered bridge IP saved: #{bridges[which_bridge-1].ip}"
+      end
     elsif bridges.length == 0
       puts "Did not discover any bridges."
     end
