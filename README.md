@@ -19,14 +19,17 @@ client.register_username
 client.request_bulb_list
 ```
 
-CLI Usage
+CLI Quick Setup
 ----
+
 ```
-lights discover
-lights config --user <username> --ip <bridge ip>
+lights discover -s
+lights config -f --user username
 lights register
 lights list
 ```
+
+See [Sample Usage (Implemented)](https://github.com/turnerba/rubyhue/wiki/Sample-Usage-(Implemented)) for more usage examples.
 
 Development
 -----
