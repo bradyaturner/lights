@@ -7,13 +7,15 @@ HUE_CONFIG_PATH = "#{ENV["HOME"]}/.hueconfig"
 
 class HueCli
 
-  attr_reader :username, :ip
   def initialize
+    @config = {}
     if File.exists? HUE_CONFIG_PATH
-      saved_data = JSON.parse( IO.read( HUE_CONFIG_PATH ) )
-      @username = saved_data["username"]
-      @ip = saved_data["bridge_ip"]
+      @config = JSON.parse( IO.read( HUE_CONFIG_PATH ) )
     end
+  end
+
+  def configured?
+    @config["username"] && @config["bridge_ip"]
   end
   
   def config
@@ -32,15 +34,14 @@ class HueCli
         options[:list] = l
       end
     end.parse!
-   
+ 
     if !options[:user] && !options[:ip] && !options[:list]
       puts "Must specify username and/or bridge IP: --user <username> --ip <IP addr. of bridge>"
       exit 1
     end
  
     if options[:list]
-      puts "Bridge IP: #{@ip}"
-      puts "Username:  #{@username}"
+      @config.each { |k,v| puts "#{k}: #{v}" }
     else
       if !options[:force] && File.exists?(HUE_CONFIG_PATH)
         overwrite = ""
@@ -58,17 +59,16 @@ class HueCli
         end
       end
   
-      config = {
-        "username" => options[:user] || @username,
-        "bridge_ip" => options[:ip] || @ip
-      }
-      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
+      @config["username"] = options[:user] || @config["username"]
+      @config["bridge_ip"] = options[:ip] || @config["bridge_ip"]
+  
+      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
       puts "Configuration settings saved."
     end
   end
   
   def list
-    hue = Hue.new @ip, @username 
+    hue = Hue.new @config["bridge_ip"], @config["username"]
     bulbs_response = hue.request_bulb_list
     bulbs_response.each do |id,value|
       info = hue.request_bulb_info( id )
@@ -77,7 +77,7 @@ class HueCli
   end
   
   def register
-    hue = Hue.new @ip, @username
+    hue = Hue.new @config["bridge_ip"], @config["username"]
     response = hue.register_username
   end
 
@@ -89,7 +89,7 @@ class HueCli
       end
     end.parse!
 
-    hue = Hue.new @ip, @username
+    hue = Hue.new @config["bridge_ip"], @config["username"]
     bridges = hue.discover_hubs
     bridges.each { |b| puts "#{b["name"]}: #{b["internalipaddress"]}" }
 
@@ -164,7 +164,7 @@ private
     on_state = { "on" => is_on }
     state = HueBulbState.new(on_state)
 
-    hue = Hue.new @ip, @username
+    hue = Hue.new @config["bridge_ip"], @config["username"]
     if lights.first == "all"
       hue.set_group_state 0,state
     else
@@ -186,7 +186,7 @@ begin
     cli.config
   elsif command == "discover"
     cli.discover
-  elsif !cli.username || !cli.ip
+  elsif !cli.configured?
     puts "Please run 'lights config' before using."
   elsif command == "list"
     cli.list
