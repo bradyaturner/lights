@@ -103,7 +103,16 @@ class HueCli
     end
   end
 
-  def on(is_on)
+  def on
+    set_on true
+  end
+
+  def off
+    set_on false
+  end
+
+private
+  def set_on(is_on)
     options = {}
     OptionParser.new do |opts|
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
@@ -128,7 +137,6 @@ class HueCli
       options[:lights].each { |l| hue.set_bulb_state(l,state) }
     end
   end
-
 end
 
   
@@ -151,9 +159,9 @@ begin
   elsif command == "discover"
     cli.discover
   elsif command == "on"
-    cli.on(true)
+    cli.on
   elsif command == "off"
-    cli.on(false)
+    cli.off
   else
     puts "Cannot find command #{command}."
   end
