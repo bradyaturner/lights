@@ -202,7 +202,7 @@ begin
   elsif command == "discover"
     cli.discover
   elsif !cli.configured?
-    puts "Please run 'lights config' before using."
+    puts "Please run 'hue config' before using."
   elsif command == "list"
     cli.list
   elsif command == "register"
