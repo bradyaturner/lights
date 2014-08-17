@@ -23,12 +23,12 @@ CLI Quick Setup
 ----
 
 ```
-lights discover -s
-lights config -f --user username
-lights register
-lights list
-lights on -l all
-lights off -l all
+hue discover -s
+hue config -f --user username
+hue register
+hue list
+hue on -l all
+hue off -l all
 ```
 
 See [Sample Usage (Implemented)](https://github.com/turnerba/rubyhue/wiki/Sample-Usage-(Implemented)) for more usage examples.
