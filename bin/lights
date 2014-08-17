@@ -150,14 +150,14 @@ begin
   command = ARGV.shift
   if command == "config"
     cli.config
+  elsif command == "discover"
+    cli.discover
   elsif !cli.username || !cli.ip
     puts "Please run 'lights config' before using."
   elsif command == "list"
     cli.list
   elsif command == "register"
     cli.register
-  elsif command == "discover"
-    cli.discover
   elsif command == "on"
     cli.on
   elsif command == "off"
