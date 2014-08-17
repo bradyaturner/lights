@@ -27,6 +27,8 @@ lights discover -s
 lights config -f --user username
 lights register
 lights list
+lights on -l all
+lignts off -l all
 ```
 
 See [Sample Usage (Implemented)](https://github.com/turnerba/rubyhue/wiki/Sample-Usage-(Implemented)) for more usage examples.
