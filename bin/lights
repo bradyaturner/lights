@@ -62,7 +62,7 @@ class HueCli
       @config["username"] = options[:user] || @config["username"]
       @config["bridge_ip"] = options[:ip] || @config["bridge_ip"]
   
-      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
+      write_config
       puts "Configuration settings saved."
     end
   end
@@ -95,7 +95,7 @@ class HueCli
 
     if options[:save] && bridges.length >= 1
       @config["bridge_ip"] = bridges.first.ip
-      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
+      write_config
       puts "Discovered bridge IP saved."
     elsif bridges.length == 0
       puts "Did not discover any bridges."
@@ -143,6 +143,11 @@ class HueCli
   end
 
 private
+  
+  def write_config
+    File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
+  end
+
   def on_off(is_on)
     options = {}
     OptionParser.new do |opts|
