@@ -210,6 +210,8 @@ rescue HueBridgeConnectException,
   puts e.message
 rescue Errno::ENETUNREACH, Errno::ENETDOWN
   puts "Please check your internet connection and try again."
+rescue Interrupt
+  puts ""
 end
 
 
