@@ -132,7 +132,7 @@ private
 
     hue = Hue.new @ip, @username
     if options[:lights].first == "all"
-      puts "TODO set all ON"
+      hue.set_group_state 0,state
     else
       options[:lights].each { |l| hue.set_bulb_state(l,state) }
     end
