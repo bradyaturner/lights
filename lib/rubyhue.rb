@@ -7,10 +7,12 @@ require 'json'
 if __FILE__==$0
   require './rubyhue/huebulb.rb'
   require './rubyhue/huegroup.rb'
-  require './hueexception.rb'
+  require './rubyhue/huebridge.rb'
+  require './rubyhue/hueexception.rb'
 else
   require 'rubyhue/huebulb.rb'
   require 'rubyhue/huegroup.rb'
+  require 'rubyhue/huebridge.rb'
   require 'rubyhue/hueexception.rb'
 end
 
@@ -27,6 +29,7 @@ class Hue
     @http = Net::HTTP.new(ip,80)
     @bulbs = []
     @groups = []
+    @bridges = []
   end
 
   def discover_hubs
@@ -38,9 +41,11 @@ class Hue
     case response.code.to_i
     when 200
       result = JSON.parse( response.body )
+      result.each { |b| @bridges << HueBridge.new(b) } 
     else
       raise "Unknown error" 
     end
+    @bridges
   end
 
   def register_username
@@ -66,7 +71,8 @@ class Hue
   end
 
   def request_bulb_info( id )
-    hue_get "lights/#{id}"
+    response = hue_get "lights/#{id}"
+    HueBulb.new(id,response)
   end
 
   def request_group_list

@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 class HueGroup
 
   attr_reader :data
