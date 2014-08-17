@@ -104,15 +104,47 @@ class HueCli
   end
 
   def on
-    set_on true
+    on_off true
   end
 
   def off
-    set_on false
+    on_off false
+  end
+
+  def set
+    options = {}
+    OptionParser.new do |opts|
+      opts.on("-o", "--on", "Turn lights on") do |o|
+        options[:on] = o
+      end
+      opts.on("-f", "--off", "Turn lights off") do |f|
+        options[:off] = f
+      end
+      opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
+        options[:lights] = l
+      end
+    end.parse!
+
+    bad_args = false
+    if !options[:on] && !options[:off]
+      puts "Must specify a state to set."
+      bad_args = true
+    end
+    if !options[:lights]
+      puts "Must specify which lights to control."
+      bad_args = true
+    end
+    exit 1 if bad_args    
+    
+    if options[:on]
+      set_on(true,options[:lights])
+    elsif options[:off]
+      set_on(false,options[:lights])
+    end 
   end
 
 private
-  def set_on(is_on)
+  def on_off(is_on)
     options = {}
     OptionParser.new do |opts|
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
@@ -125,23 +157,25 @@ private
       exit 1
     end
 
-    on_state = {
-      "on" => is_on
-    }
+   set_on is_on, options[:lights]
+  end
+
+  def set_on(is_on, lights)
+    on_state = { "on" => is_on }
     state = HueBulbState.new(on_state)
 
     hue = Hue.new @ip, @username
-    if options[:lights].first == "all"
+    if lights.first == "all"
       hue.set_group_state 0,state
     else
-      options[:lights].each { |l| hue.set_bulb_state(l,state) }
+      lights.each { |l| hue.set_bulb_state(l,state) }
     end
   end
 end
 
   
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (config, list, register, discover, on, off)"
+  STDERR.puts "Must specify a command. (config, list, register, discover, on, off, set)"
   exit 1
 end
 
@@ -162,6 +196,8 @@ begin
     cli.on
   elsif command == "off"
     cli.off
+  elsif command == "set"
+    cli.set
   else
     puts "Cannot find command #{command}."
   end
