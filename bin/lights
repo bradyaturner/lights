@@ -71,8 +71,8 @@ class HueCli
     hue = Hue.new @config["bridge_ip"], @config["username"]
     bulbs_response = hue.request_bulb_list
     bulbs_response.each do |id,value|
-      info = hue.request_bulb_info( id )
-      puts "[#{id}] #{info["name"]}"
+      bulb = hue.request_bulb_info( id )
+      puts "[#{id}] #{bulb.name}"
     end
   end
   
@@ -91,16 +91,15 @@ class HueCli
 
     hue = Hue.new @config["bridge_ip"], @config["username"]
     bridges = hue.discover_hubs
-    bridges.each { |b| puts "#{b["name"]}: #{b["internalipaddress"]}" }
+    bridges.each { |b| puts "#{b.name}: #{b.ip}" }
 
     # TODO this doesn't preserve other settings
     if options[:save] && bridges.length >= 1
-      config = {
-        "username" => @username,
-        "bridge_ip" => bridges.first["internalipaddress"]
-      }
-      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
+      @config["bridge_ip"] = bridges.first.ip
+      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
       puts "Discovered bridge IP saved."
+    elsif bridges.length == 0
+      puts "Did not discover any bridges."
     end
   end
 

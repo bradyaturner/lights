@@ -29,6 +29,7 @@ class Hue
     @http = Net::HTTP.new(ip,80)
     @bulbs = []
     @groups = []
+    @bridges = []
   end
 
   def discover_hubs
@@ -40,9 +41,11 @@ class Hue
     case response.code.to_i
     when 200
       result = JSON.parse( response.body )
+      result.each { |b| @bridges << HueBridge.new(b) } 
     else
       raise "Unknown error" 
     end
+    @bridges
   end
 
   def register_username
@@ -68,7 +71,8 @@ class Hue
   end
 
   def request_bulb_info( id )
-    hue_get "lights/#{id}"
+    response = hue_get "lights/#{id}"
+    HueBulb.new(id,response)
   end
 
   def request_group_list
