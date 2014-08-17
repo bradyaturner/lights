@@ -93,6 +93,7 @@ class HueCli
     bridges = hue.discover_hubs
     bridges.each { |b| puts "#{b["name"]}: #{b["internalipaddress"]}" }
 
+    # TODO this doesn't preserve other settings
     if options[:save] && bridges.length >= 1
       config = {
         "username" => @username,
