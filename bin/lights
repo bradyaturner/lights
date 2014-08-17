@@ -28,35 +28,43 @@ class HueCli
       opts.on("-f", "--force", "Force write to config file") do |f|
         options[:force] = f
       end
+      opts.on("-l", "--list", "List saved configuration settings") do |l|
+        options[:list] = l
+      end
     end.parse!
    
-    if !options[:user] && !options[:ip]
+    if !options[:user] && !options[:ip] && !options[:list]
       puts "Must specify username and/or bridge IP: --user <username> --ip <IP addr. of bridge>"
       exit 1
     end
+ 
+    if options[:list]
+      puts "Bridge IP: #{@ip}"
+      puts "Username:  #{@username}"
+    else
+      if !options[:force] && File.exists?(HUE_CONFIG_PATH)
+        overwrite = ""
+        while overwrite[0] != "y" \
+                && overwrite[0] != "Y" \
+                && overwrite[0] != "n" \
+                && overwrite[0] != "N" \
+                && overwrite[0] != "\n"
+          print "Hue config already exists. Overwrite? [Y/n]: "
+          overwrite = STDIN.gets
+        end
+        overwrite.upcase!
+        if overwrite[0] == "N"
+          exit
+        end
+      end
   
-    if !options[:force] && File.exists?(HUE_CONFIG_PATH)
-      overwrite = ""
-      while overwrite[0] != "y" \
-              && overwrite[0] != "Y" \
-              && overwrite[0] != "n" \
-              && overwrite[0] != "N" \
-              && overwrite[0] != "\n"
-        print "Hue config already exists. Overwrite? [Y/n]: "
-        overwrite = STDIN.gets
-      end
-      overwrite.upcase!
-      if overwrite[0] == "N"
-        exit
-      end
+      config = {
+        "username" => options[:user] || @username,
+        "bridge_ip" => options[:ip] || @ip
+      }
+      File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
+      puts "Configuration settings saved."
     end
-  
-    config = {
-      "username" => options[:user] || @username,
-      "bridge_ip" => options[:ip] || @ip
-    }
-    File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(config.to_json) }
-    puts "Configuration settings saved."
   end
   
   def list
