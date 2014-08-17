@@ -103,7 +103,7 @@ class HueCli
       else
         which_bridge = 1
       end
-      if bridges.length == 1 || which_bridge != 0
+      if which_bridge != 0
         @config["bridge_ip"] = bridges[which_bridge.to_i-1].ip
         write_config
         puts "Discovered bridge IP saved: #{bridges[which_bridge-1].ip}"
