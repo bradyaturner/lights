@@ -93,7 +93,6 @@ class HueCli
     bridges = hue.discover_hubs
     bridges.each { |b| puts "#{b.name}: #{b.ip}" }
 
-    # TODO this doesn't preserve other settings
     if options[:save] && bridges.length >= 1
       @config["bridge_ip"] = bridges.first.ip
       File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
@@ -157,7 +156,7 @@ private
       exit 1
     end
 
-   set_on is_on, options[:lights]
+    set_on is_on, options[:lights]
   end
 
   def set_on(is_on, lights)
