@@ -1,3 +1,6 @@
+# TESTING FILES
+lib/run.rb
+
 *.gem
 *.rbc
 .bundle
