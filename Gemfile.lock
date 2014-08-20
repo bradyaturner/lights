@@ -1,0 +1,14 @@
+PATH
+  remote: .
+  specs:
+    rubyhue (0.0.4)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rubyhue!
