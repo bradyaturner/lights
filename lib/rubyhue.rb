@@ -71,7 +71,7 @@ class Hue
 
   def request_sensor_info( id )
     response = hue_get("sensors/#{id}")
-    HueTap.new(id,response)
+    HueSensor.new(id,response)
   end
 
   def request_sensor_list
