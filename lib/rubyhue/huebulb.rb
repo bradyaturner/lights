@@ -21,6 +21,7 @@ class HueBulbState
               :reachable
 
   def initialize( data = {} )
+    data = {} if data == nil
     @on = data["on"]
     @bri = data["bri"]
     @hue = data["hue"]
