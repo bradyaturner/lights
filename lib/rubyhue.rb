@@ -4,17 +4,10 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-if __FILE__==$0
-  require './rubyhue/huebulb.rb'
-  require './rubyhue/huegroup.rb'
-  require './rubyhue/huebridge.rb'
-  require './rubyhue/hueexception.rb'
-else
-  require 'rubyhue/huebulb.rb'
-  require 'rubyhue/huegroup.rb'
-  require 'rubyhue/huebridge.rb'
-  require 'rubyhue/hueexception.rb'
-end
+require 'rubyhue/huebulb.rb'
+require 'rubyhue/huegroup.rb'
+require 'rubyhue/huebridge.rb'
+require 'rubyhue/hueexception.rb'
 
 def jp( s )
   puts JSON.pretty_generate( s )
