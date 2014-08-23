@@ -8,6 +8,7 @@ require 'rubyhue/huebulb.rb'
 require 'rubyhue/huegroup.rb'
 require 'rubyhue/huebridge.rb'
 require 'rubyhue/hueexception.rb'
+require 'rubyhue/huesensor.rb'
 
 def jp( s )
   puts JSON.pretty_generate( s )
@@ -66,6 +67,20 @@ class Hue
   def request_bulb_info( id )
     response = hue_get "lights/#{id}"
     HueBulb.new(id,response)
+  end
+
+  def request_group_info( id )
+    response = hue_get "groups/#{id}"
+    HueGroup.new(id,response)
+  end
+
+  def request_sensor_info( id )
+    response = hue_get("sensors/#{id}")
+    HueSensor.new(id,response)
+  end
+
+  def request_sensor_list
+    hue_get "sensors"
   end
 
   def request_group_list
