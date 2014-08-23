@@ -144,13 +144,16 @@ class HueCli
       opts.on("-f", "--off", "Turn lights off") do |f|
         options[:off] = f
       end
+      opts.on("-c", "--ct color_temp", OptionParser::DecimalInteger, "Set color temperature") do |c|
+        options[:ct] = c
+      end
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
         options[:lights] = l
       end
     end.parse!
 
     bad_args = false
-    if !options[:on] && !options[:off]
+    if !options[:on] && !options[:off] && !options[:ct]
       puts "Must specify a state to set."
       bad_args = true
     end
@@ -164,11 +167,23 @@ class HueCli
       set_on(true,options[:lights])
     elsif options[:off]
       set_on(false,options[:lights])
+    elsif options[:ct]
+      s = HueBulbState.new
+      s.ct = options[:ct]
+      set_state(s,options[:lights])
     end 
   end
 
 private
-  
+  def set_state(state,lights)
+    hue = Hue.new @config["bridge_ip"], @config["username"]
+    if lights.first == "all"
+      hue.set_group_state 0,state
+    else
+      lights.each { |l| hue.set_bulb_state(l,state) }
+    end 
+  end
+
   def write_config
     File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
   end
