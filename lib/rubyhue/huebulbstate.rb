@@ -78,5 +78,9 @@ class HueBulbState
     data["reachable"] = @reachable if @reachable 
     data 
   end 
+
+  def to_json
+    data.to_json
+  end
 end
 
