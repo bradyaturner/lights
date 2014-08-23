@@ -265,6 +265,8 @@ begin
 rescue HueBridgeConnectException,
         HueUsernameException => e
   puts e.message
+rescue HueBulbStateValueOutOfRangeException => e
+  puts e.message
 rescue Errno::ENETUNREACH, Errno::ENETDOWN
   puts "Please check your internet connection and try again."
 rescue Interrupt
