@@ -203,19 +203,9 @@ private
       exit 1
     end
 
-    set_on is_on, options[:lights]
-  end
-
-  def set_on(is_on, lights)
-    on_state = { "on" => is_on }
-    state = HueBulbState.new(on_state)
-
-    hue = Hue.new @config["bridge_ip"], @config["username"]
-    if lights.first == "all"
-      hue.set_group_state 0,state
-    else
-      lights.each { |l| hue.set_bulb_state(l,state) }
-    end
+    s = HueBulbState.new
+    s.on = is_on
+    set_state s, options[:lights]
   end
 end
 
