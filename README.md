@@ -35,6 +35,11 @@ See [Sample Usage (Implemented)](https://github.com/turnerba/rubyhue/wiki/Sample
 
 Development
 -----
+Test:
+```
+bundle exec rspec spec/
+```
+
 Build:
 ```
 rake build
