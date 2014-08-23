@@ -162,7 +162,9 @@ class HueCli
     end.parse!
 
     bad_args = false
-    if !options[:on] && !options[:off] && !options[:ct] && !options[:brightness]
+    if !options[:on] && !options[:off] \
+        && !options[:ct] && !options[:brightness] \
+        && !options[:hue] && !options[:saturation]
       puts "Must specify a state to set."
       bad_args = true
     end
