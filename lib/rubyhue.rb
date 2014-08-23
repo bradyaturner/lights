@@ -69,6 +69,11 @@ class Hue
     HueBulb.new(id,response)
   end
 
+  def request_group_info( id )
+    response = hue_get "groups/#{id}"
+    HueGroup.new(id,response)
+  end
+
   def request_sensor_info( id )
     response = hue_get("sensors/#{id}")
     HueSensor.new(id,response)

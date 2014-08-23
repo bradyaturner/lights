@@ -69,10 +69,24 @@ class HueCli
   
   def list
     hue = Hue.new @config["bridge_ip"], @config["username"]
-    bulbs_response = hue.request_bulb_list
-    bulbs_response.each do |id,value|
-      bulb = hue.request_bulb_info( id )
-      puts "[#{id}] #{bulb.name}"
+    if !ARGV[0] || ARGV[0] == "lights"
+      bulbs_response = hue.request_bulb_list
+      bulbs_response.each do |id,value|
+        bulb = hue.request_bulb_info( id )
+        puts "[#{id}] #{bulb.name}"
+      end
+    elsif ARGV[0] == "sensors"
+      sensors_response = hue.request_sensor_list
+      sensors_response.each do |id,value|
+        sensor = hue.request_sensor_info( id )
+        puts "[#{id}] #{sensor.name}"
+      end
+    elsif ARGV[0] == "groups"
+      groups_response = hue.request_group_list
+      groups_response.each do |id,value|
+        group = hue.request_group_info( id )
+        puts "[#{id}] #{group.name} (#{group.lights.join(',')})"
+      end
     end
   end
   
