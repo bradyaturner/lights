@@ -172,7 +172,6 @@ class HueCli
     end
     exit 1 if bad_args    
    
-    puts options.inspect
     s = HueBulbState.new 
     if options[:on]
       s.on = true
@@ -191,7 +190,6 @@ class HueCli
     if options[:hue]
       s.hue = options[:hue]
     end
-    puts s.data.inspect
     set_state(s,options[:lights])
     
   end
