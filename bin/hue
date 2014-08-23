@@ -1,9 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'rubyhue'
 require 'optparse'
 require 'bundler/setup'
-Bundler.require
+Bundler.require(:default, :development)
 
 HUE_CONFIG_PATH = "#{ENV["HOME"]}/.hueconfig"
 
