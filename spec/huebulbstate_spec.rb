@@ -20,6 +20,30 @@ describe HueBulbState do
   end
 
 # BRI
+  it "should properly set brightness value in constructor" do
+    data = { "bri" => HueBulbState::MAX_BRI }
+    b = HueBulbState.new(data)
+    b.bri.should eq HueBulbState::MAX_BRI
+  end
+
+  it "should properly set brightness value in constructor" do
+    data = { "bri" => HueBulbState::MIN_BRI }
+    b = HueBulbState.new(data)
+    b.bri.should eq HueBulbState::MIN_BRI
+  end
+
+  it "should properly set brightness value" do
+    b = HueBulbState.new
+    b.bri = HueBulbState::MAX_BRI
+    b.bri.should eq HueBulbState::MAX_BRI
+  end
+
+  it "should properly set brightness value" do
+    b = HueBulbState.new
+    b.bri = HueBulbState::MIN_BRI
+    b.bri.should eq HueBulbState::MIN_BRI
+  end
+
   it "should raise exception when initial brightness is out of range (high)" do
     data = { "bri" => HueBulbState::MAX_BRI + 1 }
     expect { HueBulbState.new(data) }.to raise_error
@@ -41,6 +65,30 @@ describe HueBulbState do
   end
 
 # SAT
+  it "should properly set saturation value in constructor" do
+    data = { "sat" => HueBulbState::MAX_SAT }
+    b = HueBulbState.new(data)
+    b.sat.should eq HueBulbState::MAX_SAT
+  end
+
+  it "should properly set saturation value in constructor" do
+    data = { "sat" => HueBulbState::MIN_SAT }
+    b = HueBulbState.new(data)
+    b.sat.should eq HueBulbState::MIN_SAT
+  end
+
+  it "should properly set saturation value" do
+    b = HueBulbState.new
+    b.sat = HueBulbState::MAX_SAT
+    b.sat.should eq HueBulbState::MAX_SAT
+  end
+
+  it "should properly set saturation value" do
+    b = HueBulbState.new
+    b.sat = HueBulbState::MIN_SAT
+    b.sat.should eq HueBulbState::MIN_SAT
+  end
+
   it "should raise exception when initial saturation is out of range (high)" do
     data = { "sat" => HueBulbState::MAX_SAT + 1 }
     expect { HueBulbState.new(data) }.to raise_error
@@ -62,6 +110,30 @@ describe HueBulbState do
   end
 
 # HUE
+  it "should properly set hue value in constructor" do
+    data = { "hue" => HueBulbState::MAX_HUE }
+    b = HueBulbState.new(data)
+    b.hue.should eq HueBulbState::MAX_HUE    
+  end
+
+  it "should properly set hue value in constructor" do
+    data = { "hue" => HueBulbState::MIN_HUE }
+    b = HueBulbState.new(data)
+    b.hue.should eq HueBulbState::MIN_HUE    
+  end
+
+  it "should properly set hue value" do
+    b = HueBulbState.new
+    b.hue = HueBulbState::MAX_HUE
+    b.hue.should eq HueBulbState::MAX_HUE    
+  end
+
+  it "should properly set hue value" do
+    b = HueBulbState.new
+    b.hue = HueBulbState::MIN_HUE
+    b.hue.should eq HueBulbState::MIN_HUE    
+  end
+
   it "should raise exception when initial hue is out of range (high)" do
     data = { "hue" => HueBulbState::MAX_HUE + 1 }
     expect { HueBulbState.new(data) }.to raise_error
@@ -83,6 +155,30 @@ describe HueBulbState do
   end
 
 # CT
+  it "should properly set color temperature value in constructor" do
+    data = { "ct" => HueBulbState::MAX_CT }
+    b = HueBulbState.new(data)
+    b.ct.should eq HueBulbState::MAX_CT   
+  end
+
+  it "should properly set color temperature value in constructor" do
+    data = { "ct" => HueBulbState::MIN_CT }
+    b = HueBulbState.new(data)
+    b.ct.should eq HueBulbState::MIN_CT    
+  end
+
+  it "should properly set color temperature value" do
+    b = HueBulbState.new
+    b.ct = HueBulbState::MAX_CT
+    b.ct.should eq HueBulbState::MAX_CT    
+  end
+
+  it "should properly set color temperature value" do
+    b = HueBulbState.new
+    b.ct = HueBulbState::MIN_CT
+    b.ct.should eq HueBulbState::MIN_CT    
+  end
+
   it "should raise exception when initial color temperature is out of range (high)" do
     data = { "ct" => HueBulbState::MAX_CT + 1 }
     expect { HueBulbState.new(data) }.to raise_error
