@@ -53,7 +53,7 @@ class HueBulbState
 
   def data
     data = {}
-    data["on"] = @on if @on
+    data["on"] = @on if (@on!=nil)
     data["bri"] = @bri if @bri
     data["hue"] = @hue if @hue
     data["sat"] = @sat if @sat
