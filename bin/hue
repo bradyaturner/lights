@@ -150,6 +150,12 @@ class HueCli
       opts.on("-b", "--brightness brightness", OptionParser::DecimalInteger, "Set brightness") do |b|
         options[:brightness] = b
       end
+      opts.on("-s", "--saturation saturation", OptionParser::DecimalInteger, "Set saturation") do |s|
+        options[:saturation] = s
+      end
+      opts.on("-h", "--hue hue", OptionParser::DecimalInteger, "Set hue") do |h|
+        options[:hue] = h
+      end
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
         options[:lights] = l
       end
@@ -166,6 +172,7 @@ class HueCli
     end
     exit 1 if bad_args    
    
+    puts options.inspect
     s = HueBulbState.new 
     if options[:on]
       s.on = true
@@ -178,6 +185,13 @@ class HueCli
     if options[:brightness]
       s.bri = options[:brightness]
     end
+    if options[:saturation]
+      s.sat = options[:saturation]
+    end
+    if options[:hue]
+      s.hue = options[:hue]
+    end
+    puts s.data.inspect
     set_state(s,options[:lights])
     
   end
