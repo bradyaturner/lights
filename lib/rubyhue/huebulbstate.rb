@@ -9,7 +9,8 @@ class HueBulbState
   MAX_HUE = 65535
   MIN_HUE = 0
  
-  attr_accessor :on, :bri, :hue, :sat, :xy, :ct,  
+  attr_writer :on, :xy, :alert, :effect, :colormode
+  attr_reader :on, :bri, :hue, :sat, :xy, :ct,  
               :alert, :effect, :colormode, 
               :reachable 
  
