@@ -172,6 +172,11 @@ class HueCli
       puts "Must specify which lights to control."
       bad_args = true
     end
+    if (options[:hue] || options[:saturation]) \
+        && options[:ct]
+      puts "Cannot set both color temperature and hue/saturation."
+      bad_args = true
+    end
     exit 1 if bad_args    
    
     s = HueBulbState.new 
