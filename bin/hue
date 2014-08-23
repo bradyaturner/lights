@@ -144,13 +144,27 @@ class HueCli
       opts.on("-f", "--off", "Turn lights off") do |f|
         options[:off] = f
       end
+      opts.on("-c", "--ct color_temp", OptionParser::DecimalInteger, "Set color temperature") do |c|
+        options[:ct] = c
+      end
+      opts.on("-b", "--brightness brightness", OptionParser::DecimalInteger, "Set brightness") do |b|
+        options[:brightness] = b
+      end
+      opts.on("-s", "--saturation saturation", OptionParser::DecimalInteger, "Set saturation") do |s|
+        options[:saturation] = s
+      end
+      opts.on("-h", "--hue hue", OptionParser::DecimalInteger, "Set hue") do |h|
+        options[:hue] = h
+      end
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
         options[:lights] = l
       end
     end.parse!
 
     bad_args = false
-    if !options[:on] && !options[:off]
+    if !options[:on] && !options[:off] \
+        && !options[:ct] && !options[:brightness] \
+        && !options[:hue] && !options[:saturation]
       puts "Must specify a state to set."
       bad_args = true
     end
@@ -158,17 +172,45 @@ class HueCli
       puts "Must specify which lights to control."
       bad_args = true
     end
+    if (options[:hue] || options[:saturation]) \
+        && options[:ct]
+      puts "Cannot set both color temperature and hue/saturation."
+      bad_args = true
+    end
     exit 1 if bad_args    
-    
+   
+    s = HueBulbState.new 
     if options[:on]
-      set_on(true,options[:lights])
+      s.on = true
     elsif options[:off]
-      set_on(false,options[:lights])
+      s.on = false
+    end
+    if options[:ct]
+      s.ct = options[:ct]
     end 
+    if options[:brightness]
+      s.bri = options[:brightness]
+    end
+    if options[:saturation]
+      s.sat = options[:saturation]
+    end
+    if options[:hue]
+      s.hue = options[:hue]
+    end
+    set_state(s,options[:lights])
+    
   end
 
 private
-  
+  def set_state(state,lights)
+    hue = Hue.new @config["bridge_ip"], @config["username"]
+    if lights.first == "all"
+      hue.set_group_state 0,state
+    else
+      lights.each { |l| hue.set_bulb_state(l,state) }
+    end 
+  end
+
   def write_config
     File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
   end
@@ -186,19 +228,9 @@ private
       exit 1
     end
 
-    set_on is_on, options[:lights]
-  end
-
-  def set_on(is_on, lights)
-    on_state = { "on" => is_on }
-    state = HueBulbState.new(on_state)
-
-    hue = Hue.new @config["bridge_ip"], @config["username"]
-    if lights.first == "all"
-      hue.set_group_state 0,state
-    else
-      lights.each { |l| hue.set_bulb_state(l,state) }
-    end
+    s = HueBulbState.new
+    s.on = is_on
+    set_state s, options[:lights]
   end
 end
 
@@ -232,6 +264,8 @@ begin
   end
 rescue HueBridgeConnectException,
         HueUsernameException => e
+  puts e.message
+rescue HueBulbStateValueOutOfRangeException => e
   puts e.message
 rescue Errno::ENETUNREACH, Errno::ENETDOWN
   puts "Please check your internet connection and try again."
