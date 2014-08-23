@@ -1,4 +1,5 @@
 Feature: Hue
+
   Scenario: No command
     When I run `hue`
     Then the output should contain "Must specify a command."
