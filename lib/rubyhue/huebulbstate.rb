@@ -24,13 +24,11 @@ class HueBulbState
   end 
  
   def bri=(value) 
-    if value > 254 
-      STDERR.puts "Brightness value too big, no change." 
-    elsif value < 0 
-      STDERR.puts "Brightness value too small, no change." 
-    else 
-      @bri = value 
-    end 
+    if value.between?(MIN_BRI,MAX_BRI)
+      @bri = value
+    else
+      raise "Value out of range. Must be [#{MIN_BRI},#{MAX_BRI}]"
+    end
   end 
 
   def ct=(value)

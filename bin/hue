@@ -147,13 +147,16 @@ class HueCli
       opts.on("-c", "--ct color_temp", OptionParser::DecimalInteger, "Set color temperature") do |c|
         options[:ct] = c
       end
+      opts.on("-b", "--brightness brightness", OptionParser::DecimalInteger, "Set brightness") do |b|
+        options[:brightness] = b
+      end
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
         options[:lights] = l
       end
     end.parse!
 
     bad_args = false
-    if !options[:on] && !options[:off] && !options[:ct]
+    if !options[:on] && !options[:off] && !options[:ct] && !options[:brightness]
       puts "Must specify a state to set."
       bad_args = true
     end
@@ -172,6 +175,9 @@ class HueCli
     if options[:ct]
       s.ct = options[:ct]
     end 
+    if options[:brightness]
+      s.bri = options[:brightness]
+    end
     set_state(s,options[:lights])
     
   end
