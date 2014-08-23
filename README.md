@@ -38,6 +38,7 @@ Development
 Test:
 ```
 bundle exec rspec spec/
+bundle exec cucumber spec/features/
 ```
 
 Build:
