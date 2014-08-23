@@ -1,6 +1,6 @@
 class HueGroup
 
-  attr_reader :data
+  attr_reader :id, :data
   def initialize( id, data = {} )
     @id = id
     @data = data

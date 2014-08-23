@@ -5,6 +5,7 @@ lib/run.rb
 *.rbc
 .bundle
 .config
+Gemfile.lock
 coverage
 InstalledFiles
 lib/bundler/man

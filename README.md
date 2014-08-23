@@ -35,12 +35,17 @@ See [Sample Usage (Implemented)](https://github.com/turnerba/rubyhue/wiki/Sample
 
 Development
 -----
-Building:
+Test:
 ```
-gem build rubyhue.gemspec
+bundle exec rspec spec/
 ```
 
-Install development gem:
+Build:
 ```
-gem install rubyhue-0.0.4.gem
+rake build
+```
+
+Install:
+```
+rake install
 ```
