@@ -20,22 +20,22 @@ describe HueBulbState do
   end
 
   it "should raise execption when initial brightness is out of range (high)" do
-    data = { "bri" => 256 }
+    data = { "bri" => HueBulbState::MAX_BRI + 1 }
     expect { HueBulbState.new(data) }.to raise_error
   end
 
   it "should raise execption when initial brightness is out of range (low)" do
-    data = { "bri" => -1 }
+    data = { "bri" => HueBulbState::MIN_BRI - 1 }
     expect { HueBulbState.new(data) }.to raise_error
   end
 
   it "should raise execption when set brightness is out of range (high)" do
     b = HueBulbState.new()
-    expect { b.bri = 256 }.to raise_error
+    expect { b.bri = HueBulbState::MAX_BRI + 1 }.to raise_error
   end
 
   it "should raise execption when set brightness is out of range (LOW)" do
     b = HueBulbState.new()
-    expect { b.bri = -1 }.to raise_error
+    expect { b.bri = HueBulState::MIN_BRI - 1 }.to raise_error
   end
 end
