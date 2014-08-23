@@ -19,23 +19,66 @@ describe HueBulbState do
     state.data.should eql data
   end
 
-  it "should raise execption when initial brightness is out of range (high)" do
+# BRI
+  it "should raise exception when initial brightness is out of range (high)" do
     data = { "bri" => HueBulbState::MAX_BRI + 1 }
     expect { HueBulbState.new(data) }.to raise_error
   end
 
-  it "should raise execption when initial brightness is out of range (low)" do
+  it "should raise exception when initial brightness is out of range (low)" do
     data = { "bri" => HueBulbState::MIN_BRI - 1 }
     expect { HueBulbState.new(data) }.to raise_error
   end
 
-  it "should raise execption when set brightness is out of range (high)" do
+  it "should raise exception when set brightness is out of range (high)" do
     b = HueBulbState.new()
     expect { b.bri = HueBulbState::MAX_BRI + 1 }.to raise_error
   end
 
-  it "should raise execption when set brightness is out of range (LOW)" do
+  it "should raise exception when set brightness is out of range (LOW)" do
     b = HueBulbState.new()
-    expect { b.bri = HueBulState::MIN_BRI - 1 }.to raise_error
+    expect { b.bri = HueBulbState::MIN_BRI - 1 }.to raise_error
+  end
+
+# SAT
+  it "should raise exception when initial saturation is out of range (high)" do
+    data = { "sat" => HueBulbState::MAX_SAT + 1 }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when initial saturation is out of range (low)" do
+    data = { "sat" => HueBulbState::MIN_SAT - 1 }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when set saturation is out of range (high)" do
+    b = HueBulbState.new()
+    expect { b.sat = HueBulbState::MAX_SAT + 1 }.to raise_error
+  end
+
+  it "should raise exception when set saturation is out of range (LOW)" do
+    b = HueBulbState.new()
+    expect { b.sat = HueBulbState::MIN_SAT - 1 }.to raise_error
+  end
+
+# HUE
+  it "should raise exception when initial hue is out of range (high)" do
+    data = { "hue" => HueBulbState::MAX_HUE + 1 }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when initial hue is out of range (low)" do
+    data = { "hue" => HueBulbState::MIN_HUE - 1 }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when set hue is out of range (high)" do
+    b = HueBulbState.new()
+    expect { b.hue = HueBulbState::MAX_HUE + 1 }.to raise_error
+  end
+
+  it "should raise exception when set hue is out of range (LOW)" do
+    b = HueBulbState.new()
+    expect { b.hue = HueBulbState::MIN_HUE - 1 }.to raise_error
   end
 end
