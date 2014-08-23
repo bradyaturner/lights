@@ -1,4 +1,9 @@
 class HueBulbState 
+
+  MAX_CT = 500
+  MIN_CT = 153
+  MAX_BRI = 255
+  MIN_BRI = 0
  
   attr_accessor :on, :bri, :hue, :sat, :xy, :ct,  
               :alert, :effect, :colormode, 
@@ -27,6 +32,14 @@ class HueBulbState
       @bri = value 
     end 
   end 
+
+  def ct=(value)
+    if value.between?(MIN_CT,MAX_CT)
+      @ct = value
+    else
+      raise "Value out of range. Must be [#{MIN_CT},#{MAX_CT}]"
+    end
+  end
  
   def data 
     data = {} 
