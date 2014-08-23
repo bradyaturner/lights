@@ -17,43 +17,47 @@ class HueBulbState
   def initialize( data = {} ) 
     data = {} if data == nil 
     @on = data["on"] 
-    @bri = data["bri"] 
-    @hue = data["hue"] 
-    @sat = data["sat"] 
+    set_bri data["bri"]
+    set_hue data["hue"]
+    set_sat data["sat"]
     @xy = data["xy"] 
-    @ct = data["ct"] 
+    set_ct data["ct"]
     @alert = data["alert"] 
     @effect = data["effect"] 
     @colormode = data["colormode"] 
     @reachable = data["reachable"] 
   end 
  
-  def bri=(value) 
-    if value.between?(MIN_BRI,MAX_BRI)
+  def bri=(value); set_bri(value) end
+  def set_bri(value)
+    if value.nil? || value.between?(MIN_BRI,MAX_BRI)
       @bri = value
     else
       raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_BRI},#{MAX_BRI}]"
     end
   end 
 
-  def ct=(value)
-    if value.between?(MIN_CT,MAX_CT)
+  def ct=(value); set_ct(value) end
+  def set_ct(value)
+    if value.nil? || value.between?(MIN_CT,MAX_CT)
       @ct = value
     else
       raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_CT},#{MAX_CT}]"
     end
   end
   
-  def sat=(value)
-    if value.between?(MIN_SAT,MAX_SAT)
+  def sat=(value); set_sat(value) end
+  def set_sat(value)
+    if value.nil? || value.between?(MIN_SAT,MAX_SAT)
       @sat = value
     else
       raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_SAT},#{MAX_SAT}]"
     end
   end
  
-  def hue=(value)
-    if value.between?(MIN_HUE,MAX_HUE)
+  def hue=(value); set_hue(value) end
+  def set_hue(value)
+    if value.nil? || value.between?(MIN_HUE,MAX_HUE)
       @hue = value
     else
       raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"
