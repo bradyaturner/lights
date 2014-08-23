@@ -9,5 +9,13 @@ class HueBridge
     @name = data["name"]
   end
 
+  def data
+    data = {}
+    data["id"] = @id if @id
+    data["internalipaddress"] = @ip if @ip
+    data["macaddress"] = @mac if @mac
+    data["name"] = @name if @name
+    data
+  end
 end
 

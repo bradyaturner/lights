@@ -1,10 +1,9 @@
 class HueBulb
 
   attr_reader :id, :name, :type, :swversion,
-              :state, :data
+              :state
 
   def initialize(id,data = {})
-    @data = data
     @id = id
     @name = data["name"]
     @type = data["type"]
@@ -12,6 +11,14 @@ class HueBulb
     @state = HueBulbState.new data["state"]
   end
 
+  def data
+    data = {}
+    data["name"] = @name if @name
+    data["type"] = @type if @type
+    data["swversion"] = @swversion if @swversion
+    data["state"] = @state.data if !@state.data.empty?
+    data
+  end
 end
 
 class HueBulbState
@@ -45,19 +52,18 @@ class HueBulbState
   end
 
   def data
-    {
-      "on" => @on,
-      "bri" => @bri,
-      "hue" => @hue,
-      "sat" => @sat,
-      "xy" => @xy,
-      "ct" => @ct,
-      "alert" => @alert,
-      "effect" => @effect,
-      "colormode" => @colormode,
-      "reachable" => @reachable
-    }
+    data = {}
+    data["on"] = @on if @on
+    data["bri"] = @bri if @bri
+    data["hue"] = @hue if @hue
+    data["sat"] = @sat if @sat
+    data["xy"] = @xy if @xy
+    data["ct"] = @ct if @ct
+    data["alert"] = @alert if @alert
+    data["effect"] = @effect if @effect
+    data["colormode"] = @colormode if @colormode
+    data["reachable"] = @reachable if @reachable
+    data
   end
-
 
 end
