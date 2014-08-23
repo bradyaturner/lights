@@ -35,18 +35,22 @@ See [Sample Usage (Implemented)](https://github.com/turnerba/rubyhue/wiki/Sample
 
 Development
 -----
-Test:
+#### Test:
 ```
 bundle exec rspec spec/
 bundle exec cucumber spec/features/
 ```
+or
+```
+rake test
+```
 
-Build:
+#### Build:
 ```
 rake build
 ```
 
-Install:
+#### Install:
 ```
 rake install
 ```
