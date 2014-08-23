@@ -162,16 +162,18 @@ class HueCli
       bad_args = true
     end
     exit 1 if bad_args    
-    
+   
+    s = HueBulbState.new 
     if options[:on]
-      set_on(true,options[:lights])
+      s.on = true
     elsif options[:off]
-      set_on(false,options[:lights])
-    elsif options[:ct]
-      s = HueBulbState.new
+      s.on = false
+    end
+    if options[:ct]
       s.ct = options[:ct]
-      set_state(s,options[:lights])
     end 
+    set_state(s,options[:lights])
+    
   end
 
 private
