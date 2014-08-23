@@ -81,4 +81,25 @@ describe HueBulbState do
     b = HueBulbState.new()
     expect { b.hue = HueBulbState::MIN_HUE - 1 }.to raise_error
   end
+
+# CT
+  it "should raise exception when initial color temperature is out of range (high)" do
+    data = { "ct" => HueBulbState::MAX_CT + 1 }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when initial color temperature is out of range (low)" do
+    data = { "ct" => HueBulbState::MIN_CT - 1 }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when set color temperature is out of range (high)" do
+    b = HueBulbState.new()
+    expect { b.ct = HueBulbState::MAX_CT + 1 }.to raise_error
+  end
+
+  it "should raise exception when set color temperature is out of range (LOW)" do
+    b = HueBulbState.new()
+    expect { b.ct = HueBulbState::MIN_CT - 1 }.to raise_error
+  end
 end
