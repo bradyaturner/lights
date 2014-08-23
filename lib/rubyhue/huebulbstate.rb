@@ -32,7 +32,7 @@ class HueBulbState
     if value.between?(MIN_BRI,MAX_BRI)
       @bri = value
     else
-      raise "Value out of range. Must be [#{MIN_BRI},#{MAX_BRI}]"
+      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_BRI},#{MAX_BRI}]"
     end
   end 
 
@@ -40,7 +40,7 @@ class HueBulbState
     if value.between?(MIN_CT,MAX_CT)
       @ct = value
     else
-      raise "Value out of range. Must be [#{MIN_CT},#{MAX_CT}]"
+      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_CT},#{MAX_CT}]"
     end
   end
   
@@ -48,7 +48,7 @@ class HueBulbState
     if value.between?(MIN_SAT,MAX_SAT)
       @sat = value
     else
-      raise "Value out of range. Must be [#{MIN_SAT},#{MAX_SAT}]"
+      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_SAT},#{MAX_SAT}]"
     end
   end
  
@@ -56,7 +56,7 @@ class HueBulbState
     if value.between?(MIN_HUE,MAX_HUE)
       @hue = value
     else
-      raise "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"
+      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"
     end
   end
 
