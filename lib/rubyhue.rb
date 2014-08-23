@@ -9,6 +9,7 @@ require 'rubyhue/huegroup.rb'
 require 'rubyhue/huebridge.rb'
 require 'rubyhue/hueexception.rb'
 require 'rubyhue/huesensor.rb'
+require 'rubyhue/loggerconfig.rb'
 
 def jp( s )
   puts JSON.pretty_generate( s )
@@ -24,6 +25,8 @@ class Hue
     @bulbs = []
     @groups = []
     @bridges = []
+    @logger = Logger.new(STDERR)
+    @logger.level = LoggerConfig::HUE_LEVEL
   end
 
   def discover_hubs
@@ -114,9 +117,12 @@ private
   end
 
   def hue_get( path )
+    @logger.debug "==> GET: #{path}"
     request = Net::HTTP::Get.new( "/api/#{@username}/#{path}" )
     response = @http.request request
     result = JSON.parse( response.body )
+    @logger.debug "<== #{response.code}"
+    @logger.debug response.body
     if result.first.kind_of?(Hash) && result.first.has_key?("error")
       process_error result.first
     end
@@ -124,12 +130,20 @@ private
   end
 
   def hue_put( path, data )
+    @logger.debug "==> PUT: #{path}"
+    @logger.debug data.to_json 
     response = @http.put( "/api/#{@username}/#{path}", data.to_json )
+    @logger.debug "<== #{response.code}"
+    @logger.debug response.body
     JSON.parse response.body
   end
 
   def hue_post(path, data)
+    @logger.debug "==> POST: #{path}"
+    @logger.debug data.to_json
     response = @http.post("/api/#{@username}/#{path}", data.to_json)
+    @logger.debug "<== #{response.code}"
+    @logger.debug response.body
     JSON.parse response.body
   end
 
