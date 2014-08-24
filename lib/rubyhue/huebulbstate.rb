@@ -8,6 +8,10 @@ class HueBulbState
   MIN_SAT = 0
   MAX_HUE = 65535
   MIN_HUE = 0
+  module HueEffect
+    NONE = "none"
+    COLORLOOP = "colorloop"
+  end
  
   attr_writer :on, :xy, :alert, :effect, :colormode
   attr_reader :on, :bri, :hue, :sat, :xy, :ct,  
@@ -23,10 +27,19 @@ class HueBulbState
     @xy = data["xy"] 
     set_ct data["ct"]
     @alert = data["alert"] 
-    @effect = data["effect"] 
+    set_effect data["effect"] 
     @colormode = data["colormode"] 
     @reachable = data["reachable"] 
   end 
+
+  def effect=(value) set_effect(value) end
+  def set_effect(value)
+    if value.nil? || value == HueEffect::NONE || value == HueEffect::COLORLOOP
+      @effect = value
+    else
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires 'none' or 'colorloop'"
+    end
+  end
 
   def on=(value) set_on(value) end
   def set_on(value)

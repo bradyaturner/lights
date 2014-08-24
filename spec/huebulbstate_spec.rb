@@ -229,4 +229,35 @@ describe HueBulbState do
     b = HueBulbState.new()
     expect { b.ct = HueBulbState::MIN_CT - 1 }.to raise_error
   end
+
+# EFFECT
+  it "should properly set color temperature value in constructor" do
+    data = { "effect" => HueBulbState::HueEffect::COLORLOOP }
+    b = HueBulbState.new(data)
+    b.effect.should eq HueBulbState::HueEffect::COLORLOOP
+  end
+
+  it "should properly set effect value in constructor" do
+    data = { "effect" => HueBulbState::HueEffect::COLORLOOP }
+    b = HueBulbState.new(data)
+    b.effect.should eq HueBulbState::HueEffect::COLORLOOP
+  end
+
+  it "should properly set effect value" do
+    b = HueBulbState.new
+    b.effect = HueBulbState::HueEffect::COLORLOOP
+    b.effect.should eq HueBulbState::HueEffect::COLORLOOP
+  end
+
+  it "should properly set effect value" do
+    b = HueBulbState.new
+    b.effect = HueBulbState::HueEffect::COLORLOOP
+    b.effect.should eq HueBulbState::HueEffect::COLORLOOP
+  end
+
+  it "should raise exception when effect value is invalid" do
+    data = { "effect" => "test value" }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
 end
+
