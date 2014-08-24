@@ -159,6 +159,9 @@ class HueCli
       opts.on("-e", "--effect none|colorloop", String, "Set effect") do |e|
         options[:effect] = e
       end
+      opts.on("-a", "--alert none|select|lselect", String, "Set alert") do |a|
+        options[:alert] = a
+      end
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
         options[:lights] = l
       end
@@ -171,7 +174,7 @@ class HueCli
     if !options[:on] && !options[:off] \
         && !options[:ct] && !options[:brightness] \
         && !options[:hue] && !options[:saturation] \
-        && !options[:effect]
+        && !options[:effect] && !options[:alert]
       puts "Must specify a state to set."
       bad_args = true
     end
@@ -209,6 +212,9 @@ class HueCli
     end
     if options[:duration]
       s.transition_time = options[:duration] * 10
+    end
+    if options[:alert]
+      s.alert = options[:alert]
     end
     set_state(s,options[:lights])
     
