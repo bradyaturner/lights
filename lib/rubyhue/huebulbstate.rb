@@ -11,15 +11,18 @@ class HueBulbState
   MIN_TRANSITION_TIME = 0
   MAX_XY = 1.0
   MIN_XY = 0.0
+
   module HueEffect
     NONE = "none"
     COLORLOOP = "colorloop"
   end
+
   module HueAlert
     NONE = "none"
     SELECT = "select"
     LSELECT = "lselect"
   end
+
   module HueColorMode
     HS = "hs"
     XY = "xy"
