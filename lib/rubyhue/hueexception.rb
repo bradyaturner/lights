@@ -16,3 +16,9 @@ class HueBulbStateValueOutOfRangeException < Exception
     super(msg)
   end
 end
+
+class HueBulbStateValueTypeException < Exception
+  def initialize(msg = "Value is of incorrect type.")
+    super
+  end
+end

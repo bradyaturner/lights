@@ -1,11 +1,6 @@
 require 'rubyhue'
 
 describe HueBulbState do
-  it "properly parse input parameters" do
-    data = { "on" => true }
-    bulb = HueBulbState.new(data)
-    bulb.on.should eql true 
-  end
 
   it "properly reconstructs object hash" do
     data = { "on" => true }
@@ -17,6 +12,22 @@ describe HueBulbState do
     data = { "on" => false }
     state = HueBulbState.new(data)
     state.data.should eql data
+  end
+
+# ON
+  it "should properly set on value in constructor" do
+    data = { "on" => true }
+    bulb = HueBulbState.new(data)
+    bulb.on.should eql true
+  end
+  it "should properly set on value" do
+    b = HueBulbState.new
+    b.on = true
+    b.on.should eq true
+  end
+  it "should raise exception when on has invalid type" do
+    b = HueBulbState.new
+    expect { b.on = "test state" }.to raise_error
   end
 
 # BRI

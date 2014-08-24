@@ -27,6 +27,15 @@ class HueBulbState
     @colormode = data["colormode"] 
     @reachable = data["reachable"] 
   end 
+
+  def on=(value) set_on(value) end
+  def set_on(value)
+    if !!value == value
+      @on = value
+    else
+      raise HueBulbStateValueTypeException, "Value has incorrect type, requires boolean, got #{value.class}"
+    end
+  end
  
   def bri=(value); set_bri(value) end
   def set_bri(value)
