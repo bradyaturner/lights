@@ -18,3 +18,9 @@ Feature: Hue
   Scenario: List Hue sensors
     When I run `hue list sensors`
     Then the output should contain "[1]"
+
+# This test is failing because OptionParser is casting the string as an integer (0)
+#  Scenario: Incorrect parameters to set
+#    When I run `hue set -l all -h test`
+#    Then the output should contain "incorrect"
+

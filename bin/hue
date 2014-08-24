@@ -156,6 +156,9 @@ class HueCli
       opts.on("-h", "--hue hue", OptionParser::DecimalInteger, "Set hue") do |h|
         options[:hue] = h
       end
+      opts.on("-e", "--effect none|colorloop", String, "Set effect") do |e|
+        options[:effect] = e
+      end
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
         options[:lights] = l
       end
@@ -164,7 +167,8 @@ class HueCli
     bad_args = false
     if !options[:on] && !options[:off] \
         && !options[:ct] && !options[:brightness] \
-        && !options[:hue] && !options[:saturation]
+        && !options[:hue] && !options[:saturation] \
+        && !options[:effect]
       puts "Must specify a state to set."
       bad_args = true
     end
@@ -196,6 +200,9 @@ class HueCli
     end
     if options[:hue]
       s.hue = options[:hue]
+    end
+    if options[:effect]
+      s.effect = options[:effect]
     end
     set_state(s,options[:lights])
     
