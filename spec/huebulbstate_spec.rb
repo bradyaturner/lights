@@ -231,7 +231,7 @@ describe HueBulbState do
   end
 
 # EFFECT
-  it "should properly set color temperature value in constructor" do
+  it "should properly set effect value in constructor" do
     data = { "effect" => HueBulbState::HueEffect::COLORLOOP }
     b = HueBulbState.new(data)
     b.effect.should eq HueBulbState::HueEffect::COLORLOOP
@@ -330,5 +330,103 @@ describe HueBulbState do
     data = { "colormode" => "test value" }
     expect { HueBulbState.new(data) }.to raise_error
   end
+
+# XY
+  it "should properly set xy value in constructor" do
+    xy = [HueBulbState::MAX_XY,HueBulbState::MAX_XY]
+    data = { "xy" => xy }
+    b = HueBulbState.new(data)
+    b.xy.should eq xy
+  end
+
+  it "should properly set xy value in constructor" do
+    xy = [HueBulbState::MIN_XY,HueBulbState::MIN_XY]
+    data = { "xy" => xy }
+    b = HueBulbState.new(data)
+    b.xy.should eq xy 
+  end
+
+  it "should properly set xy value" do
+    b = HueBulbState.new
+    xy = [HueBulbState::MAX_XY,HueBulbState::MAX_XY]
+    b.xy = xy
+    b.xy.should eq xy
+  end
+
+  it "should properly set xy value" do
+    b = HueBulbState.new
+    xy = [HueBulbState::MIN_XY,HueBulbState::MIN_XY]
+    b.xy = xy
+    b.xy.should eq xy 
+  end
+
+  it "should raise exception when xy value is not an array" do
+    xy = {}
+    data = { "xy" => xy }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+# XY - X
+  it "should raise exception when x value is not a number" do
+    xy = ["test value",HueBulbState::MIN_XY]
+    data = { "xy" => xy }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when initial xy is out of range (X,HIGH)" do
+    xy = [HueBulbState::MAX_XY+1,HueBulbState::MIN_XY]
+    data = { "xy" => xy }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when initial xy is out of range (X,LOW)" do
+    xy = [HueBulbState::MIN_XY-1,HueBulbState::MIN_XY]
+    data = { "xy" => xy }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when set xy is out of range (X,HIGH)" do
+    xy = [HueBulbState::MAX_XY+1,HueBulbState::MIN_XY]
+    b = HueBulbState.new()
+    expect { b.xy = xy }.to raise_error
+  end
+
+  it "should raise exception when set xy is out of range (X,LOW)" do
+    xy = [HueBulbState::MIN_XY-1,HueBulbState::MIN_XY]
+    b = HueBulbState.new()
+    expect { b.xy = xy }.to raise_error
+  end
+
+# XY - Y
+  it "should raise exception when y value is not a number" do
+    xy = [HueBulbState::MIN_XY,"test value"]
+    data = { "xy" => xy }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when initial xy is out of range (Y,HIGH)" do
+    xy = [HueBulbState::MIN_XY,HueBulbState::MAX_XY+1]
+    data = { "xy" => xy }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when initial xy is out of range (Y,LOW)" do
+    xy = [HueBulbState::MIN_XY,HueBulbState::MIN_XY-1]
+    data = { "xy" => xy }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when set xy is out of range (Y,HIGH)" do
+    xy = [HueBulbState::MAX_XY,HueBulbState::MAX_XY+1]
+    b = HueBulbState.new()
+    expect { b.xy = xy }.to raise_error
+  end
+
+  it "should raise exception when set xy is out of range (Y,LOW)" do
+    xy = [HueBulbState::MIN_XY,HueBulbState::MIN_XY-1]
+    b = HueBulbState.new()
+    expect { b.xy = xy }.to raise_error
+  end
+
 end
 
