@@ -17,11 +17,16 @@ class HueBulbState
     NONE = "none"
     SELECT = "select"
     LSELECT = "lselect"
-  end 
+  end
+  module HueColorMode
+    HS = "hs"
+    XY = "xy"
+    CT = "ct"
+  end
 
-  attr_writer :on, :xy, :alert, :effect, :colormode
+  attr_writer :xy
   attr_reader :on, :bri, :hue, :sat, :xy, :ct,  
-              :alert, :effect, :colormode, 
+              :alert, :effect, :color_mode, 
               :reachable, :transition_time
  
   def initialize( data = {} ) 
@@ -34,10 +39,22 @@ class HueBulbState
     set_ct data["ct"]
     set_alert data["alert"] 
     set_effect data["effect"] 
-    @colormode = data["colormode"] 
+    set_color_mode data["colormode"] 
     @reachable = data["reachable"] 
     set_transition_time data["transitiontime"]
-  end 
+  end
+ 
+  def color_mode=(value) set_color_mode(value) end
+  def set_color_mode(value)
+    puts value
+    if value.nil? || value == HueColorMode::XY \
+        || value == HueColorMode::HS \
+        || value == HueColorMode::CT
+      @color_mode = value
+    else
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires 'hs', 'xy', or 'ct'"
+    end
+  end
 
   def alert=(value) set_alert(value) end
   def set_alert(value)
@@ -132,7 +149,7 @@ class HueBulbState
     data["ct"] = @ct if @ct 
     data["alert"] = @alert if @alert 
     data["effect"] = @effect if @effect 
-    data["colormode"] = @colormode if @colormode 
+    data["colormode"] = @color_mode if @color_mode 
     data["reachable"] = @reachable if @reachable 
     data["transitiontime"] = @transition_time if @transition_time
     data 

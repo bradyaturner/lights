@@ -306,5 +306,29 @@ describe HueBulbState do
     data = { "alert" => "test value" }
     expect { HueBulbState.new(data) }.to raise_error
   end
+
+# COLORMODE
+  it "should properly set color mode value in constructor" do
+    data = { "colormode" => HueBulbState::HueColorMode::HS }
+    b = HueBulbState.new(data)
+    b.color_mode.should eq HueBulbState::HueColorMode::HS
+  end
+
+ it "should properly set color mode value" do
+    b = HueBulbState.new
+    b.color_mode = HueBulbState::HueColorMode::XY
+    b.color_mode.should eq HueBulbState::HueColorMode::XY
+  end
+
+ it "should properly set color mode value" do
+    b = HueBulbState.new
+    b.color_mode = HueBulbState::HueColorMode::CT
+    b.color_mode.should eq HueBulbState::HueColorMode::CT
+  end
+
+  it "should raise exception when alert value is invalid" do
+    data = { "colormode" => "test value" }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
 end
 
