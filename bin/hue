@@ -162,6 +162,9 @@ class HueCli
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
         options[:lights] = l
       end
+      opts.on("-d", "--duration seconds", OptionParser::DecimalInteger, "Transition duration in seconds") do |d|
+        options[:duration] = d
+      end
     end.parse!
 
     bad_args = false
@@ -203,6 +206,9 @@ class HueCli
     end
     if options[:effect]
       s.effect = options[:effect]
+    end
+    if options[:duration]
+      s.transition_time = options[:duration] * 10
     end
     set_state(s,options[:lights])
     
