@@ -30,10 +30,11 @@ class HueBulbState
 
   def on=(value) set_on(value) end
   def set_on(value)
+    # Tests if value is boolean
     if !!value == value
       @on = value
     else
-      raise HueBulbStateValueTypeException, "Value has incorrect type, requires boolean, got #{value.class}"
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires boolean, got #{value.class}"
     end
   end
  
@@ -48,7 +49,9 @@ class HueBulbState
 
   def ct=(value); set_ct(value) end
   def set_ct(value)
-    if value.nil? || value.between?(MIN_CT,MAX_CT)
+    if !value.nil? && (!value.is_a? Integer)
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+    elsif value.nil? || value.between?(MIN_CT,MAX_CT)
       @ct = value
     else
       raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_CT},#{MAX_CT}]"
@@ -57,7 +60,9 @@ class HueBulbState
   
   def sat=(value); set_sat(value) end
   def set_sat(value)
-    if value.nil? || value.between?(MIN_SAT,MAX_SAT)
+    if !value.nil? && (!value.is_a? Integer)
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+    elsif value.nil? || value.between?(MIN_SAT,MAX_SAT)
       @sat = value
     else
       raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_SAT},#{MAX_SAT}]"
@@ -66,7 +71,9 @@ class HueBulbState
  
   def hue=(value); set_hue(value) end
   def set_hue(value)
-    if value.nil? || value.between?(MIN_HUE,MAX_HUE)
+    if !value.nil? && (!value.is_a? Integer)
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+    elsif value.nil? || value.between?(MIN_HUE,MAX_HUE)
       @hue = value
     else
       raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"

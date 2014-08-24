@@ -11,8 +11,7 @@ class HueUsernameException < Exception
 end
 
 class HueBulbStateValueOutOfRangeException < Exception
-  def initalize(min, max)
-    msg = "Value for #{name} out of range: [#{min},#{max}]"
+  def initalize(msg = "Value out of range.")
     super(msg)
   end
 end

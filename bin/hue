@@ -263,9 +263,9 @@ begin
     puts "Cannot find command #{command}."
   end
 rescue HueBridgeConnectException,
-        HueUsernameException => e
-  puts e.message
-rescue HueBulbStateValueOutOfRangeException => e
+        HueUsernameException,
+        HueBulbStateValueOutOfRangeException,
+        HueBulbStateValueTypeException => e
   puts e.message
 rescue Errno::ENETUNREACH, Errno::ENETDOWN
   puts "Please check your internet connection and try again."
