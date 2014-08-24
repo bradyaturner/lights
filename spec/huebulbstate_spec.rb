@@ -251,13 +251,37 @@ describe HueBulbState do
 
   it "should properly set effect value" do
     b = HueBulbState.new
-    b.effect = HueBulbState::HueEffect::COLORLOOP
-    b.effect.should eq HueBulbState::HueEffect::COLORLOOP
+    b.effect = HueBulbState::HueEffect::NONE
+    b.effect.should eq HueBulbState::HueEffect::NONE
   end
 
   it "should raise exception when effect value is invalid" do
     data = { "effect" => "test value" }
     expect { HueBulbState.new(data) }.to raise_error
   end
+
+# TRANSITION TIME
+  it "should properly set transition time value in constructor" do
+    data = { "transitiontime" => 0.1 }
+    b = HueBulbState.new(data)
+    b.transition_time.should eq 0.1
+  end
+
+ it "should properly set transition time value" do
+    b = HueBulbState.new
+    b.transition_time = HueBulbState::MIN_TRANSITION_TIME
+    b.transition_time.should eq HueBulbState::MIN_TRANSITION_TIME
+  end
+
+  it "should raise exception when transition time value is invalid" do
+    data = { "transitiontime" => "test value" }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
+  it "should raise exception when transition time is out of range (LOW)" do
+    data = { "transitiontime" => -1 }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
 end
 
