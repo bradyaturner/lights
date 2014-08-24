@@ -8,6 +8,7 @@ class HueBulbState
   MIN_SAT = 0
   MAX_HUE = 65535
   MIN_HUE = 0
+  MIN_TRANSITION_TIME = 0
   module HueEffect
     NONE = "none"
     COLORLOOP = "colorloop"
@@ -16,7 +17,7 @@ class HueBulbState
   attr_writer :on, :xy, :alert, :effect, :colormode
   attr_reader :on, :bri, :hue, :sat, :xy, :ct,  
               :alert, :effect, :colormode, 
-              :reachable 
+              :reachable, :transition_time
  
   def initialize( data = {} ) 
     data = {} if data == nil 
@@ -30,6 +31,7 @@ class HueBulbState
     set_effect data["effect"] 
     @colormode = data["colormode"] 
     @reachable = data["reachable"] 
+    set_transition_time data["transitiontime"]
   end 
 
   def effect=(value) set_effect(value) end
@@ -93,6 +95,17 @@ class HueBulbState
     end
   end
 
+  def transition_time=(value); set_transition_time(value) end
+  def set_transition_time(value)
+    if !value.nil? && (!value.is_a? Numeric)
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires decimal, got #{value.class}"
+    elsif value.nil? || value >= MIN_TRANSITION_TIME
+      @transition_time = value
+    else
+      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"
+    end
+  end  
+
   def data 
     data = {} 
     data["on"] = @on if (@on!=nil) 
@@ -105,6 +118,7 @@ class HueBulbState
     data["effect"] = @effect if @effect 
     data["colormode"] = @colormode if @colormode 
     data["reachable"] = @reachable if @reachable 
+    data["transitiontime"] = @transition_time if @transition_time
     data 
   end 
 
