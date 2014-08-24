@@ -148,15 +148,15 @@ class HueBulbState
       raise HueBulbStateValueTypeException, "Value has incorrect type. Requires array, got #{value.class}"
     elsif value.nil?
       return
-    elsif value.length == 2 && value[0].is_a?(Numeric) \
-            && value[1].is_a?(Numeric) &&  value[0].to_f >= MIN_XY \
+    elsif value.length == 2 && value[0].to_f.is_a?(Numeric) \
+            && value[1].to_f.is_a?(Numeric) &&  value[0].to_f >= MIN_XY \
             && value[0].to_f <= MAX_XY && value[1].to_f >= MIN_XY \
             && value[1].to_f <= MAX_XY
       @xy = []
       @xy[0] = value[0].to_f
       @xy[1] = value[1].to_f
     else
-      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_XY},#{MAX_HUE}]"
+      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_XY},#{MAX_XY}]"
     end
   end
 
