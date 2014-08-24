@@ -13,7 +13,12 @@ class HueBulbState
     NONE = "none"
     COLORLOOP = "colorloop"
   end
- 
+  module HueAlert
+    NONE = "none"
+    SELECT = "select"
+    LSELECT = "lselect"
+  end 
+
   attr_writer :on, :xy, :alert, :effect, :colormode
   attr_reader :on, :bri, :hue, :sat, :xy, :ct,  
               :alert, :effect, :colormode, 
@@ -27,12 +32,23 @@ class HueBulbState
     set_sat data["sat"]
     @xy = data["xy"] 
     set_ct data["ct"]
-    @alert = data["alert"] 
+    set_alert data["alert"] 
     set_effect data["effect"] 
     @colormode = data["colormode"] 
     @reachable = data["reachable"] 
     set_transition_time data["transitiontime"]
   end 
+
+  def alert=(value) set_alert(value) end
+  def set_alert(value)
+    if value.nil? || value == HueAlert::NONE \
+        || value == HueAlert::SELECT \
+        || value == HueAlert::LSELECT
+      @alert = value
+    else
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires 'none', 'select', or 'lselect'"
+    end
+  end
 
   def effect=(value) set_effect(value) end
   def set_effect(value)

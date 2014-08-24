@@ -283,5 +283,28 @@ describe HueBulbState do
     expect { HueBulbState.new(data) }.to raise_error
   end
 
+# ALERT
+  it "should properly set alert value in constructor" do
+    data = { "alert" => HueBulbState::HueAlert::SELECT }
+    b = HueBulbState.new(data)
+    b.alert.should eq HueBulbState::HueAlert::SELECT
+  end
+
+ it "should properly set alert value" do
+    b = HueBulbState.new
+    b.alert = HueBulbState::HueAlert::LSELECT
+    b.alert.should eq HueBulbState::HueAlert::LSELECT
+  end
+
+ it "should properly set alert value" do
+    b = HueBulbState.new
+    b.alert = HueBulbState::HueAlert::NONE
+    b.alert.should eq HueBulbState::HueAlert::NONE
+  end
+
+  it "should raise exception when alert value is invalid" do
+    data = { "alert" => "test value" }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
 end
 
