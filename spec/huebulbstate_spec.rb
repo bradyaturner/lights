@@ -1,11 +1,6 @@
 require 'rubyhue'
 
 describe HueBulbState do
-  it "properly parse input parameters" do
-    data = { "on" => true }
-    bulb = HueBulbState.new(data)
-    bulb.on.should eql true 
-  end
 
   it "properly reconstructs object hash" do
     data = { "on" => true }
@@ -17,6 +12,22 @@ describe HueBulbState do
     data = { "on" => false }
     state = HueBulbState.new(data)
     state.data.should eql data
+  end
+
+# ON
+  it "should properly set on value in constructor" do
+    data = { "on" => true }
+    bulb = HueBulbState.new(data)
+    bulb.on.should eql true
+  end
+  it "should properly set on value" do
+    b = HueBulbState.new
+    b.on = true
+    b.on.should eq true
+  end
+  it "should raise exception when on has invalid type" do
+    b = HueBulbState.new
+    expect { b.on = "test state" }.to raise_error
   end
 
 # BRI
@@ -42,6 +53,11 @@ describe HueBulbState do
     b = HueBulbState.new
     b.bri = HueBulbState::MIN_BRI
     b.bri.should eq HueBulbState::MIN_BRI
+  end
+
+  it "should raise exception when brightness value is not an integer" do
+    data = { "bri" => "test value" }
+    expect { HueBulbState.new(data) }.to raise_error
   end
 
   it "should raise exception when initial brightness is out of range (high)" do
@@ -89,6 +105,11 @@ describe HueBulbState do
     b.sat.should eq HueBulbState::MIN_SAT
   end
 
+  it "should raise exception when sat value is not an integer" do
+    data = { "sat" => "test value" }
+    expect { HueBulbState.new(data) }.to raise_error
+  end
+
   it "should raise exception when initial saturation is out of range (high)" do
     data = { "sat" => HueBulbState::MAX_SAT + 1 }
     expect { HueBulbState.new(data) }.to raise_error
@@ -132,6 +153,11 @@ describe HueBulbState do
     b = HueBulbState.new
     b.hue = HueBulbState::MIN_HUE
     b.hue.should eq HueBulbState::MIN_HUE    
+  end
+
+  it "should raise exception when hue value is not an integer" do
+    data = { "hue" => "test value" }
+    expect { HueBulbState.new(data) }.to raise_error
   end
 
   it "should raise exception when initial hue is out of range (high)" do
@@ -178,6 +204,11 @@ describe HueBulbState do
     b.ct = HueBulbState::MIN_CT
     b.ct.should eq HueBulbState::MIN_CT    
   end
+
+  it "should raise exception when color temperature value is not an integer" do
+    data = { "ct" => "test value" }
+    expect { HueBulbState.new(data) }.to raise_error
+  end 
 
   it "should raise exception when initial color temperature is out of range (high)" do
     data = { "ct" => HueBulbState::MAX_CT + 1 }
