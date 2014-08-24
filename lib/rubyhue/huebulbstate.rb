@@ -9,6 +9,8 @@ class HueBulbState
   MAX_HUE = 65535
   MIN_HUE = 0
   MIN_TRANSITION_TIME = 0
+  MAX_XY = 1.0
+  MIN_XY = 0.0
   module HueEffect
     NONE = "none"
     COLORLOOP = "colorloop"
@@ -24,7 +26,6 @@ class HueBulbState
     CT = "ct"
   end
 
-  attr_writer :xy
   attr_reader :on, :bri, :hue, :sat, :xy, :ct,  
               :alert, :effect, :color_mode, 
               :reachable, :transition_time
@@ -35,7 +36,7 @@ class HueBulbState
     set_bri data["bri"]
     set_hue data["hue"]
     set_sat data["sat"]
-    @xy = data["xy"] 
+    set_xy data["xy"] 
     set_ct data["ct"]
     set_alert data["alert"] 
     set_effect data["effect"] 
@@ -134,9 +135,20 @@ class HueBulbState
     elsif value.nil? || value >= MIN_TRANSITION_TIME
       @transition_time = value
     else
-      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"
+      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be > #{MIN_TRANSITION_TIME}"
     end
   end  
+
+  def xy=(value); set_xy(value) end
+  def set_xy(value)
+    if !value.nil? && (!value.is_a? Array)
+      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires array, got #{value.class}"
+    elsif value.nil? || ( value.length == 2 && value[0] >= MIN_XY && value[0] <= MAX_XY && value[1] >= MIN_XY && value[1] <= MAX_XY )
+      @xy = value
+    else
+      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_XY},#{MAX_HUE}]"
+    end
+  end
 
   def data 
     data = {} 
