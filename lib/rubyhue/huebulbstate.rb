@@ -46,7 +46,6 @@ class HueBulbState
  
   def color_mode=(value) set_color_mode(value) end
   def set_color_mode(value)
-    puts value
     if value.nil? || value == HueColorMode::XY \
         || value == HueColorMode::HS \
         || value == HueColorMode::CT
