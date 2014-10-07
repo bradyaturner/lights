@@ -1,22 +1,22 @@
-class HueBridgeConnectException < Exception
+class BridgeConnectException < Exception
   def initialize(msg = "Press the button on the Hue bridge and try again.")
     super
   end
 end
 
-class HueUsernameException < Exception
+class UsernameException < Exception
   def initialize(msg = "Please register username and try again.")
     super
   end
 end
 
-class HueBulbStateValueOutOfRangeException < Exception
+class BulbStateValueOutOfRangeException < Exception
   def initalize(msg = "Value out of range.")
     super(msg)
   end
 end
 
-class HueBulbStateValueTypeException < Exception
+class BulbStateValueTypeException < Exception
   def initialize(msg = "Value is of incorrect type.")
     super
   end

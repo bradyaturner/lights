@@ -1,16 +1,16 @@
 #!/usr/bin/env ruby
 
-require 'rubyhue'
+require 'rue'
 require 'optparse'
 
-HUE_CONFIG_PATH = "#{ENV["HOME"]}/.hueconfig"
+RUE_CONFIG_PATH = "#{ENV["HOME"]}/.rueconfig"
 
-class HueCli
+class RueCli
 
   def initialize
     @config = {}
-    if File.exists? HUE_CONFIG_PATH
-      @config = JSON.parse( IO.read( HUE_CONFIG_PATH ) )
+    if File.exists? RUE_CONFIG_PATH
+      @config = JSON.parse( IO.read( RUE_CONFIG_PATH ) )
     end
   end
 
@@ -43,14 +43,14 @@ class HueCli
     if options[:list]
       @config.each { |k,v| puts "#{k}: #{v}" }
     else
-      if !options[:force] && File.exists?(HUE_CONFIG_PATH)
+      if !options[:force] && File.exists?(RUE_CONFIG_PATH)
         overwrite = ""
         while overwrite[0] != "y" \
                 && overwrite[0] != "Y" \
                 && overwrite[0] != "n" \
                 && overwrite[0] != "N" \
                 && overwrite[0] != "\n"
-          print "Hue config already exists. Overwrite? [Y/n]: "
+          print "Rue config already exists. Overwrite? [Y/n]: "
           overwrite = STDIN.gets
         end
         overwrite.upcase!
@@ -68,31 +68,31 @@ class HueCli
   end
   
   def list
-    hue = Hue.new @config["bridge_ip"], @config["username"]
+    rue = Rue.new @config["bridge_ip"], @config["username"]
     if !ARGV[0] || ARGV[0] == "lights"
-      bulbs_response = hue.request_bulb_list
+      bulbs_response = rue.request_bulb_list
       bulbs_response.each do |id,value|
-        bulb = hue.request_bulb_info( id )
+        bulb = rue.request_bulb_info( id )
         puts "[#{id}] #{bulb.name}"
       end
     elsif ARGV[0] == "sensors"
-      sensors_response = hue.request_sensor_list
+      sensors_response = rue.request_sensor_list
       sensors_response.each do |id,value|
-        sensor = hue.request_sensor_info( id )
+        sensor = rue.request_sensor_info( id )
         puts "[#{id}] #{sensor.name}"
       end
     elsif ARGV[0] == "groups"
-      groups_response = hue.request_group_list
+      groups_response = rue.request_group_list
       groups_response.each do |id,value|
-        group = hue.request_group_info( id )
+        group = rue.request_group_info( id )
         puts "[#{id}] #{group.name} (#{group.lights.join(',')})"
       end
     end
   end
   
   def register
-    hue = Hue.new @config["bridge_ip"], @config["username"]
-    response = hue.register_username
+    rue = Rue.new @config["bridge_ip"], @config["username"]
+    response = rue.register_username
   end
 
   def discover 
@@ -103,8 +103,8 @@ class HueCli
       end
     end.parse!
 
-    hue = Hue.new @config["bridge_ip"], @config["username"]
-    bridges = hue.discover_hubs
+    rue = Rue.new @config["bridge_ip"], @config["username"]
+    bridges = rue.discover_hubs
     bridges.each_with_index { |b,i| puts "[#{i+1}] #{b.name}: #{b.ip}" }
 
     if options[:save] && bridges.length >= 1
@@ -193,7 +193,7 @@ class HueCli
     end
     exit 1 if bad_args    
    
-    s = HueBulbState.new 
+    s = BulbState.new 
     if options[:on]
       s.on = true
     elsif options[:off]
@@ -229,16 +229,16 @@ class HueCli
 
 private
   def set_state(state,lights)
-    hue = Hue.new @config["bridge_ip"], @config["username"]
+    rue = Rue.new @config["bridge_ip"], @config["username"]
     if lights.first == "all"
-      hue.set_group_state 0,state
+      rue.set_group_state 0,state
     else
-      lights.each { |l| hue.set_bulb_state(l,state) }
+      lights.each { |l| rue.set_bulb_state(l,state) }
     end 
   end
 
   def write_config
-    File.open(HUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
+    File.open(RUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
   end
 
   def on_off(is_on)
@@ -254,7 +254,7 @@ private
       exit 1
     end
 
-    s = HueBulbState.new
+    s = BulbState.new
     s.on = is_on
     set_state s, options[:lights]
   end
@@ -267,14 +267,14 @@ if !ARGV[0]
 end
 
 begin
-  cli = HueCli.new
+  cli = RueCli.new
   command = ARGV.shift
   if command == "config"
     cli.config
   elsif command == "discover"
     cli.discover
   elsif !cli.configured?
-    puts "Please run 'hue config' before using."
+    puts "Please run 'rue config' before using."
   elsif command == "list"
     cli.list
   elsif command == "register"
@@ -288,10 +288,10 @@ begin
   else
     puts "Cannot find command #{command}."
   end
-rescue HueBridgeConnectException,
-        HueUsernameException,
-        HueBulbStateValueOutOfRangeException,
-        HueBulbStateValueTypeException => e
+rescue BridgeConnectException,
+        UsernameException,
+        BulbStateValueOutOfRangeException,
+        BulbStateValueTypeException => e
   puts e.message
 rescue Errno::ENETUNREACH, Errno::ENETDOWN
   puts "Please check your internet connection and try again."

@@ -1,10 +1,10 @@
-class HueGroup
+class Group
 
   attr_reader :id, :data, :name, :lights
   def initialize( id, data = {} )
     @id = id
     @data = data
-    @action = HueBulbState.new(data["action"]) 
+    @action = BulbState.new(data["action"]) 
     @name = data["name"]
     @lights = data["lights"]
   end

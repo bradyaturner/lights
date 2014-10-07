@@ -1,4 +1,4 @@
-rubyhue
+rue
 ========
 A Ruby library & CLI for controlling Phillips Hue lightbulbs.
 
@@ -7,14 +7,14 @@ Phillips Hue API Documentation: http://developers.meethue.com/index.html
 Installation
 ----
 ```
-gem install rubyhue
+gem install rue 
 ```
 
 Basic Usage
 -----
 ```ruby
-require 'rubyhue'
-client = Hue.new( '192.168.x.x', 'username' )
+require 'rue'
+client = Rue.new( '192.168.x.x', 'username' )
 client.register_username
 client.request_bulb_list
 ```
@@ -23,15 +23,15 @@ CLI Quick Setup
 ----
 
 ```
-hue discover -s
-hue config -f --user username
-hue register
-hue list
-hue on -l all
-hue off -l all
+rue discover -s
+rue config -f --user username
+rue register
+rue list
+rue on -l all
+rue off -l all
 ```
 
-See [Sample Usage (Implemented)](https://github.com/turnerba/rubyhue/wiki/Sample-Usage-(Implemented)) for more usage examples.
+See [Sample Usage (Implemented)](https://github.com/turnerba/rue/wiki/Sample-Usage-(Implemented)) for more usage examples.
 
 Development
 -----

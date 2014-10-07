@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in rubyhue.gemspec
+# Specify your gem's dependencies in rue.gemspec
 gemspec
