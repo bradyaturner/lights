@@ -1,4 +1,4 @@
-class Bridge
+class HueBridge
 
   attr_reader :id, :ip, :name, :mac
 

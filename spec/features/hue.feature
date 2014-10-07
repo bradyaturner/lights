@@ -1,26 +1,26 @@
-Feature: Rue
+Feature: Hue
 
   Scenario: No command
-    When I run `rue`
+    When I run `hue`
     Then the output should contain "Must specify a command."
   Scenario: List Default
-    When I run `rue list`
+    When I run `hue list`
     Then the output should contain "[1]"
 
   Scenario: List Hue bulbs
-    When I run `rue list lights`
+    When I run `hue list lights`
     Then the output should contain "[1]"
 
   Scenario: List Hue groups
-    When I run `rue list groups`
+    When I run `hue list groups`
     Then the output should contain "[1]"
 
   Scenario: List Hue sensors
-    When I run `rue list sensors`
+    When I run `hue list sensors`
     Then the output should contain "[1]"
 
 # This test is failing because OptionParser is casting the string as an integer (0)
 #  Scenario: Incorrect parameters to set
-#    When I run `rue set -l all -h test`
+#    When I run `hue set -l all -h test`
 #    Then the output should contain "incorrect"
 

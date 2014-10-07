@@ -1,9 +1,9 @@
-require 'rue'
+require 'rubyhue'
 
-describe Bulb do
+describe HueBulb do
   it "properly parse input parameters" do
     data = { "name" => "test name" }
-    bulb = Bulb.new(1,data)
+    bulb = HueBulb.new(1,data)
     bulb.name.should eql "test name"
   end
 
@@ -14,7 +14,7 @@ describe Bulb do
         "on" => true
       }
     }
-    bulb = Bulb.new(1,data)
+    bulb = HueBulb.new(1,data)
     bulb.state.on.should eql true
     bulb.state.data.should eql data["state"]
   end
@@ -26,7 +26,7 @@ describe Bulb do
         "on" => true
       }
     }
-    bulb = Bulb.new(1,data) 
+    bulb = HueBulb.new(1,data) 
     bulb.data.should eql data
   end
 end

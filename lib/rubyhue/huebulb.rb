@@ -1,6 +1,6 @@
-require 'rue/bulbstate'
+require 'rubyhue/huebulbstate'
 
-class Bulb
+class HueBulb
 
   attr_reader :id, :name, :type, :swversion,
               :state
@@ -10,7 +10,7 @@ class Bulb
     @name = data["name"]
     @type = data["type"]
     @swversion = data["type"]
-    @state = BulbState.new data["state"]
+    @state = HueBulbState.new data["state"]
   end
 
   def data

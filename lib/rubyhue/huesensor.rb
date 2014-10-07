@@ -1,4 +1,4 @@
-class SensorState
+class HueSensorState
   attr_reader :data, :last_updated
   def initialize(data)
     @data = data
@@ -6,7 +6,7 @@ class SensorState
   end
 end
 
-class TapState < SensorState
+class HueTapState < HueSensorState
   attr_reader :button_event
   def initialize(data)
     @button_event = data["button_event"]
@@ -14,7 +14,7 @@ class TapState < SensorState
   end
 end
 
-class Sensor 
+class HueSensor 
   attr_reader :id, :data, :name, :type, :model_id, :manufacturer_name, :unique_id, :sw_version, :state
   def initialize( id, data = {} )
     @id = id
@@ -25,7 +25,7 @@ class Sensor
     @manufacturer_name = data["manufacturername"]
     @unique_id = data["uniqueid"]
     @sw_version = data["swversion"]
-    @state = SensorState.new(data["state"])
-    #@config = SensorConfig.new(data["config"])
+    @state = HueSensorState.new(data["state"])
+    #@config = HueSensorConfig.new(data["config"])
   end
 end

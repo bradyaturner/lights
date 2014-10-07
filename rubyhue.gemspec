@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rue/version'
+require 'rubyhue/version'
 
 Gem::Specification.new do |s|
-  s.name          = 'rue'
-  s.version       = RueC::VERSION
+  s.name          = 'rubyhue'
+  s.version       = RubyHue::VERSION
   s.authors       = ["Brady Turner"]
   s.email         = 'bradyaturner@gmail.com'
   s.description   = "Client library and CLI for controlling Phillips Hue lights."
-  s.summary       = "rue"
-  s.homepage      = 'http://rubygems.org/gems/rue'
+  s.summary       = "rubyhue"
+  s.homepage      = 'http://rubygems.org/gems/rubyhue'
   s.license       = 'MIT'
   s.date          = '2014-08-17'
 

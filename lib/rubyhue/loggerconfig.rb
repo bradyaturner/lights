@@ -1,5 +1,5 @@
 require 'logger'
 
 module LoggerConfig
-  RUE_LEVEL = Logger::FATAL
+  HUE_LEVEL = Logger::FATAL
 end
