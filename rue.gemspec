@@ -5,7 +5,7 @@ require 'rue/version'
 
 Gem::Specification.new do |s|
   s.name          = 'rue'
-  s.version       = Rue::VERSION
+  s.version       = RueC::VERSION
   s.authors       = ["Brady Turner"]
   s.email         = 'bradyaturner@gmail.com'
   s.description   = "Client library and CLI for controlling Phillips Hue lights."

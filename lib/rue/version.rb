@@ -1,3 +1,3 @@
-module Rue
-  VERSION = "0.0.4"
+module RueC
+  VERSION = "0.8.0"
 end
