@@ -1,4 +1,4 @@
-class HueBulbState 
+class BulbState 
 
   MAX_CT = 500
   MIN_CT = 153
@@ -12,18 +12,18 @@ class HueBulbState
   MAX_XY = 1.0
   MIN_XY = 0.0
 
-  module HueEffect
+  module Effect
     NONE = "none"
     COLORLOOP = "colorloop"
   end
 
-  module HueAlert
+  module Alert
     NONE = "none"
     SELECT = "select"
     LSELECT = "lselect"
   end
 
-  module HueColorMode
+  module ColorMode
     HS = "hs"
     XY = "xy"
     CT = "ct"
@@ -50,32 +50,32 @@ class HueBulbState
  
   def color_mode=(value) set_color_mode(value) end
   def set_color_mode(value)
-    if value.nil? || value == HueColorMode::XY \
-        || value == HueColorMode::HS \
-        || value == HueColorMode::CT
+    if value.nil? || value == ColorMode::XY \
+        || value == ColorMode::HS \
+        || value == ColorMode::CT
       @color_mode = value
     else
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires 'hs', 'xy', or 'ct'"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires 'hs', 'xy', or 'ct'"
     end
   end
 
   def alert=(value) set_alert(value) end
   def set_alert(value)
-    if value.nil? || value == HueAlert::NONE \
-        || value == HueAlert::SELECT \
-        || value == HueAlert::LSELECT
+    if value.nil? || value == Alert::NONE \
+        || value == Alert::SELECT \
+        || value == Alert::LSELECT
       @alert = value
     else
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires 'none', 'select', or 'lselect'"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires 'none', 'select', or 'lselect'"
     end
   end
 
   def effect=(value) set_effect(value) end
   def set_effect(value)
-    if value.nil? || value == HueEffect::NONE || value == HueEffect::COLORLOOP
+    if value.nil? || value == Effect::NONE || value == Effect::COLORLOOP
       @effect = value
     else
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires 'none' or 'colorloop'"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires 'none' or 'colorloop'"
     end
   end
 
@@ -85,7 +85,7 @@ class HueBulbState
     if !!value == value
       @on = value
     else
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires boolean, got #{value.class}"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires boolean, got #{value.class}"
     end
   end
  
@@ -94,58 +94,58 @@ class HueBulbState
     if value.nil? || value.between?(MIN_BRI,MAX_BRI)
       @bri = value
     else
-      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_BRI},#{MAX_BRI}]"
+      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_BRI},#{MAX_BRI}]"
     end
   end 
 
   def ct=(value); set_ct(value) end
   def set_ct(value)
     if !value.nil? && (!value.is_a? Integer)
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
     elsif value.nil? || value.between?(MIN_CT,MAX_CT)
       @ct = value
     else
-      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_CT},#{MAX_CT}]"
+      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_CT},#{MAX_CT}]"
     end
   end
   
   def sat=(value); set_sat(value) end
   def set_sat(value)
     if !value.nil? && (!value.is_a? Integer)
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
     elsif value.nil? || value.between?(MIN_SAT,MAX_SAT)
       @sat = value
     else
-      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_SAT},#{MAX_SAT}]"
+      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_SAT},#{MAX_SAT}]"
     end
   end
  
   def hue=(value); set_hue(value) end
   def set_hue(value)
     if !value.nil? && (!value.is_a? Integer)
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
     elsif value.nil? || value.between?(MIN_HUE,MAX_HUE)
       @hue = value
     else
-      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"
+      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"
     end
   end
 
   def transition_time=(value); set_transition_time(value) end
   def set_transition_time(value)
     if !value.nil? && (!value.is_a? Numeric)
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires decimal, got #{value.class}"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires decimal, got #{value.class}"
     elsif value.nil? || value >= MIN_TRANSITION_TIME
       @transition_time = value
     else
-      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be > #{MIN_TRANSITION_TIME}"
+      raise BulbStateValueOutOfRangeException, "Value out of range. Must be > #{MIN_TRANSITION_TIME}"
     end
   end  
 
   def xy=(value); set_xy(value) end
   def set_xy(value)
     if !value.nil? && (!value.is_a? Array)
-      raise HueBulbStateValueTypeException, "Value has incorrect type. Requires array, got #{value.class}"
+      raise BulbStateValueTypeException, "Value has incorrect type. Requires array, got #{value.class}"
     elsif value.nil?
       return
     elsif value.length == 2 && value[0].to_f.is_a?(Numeric) \
@@ -156,7 +156,7 @@ class HueBulbState
       @xy[0] = value[0].to_f
       @xy[1] = value[1].to_f
     else
-      raise HueBulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_XY},#{MAX_XY}]"
+      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_XY},#{MAX_XY}]"
     end
   end
 
