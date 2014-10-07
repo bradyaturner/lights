@@ -128,7 +128,7 @@ class LightsCli
   end
 
   def on
-    on_off tlights
+    on_off true
   end
 
   def off
@@ -180,22 +180,22 @@ class LightsCli
         && !options[:effect] && !options[:alert] \
         && !options[:xy]
       puts "Must specify a state to set."
-      bad_args = tlights
+      bad_args = true
     end
     if !options[:lights]
       puts "Must specify which lights to control."
-      bad_args = tlights
+      bad_args = true
     end
     if (options[:hue] || options[:saturation]) \
         && options[:ct]
       puts "Cannot set both color temperature and hue/saturation."
-      bad_args = tlights
+      bad_args = true
     end
     exit 1 if bad_args    
    
     s = BulbState.new 
     if options[:on]
-      s.on = tlights
+      s.on = true
     elsif options[:off]
       s.on = false
     end
@@ -228,12 +228,12 @@ class LightsCli
   end
 
 private
-  def set_state(state,lights)
+  def set_state(state,bulbs)
     lights = Lights.new @config["bridge_ip"], @config["username"]
-    if lights.first == "all"
+    if bulbs.first == "all"
       lights.set_group_state 0,state
     else
-      lights.each { |l| lights.set_bulb_state(l,state) }
+      bulbs.each { |l| lights.set_bulb_state(l,state) }
     end 
   end
 
