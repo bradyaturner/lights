@@ -1,4 +1,4 @@
-require 'rue'
+require 'lights'
 
 describe Bulb do
   it "properly parse input parameters" do

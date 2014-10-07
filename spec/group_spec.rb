@@ -1,4 +1,4 @@
-require 'rue'
+require 'lights'
 
 describe Group do
   it "properly parses input parameters" do

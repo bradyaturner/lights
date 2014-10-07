@@ -4,18 +4,18 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-require 'rue/bulb.rb'
-require 'rue/group.rb'
-require 'rue/bridge.rb'
-require 'rue/exception.rb'
-require 'rue/sensor.rb'
-require 'rue/loggerconfig.rb'
+require 'lights/bulb.rb'
+require 'lights/group.rb'
+require 'lights/bridge.rb'
+require 'lights/exception.rb'
+require 'lights/sensor.rb'
+require 'lights/loggerconfig.rb'
 
 def jp( s )
   puts JSON.pretty_generate( s )
 end
 
-class Rue
+class Lights 
 
   attr_reader :bulbs
   def initialize(ip,username)
@@ -26,12 +26,12 @@ class Rue
     @groups = []
     @bridges = []
     @logger = Logger.new(STDERR)
-    @logger.level = LoggerConfig::RUE_LEVEL
+    @logger.level = LoggerConfig::LIGHTS_LEVEL
   end
 
   def discover_hubs
     http = Net::HTTP.new("www.meethue.com",443)
-    http.use_ssl = true
+    http.use_ssl = tlights
     request = Net::HTTP::Get.new( "/api/nupnp" )
     response = http.request request
     
@@ -46,7 +46,7 @@ class Rue
   end
 
   def register_username
-    data = { "devicetype"=>"rue",
+    data = { "devicetype"=>"lights",
               "username"=>@username }
     response = @http.post "/api", data.to_json
     result = JSON.parse(response.body).first

@@ -1,4 +1,4 @@
-require 'rue'
+require 'lights'
 
 describe BulbState do
 

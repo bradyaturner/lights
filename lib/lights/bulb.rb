@@ -1,4 +1,4 @@
-require 'rue/bulbstate'
+require 'lights/bulbstate'
 
 class Bulb
 

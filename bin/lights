@@ -1,16 +1,16 @@
 #!/usr/bin/env ruby
 
-require 'rue'
+require 'lights'
 require 'optparse'
 
-RUE_CONFIG_PATH = "#{ENV["HOME"]}/.rueconfig"
+LIGHTS_CONFIG_PATH = "#{ENV["HOME"]}/.lightsconfig"
 
-class RueCli
+class LightsCli
 
   def initialize
     @config = {}
-    if File.exists? RUE_CONFIG_PATH
-      @config = JSON.parse( IO.read( RUE_CONFIG_PATH ) )
+    if File.exists? LIGHTS_CONFIG_PATH
+      @config = JSON.parse( IO.read( LIGHTS_CONFIG_PATH ) )
     end
   end
 
@@ -43,14 +43,14 @@ class RueCli
     if options[:list]
       @config.each { |k,v| puts "#{k}: #{v}" }
     else
-      if !options[:force] && File.exists?(RUE_CONFIG_PATH)
+      if !options[:force] && File.exists?(LIGHTS_CONFIG_PATH)
         overwrite = ""
         while overwrite[0] != "y" \
                 && overwrite[0] != "Y" \
                 && overwrite[0] != "n" \
                 && overwrite[0] != "N" \
                 && overwrite[0] != "\n"
-          print "Rue config already exists. Overwrite? [Y/n]: "
+          print "Lights config already exists. Overwrite? [Y/n]: "
           overwrite = STDIN.gets
         end
         overwrite.upcase!
@@ -68,31 +68,31 @@ class RueCli
   end
   
   def list
-    rue = Rue.new @config["bridge_ip"], @config["username"]
+    lights = Lights.new @config["bridge_ip"], @config["username"]
     if !ARGV[0] || ARGV[0] == "lights"
-      bulbs_response = rue.request_bulb_list
+      bulbs_response = lights.request_bulb_list
       bulbs_response.each do |id,value|
-        bulb = rue.request_bulb_info( id )
+        bulb = lights.request_bulb_info( id )
         puts "[#{id}] #{bulb.name}"
       end
     elsif ARGV[0] == "sensors"
-      sensors_response = rue.request_sensor_list
+      sensors_response = lights.request_sensor_list
       sensors_response.each do |id,value|
-        sensor = rue.request_sensor_info( id )
+        sensor = lights.request_sensor_info( id )
         puts "[#{id}] #{sensor.name}"
       end
     elsif ARGV[0] == "groups"
-      groups_response = rue.request_group_list
+      groups_response = lights.request_group_list
       groups_response.each do |id,value|
-        group = rue.request_group_info( id )
+        group = lights.request_group_info( id )
         puts "[#{id}] #{group.name} (#{group.lights.join(',')})"
       end
     end
   end
   
   def register
-    rue = Rue.new @config["bridge_ip"], @config["username"]
-    response = rue.register_username
+    lights = Lights.new @config["bridge_ip"], @config["username"]
+    response = lights.register_username
   end
 
   def discover 
@@ -103,8 +103,8 @@ class RueCli
       end
     end.parse!
 
-    rue = Rue.new @config["bridge_ip"], @config["username"]
-    bridges = rue.discover_hubs
+    lights = Lights.new @config["bridge_ip"], @config["username"]
+    bridges = lights.discover_hubs
     bridges.each_with_index { |b,i| puts "[#{i+1}] #{b.name}: #{b.ip}" }
 
     if options[:save] && bridges.length >= 1
@@ -128,7 +128,7 @@ class RueCli
   end
 
   def on
-    on_off true
+    on_off tlights
   end
 
   def off
@@ -180,22 +180,22 @@ class RueCli
         && !options[:effect] && !options[:alert] \
         && !options[:xy]
       puts "Must specify a state to set."
-      bad_args = true
+      bad_args = tlights
     end
     if !options[:lights]
       puts "Must specify which lights to control."
-      bad_args = true
+      bad_args = tlights
     end
     if (options[:hue] || options[:saturation]) \
         && options[:ct]
       puts "Cannot set both color temperature and hue/saturation."
-      bad_args = true
+      bad_args = tlights
     end
     exit 1 if bad_args    
    
     s = BulbState.new 
     if options[:on]
-      s.on = true
+      s.on = tlights
     elsif options[:off]
       s.on = false
     end
@@ -229,16 +229,16 @@ class RueCli
 
 private
   def set_state(state,lights)
-    rue = Rue.new @config["bridge_ip"], @config["username"]
+    lights = Lights.new @config["bridge_ip"], @config["username"]
     if lights.first == "all"
-      rue.set_group_state 0,state
+      lights.set_group_state 0,state
     else
-      lights.each { |l| rue.set_bulb_state(l,state) }
+      lights.each { |l| lights.set_bulb_state(l,state) }
     end 
   end
 
   def write_config
-    File.open(RUE_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
+    File.open(LIGHTS_CONFIG_PATH,"w+") { |file| file.write(@config.to_json) }
   end
 
   def on_off(is_on)
@@ -267,14 +267,14 @@ if !ARGV[0]
 end
 
 begin
-  cli = RueCli.new
+  cli = LightsCli.new
   command = ARGV.shift
   if command == "config"
     cli.config
   elsif command == "discover"
     cli.discover
   elsif !cli.configured?
-    puts "Please run 'rue config' before using."
+    puts "Please run 'lights config' before using."
   elsif command == "list"
     cli.list
   elsif command == "register"

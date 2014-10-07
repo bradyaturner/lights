@@ -1,4 +1,4 @@
-require 'rue'
+require 'lights'
 
 describe Bridge do
   it "properly parse input parameters" do
