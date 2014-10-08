@@ -4,18 +4,18 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-require 'rubyhue/huebulb.rb'
-require 'rubyhue/huegroup.rb'
-require 'rubyhue/huebridge.rb'
-require 'rubyhue/hueexception.rb'
-require 'rubyhue/huesensor.rb'
-require 'rubyhue/loggerconfig.rb'
+require 'lights/bulb.rb'
+require 'lights/group.rb'
+require 'lights/bridge.rb'
+require 'lights/exception.rb'
+require 'lights/sensor.rb'
+require 'lights/loggerconfig.rb'
 
 def jp( s )
   puts JSON.pretty_generate( s )
 end
 
-class Hue
+class Lights 
 
   attr_reader :bulbs
   def initialize(ip,username)
@@ -26,19 +26,19 @@ class Hue
     @groups = []
     @bridges = []
     @logger = Logger.new(STDERR)
-    @logger.level = LoggerConfig::HUE_LEVEL
+    @logger.level = LoggerConfig::LIGHTS_LEVEL
   end
 
   def discover_hubs
     http = Net::HTTP.new("www.meethue.com",443)
-    http.use_ssl = true
+    http.use_ssl = tlights
     request = Net::HTTP::Get.new( "/api/nupnp" )
     response = http.request request
     
     case response.code.to_i
     when 200
       result = JSON.parse( response.body )
-      result.each { |b| @bridges << HueBridge.new(b) } 
+      result.each { |b| @bridges << Bridge.new(b) } 
     else
       raise "Unknown error" 
     end
@@ -46,7 +46,7 @@ class Hue
   end
 
   def register_username
-    data = { "devicetype"=>"rubyhue",
+    data = { "devicetype"=>"lights",
               "username"=>@username }
     response = @http.post "/api", data.to_json
     result = JSON.parse(response.body).first
@@ -56,50 +56,50 @@ class Hue
   end
 
   def request_config
-    hue_get "config"
+    get "config"
   end
 
   def add_bulb(id,bulb_data)
-    @bulbs << HueBulb.new( id, bulb_data )
+    @bulbs << Bulb.new( id, bulb_data )
   end
 
   def request_bulb_list
-    hue_get "lights"
+    get "lights"
   end
 
   def request_bulb_info( id )
-    response = hue_get "lights/#{id}"
-    HueBulb.new(id,response)
+    response = get "lights/#{id}"
+    Bulb.new(id,response)
   end
 
   def request_group_info( id )
-    response = hue_get "groups/#{id}"
-    HueGroup.new(id,response)
+    response = get "groups/#{id}"
+    Group.new(id,response)
   end
 
   def request_sensor_info( id )
-    response = hue_get("sensors/#{id}")
-    HueSensor.new(id,response)
+    response = get("sensors/#{id}")
+    Sensor.new(id,response)
   end
 
   def request_sensor_list
-    hue_get "sensors"
+    get "sensors"
   end
 
   def request_group_list
-    hue_get "groups"
+    get "groups"
   end
 
   def request_schedule_list
-    hue_get "schedules"
+    get "schedules"
   end
 
   def set_bulb_state( id, state )
-    hue_put "lights/#{id}/state", state
+    put "lights/#{id}/state", state
   end
 
   def set_group_state( id, state )
-    hue_put "groups/#{id}/action", state
+    put "groups/#{id}/action", state
   end
 
 private
@@ -108,15 +108,15 @@ private
     type = result["error"]["type"]
     case type
     when 1
-      raise HueUsernameException
+      raise UsernameException
     when 101
-      raise HueBridgeConnectException
+      raise BridgeConnectException
     else
       puts "Unknown Error."
     end
   end
 
-  def hue_get( path )
+  def get( path )
     @logger.debug "==> GET: #{path}"
     request = Net::HTTP::Get.new( "/api/#{@username}/#{path}" )
     response = @http.request request
@@ -129,19 +129,10 @@ private
     result
   end
 
-  def hue_put( path, data )
+  def put( path, data )
     @logger.debug "==> PUT: #{path}"
     @logger.debug data.to_json 
     response = @http.put( "/api/#{@username}/#{path}", data.to_json )
-    @logger.debug "<== #{response.code}"
-    @logger.debug response.body
-    JSON.parse response.body
-  end
-
-  def hue_post(path, data)
-    @logger.debug "==> POST: #{path}"
-    @logger.debug data.to_json
-    response = @http.post("/api/#{@username}/#{path}", data.to_json)
     @logger.debug "<== #{response.code}"
     @logger.debug response.body
     JSON.parse response.body
