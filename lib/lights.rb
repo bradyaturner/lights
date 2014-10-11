@@ -9,6 +9,7 @@ require 'lights/group.rb'
 require 'lights/bridge.rb'
 require 'lights/exception.rb'
 require 'lights/sensor.rb'
+require 'lights/scene'
 require 'lights/loggerconfig.rb'
 
 def jp( s )

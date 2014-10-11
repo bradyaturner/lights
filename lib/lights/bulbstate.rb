@@ -148,8 +148,8 @@ class BulbState
       raise BulbStateValueTypeException, "Value has incorrect type. Requires array, got #{value.class}"
     elsif value.nil?
       return
-    elsif value.length == 2 && value[0].to_f.is_a?(Numeric) \
-            && value[1].to_f.is_a?(Numeric) &&  value[0].to_f >= MIN_XY \
+    elsif value.length == 2 && value[0].is_a?(Numeric) \
+            && value[1].is_a?(Numeric) &&  value[0].to_f >= MIN_XY \
             && value[0].to_f <= MAX_XY && value[1].to_f >= MIN_XY \
             && value[1].to_f <= MAX_XY
       @xy = []
