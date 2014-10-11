@@ -139,6 +139,28 @@ class LightsCli
       scenes.each do |s| 
         puts s.id.ljust(c1w) + s.name.ljust(c2w) + s.lights.join(',').ljust(c3w)
       end
+    elsif ARGV[0] == "users"
+      config_response = hue.request_config
+      
+      users = []
+      config_response["whitelist"].each do |id,value| 
+        users << User.new(id,value)
+      end
+
+      c1w = users.collect{|u|u.id.to_s}.group_by(&:size).max.first + 2
+      c2w = users.collect{|u|u.name.to_s}.group_by(&:size).max.first + 2
+      c3w = users.collect{|u|u.create_date.to_s}.group_by(&:size).max.first + 2
+      c4w = users.collect{|u|u.last_use_date.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+      c3w = 15 if c3w < 15
+      c4w = 15 if c4w < 15
+
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "CREATE DATE".ljust(c3w) + "LAST USE DATE".ljust(c4w)
+      puts "=" * (c1w+c2w+c3w+c4w)
+      users.each do |u| 
+        puts u.id.ljust(c1w) + u.name.ljust(c2w) + u.create_date.ljust(c3w) + u.last_use_date.ljust(c4w)
+      end
     end
   end
   
