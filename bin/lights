@@ -68,31 +68,76 @@ class LightsCli
   end
   
   def list
-    lights = Lights.new @config["bridge_ip"], @config["username"]
+    hue = Lights.new @config["bridge_ip"], @config["username"]
     if !ARGV[0] || ARGV[0] == "lights"
-      bulbs_response = lights.request_bulb_list
+      bulbs_response = hue.request_bulb_list
+      bulbs = []
       bulbs_response.each do |id,value|
-        bulb = lights.request_bulb_info( id )
-        puts "[#{id}] #{bulb.name}"
+        bulbs << hue.request_bulb_info( id )
+      end
+      c1w = bulbs.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
+      c2w = bulbs.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w)
+      puts "=" * (c1w+c2w)
+      bulbs.each do |b| 
+        puts b.id.ljust(c1w) + b.name.ljust(c2w)
       end
     elsif ARGV[0] == "sensors"
-      sensors_response = lights.request_sensor_list
+      sensors_response = hue.request_sensor_list
+      sensors = []
       sensors_response.each do |id,value|
-        sensor = lights.request_sensor_info( id )
-        puts "[#{id}] #{sensor.name}"
+        sensors << hue.request_sensor_info( id )
+      end
+      c1w = sensors.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
+      c2w = sensors.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w)
+      puts "=" * (c1w+c2w)
+      sensors.each do |s| 
+        puts s.id.ljust(c1w) + s.name.ljust(c2w)
       end
     elsif ARGV[0] == "groups"
-      groups_response = lights.request_group_list
+      groups_response = hue.request_group_list
+      groups = []
       groups_response.each do |id,value|
-        group = lights.request_group_info( id )
-        puts "[#{id}] #{group.name} (#{group.lights.join(',')})"
+        groups << hue.request_group_info( id )
+      end
+
+      c1w = groups.collect{|g|g.id.to_s}.group_by(&:size).max.first + 2
+      c2w = groups.collect{|g|g.name.to_s}.group_by(&:size).max.first + 2
+      c3w = groups.collect{|g|g.lights.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+      c3w = 8 if c3w < 8
+
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
+      puts "=" * (c1w+c2w+c3w)
+      groups.each do |g| 
+        puts g.id.ljust(c1w) + g.name.ljust(c2w) + g.lights.join(',').ljust(c3w)
       end
     elsif ARGV[0] == "scenes"
-      scenes_response = lights.request_scene_list
-      jp scenes_response
-      scenes_response.each do |id,value|
-        scene = Scene.new(id,value)
-        puts "[#{id}] #{scene.name} (#{scene.lights.join(',')})"
+      scenes_response = hue.request_scene_list
+      scenes = []
+      scenes_response.each do |id,value| 
+        scenes << Scene.new(id,value)
+      end
+
+      c1w = scenes.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
+      c2w = scenes.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
+      c3w = scenes.collect{|s|s.lights.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+      c3w = 8 if c3w < 8
+
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
+      puts "=" * (c1w+c2w+c3w)
+      scenes.each do |s| 
+        puts s.id.ljust(c1w) + s.name.ljust(c2w) + s.lights.join(',').ljust(c3w)
       end
     end
   end
