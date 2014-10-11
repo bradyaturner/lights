@@ -89,10 +89,19 @@ class LightsCli
       end
     elsif ARGV[0] == "scenes"
       scenes_response = lights.request_scene_list
-      jp scenes_response
-      scenes_response.each do |id,value|
-        scene = Scene.new(id,value)
-        puts "[#{id}] #{scene.name} (#{scene.lights.join(',')})"
+      scenes = []
+      scenes_response.each do |id,value| 
+        scenes << Scene.new(id,value)
+      end
+
+      c1w = scenes.collect{|s|s.id.to_s}.group_by(&:size).max.first
+      c2w = scenes.collect{|s|s.name.to_s}.group_by(&:size).max.first
+      c3w = scenes.collect{|s|s.lights.to_s}.group_by(&:size).max.first
+
+      puts "ID".ljust(c1w) + "\tNAME".ljust(c2w) + "\t\tLIGHTS".ljust(c3w)
+      puts "=" * (c1w+c2w+c3w+6)
+      scenes.each do |s| 
+        puts s.id.ljust(c1w) + "\t" + s.name.ljust(c2w) + "\t" + s.lights.join(',').ljust(c3w)
       end
     end
   end
