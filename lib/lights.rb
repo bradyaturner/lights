@@ -4,13 +4,14 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-require 'lights/bulb.rb'
-require 'lights/group.rb'
-require 'lights/bridge.rb'
-require 'lights/exception.rb'
-require 'lights/sensor.rb'
+require 'lights/bulb'
+require 'lights/group'
+require 'lights/bridge'
+require 'lights/exception'
+require 'lights/sensor'
 require 'lights/scene'
-require 'lights/loggerconfig.rb'
+require 'lights/user'
+require 'lights/loggerconfig'
 
 def jp( s )
   puts JSON.pretty_generate( s )
@@ -97,6 +98,10 @@ class Lights
 
   def request_scene_list
     get "scenes"
+  end
+  
+  def request_config
+    get "config"
   end
 
   def set_bulb_state( id, state )

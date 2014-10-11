@@ -24,6 +24,10 @@ Feature: Lights
     When I run `lights list scenes`
     Then the output should contain "ID"
 
+  Scenario: List registered users
+    When I run `lights list users`
+    Then the output should contain "ID"
+
 # This test is failing because OptionParser is casting the string as an integer (0)
 #  Scenario: Incorrect parameters to set
 #    When I run `lights set -l all -h test`
