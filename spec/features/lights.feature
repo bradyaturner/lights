@@ -18,7 +18,7 @@ Feature: Lights
 
   Scenario: List Hue sensors
     When I run `lights list sensors`
-    Then the output should contain "[1]"
+    Then the output should contain "ID"
 
   Scenario: List Hue scenes
     When I run `lights list scenes`

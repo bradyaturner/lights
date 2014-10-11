@@ -81,15 +81,25 @@ class LightsCli
       c2w = 6 if c2w < 6
 
       puts "ID".ljust(c1w) + "NAME".ljust(c2w)
-      puts "=" * (c1w+c2w+4)
+      puts "=" * (c1w+c2w)
       bulbs.each do |b| 
         puts b.id.ljust(c1w) + b.name.ljust(c2w)
       end
     elsif ARGV[0] == "sensors"
       sensors_response = hue.request_sensor_list
+      sensors = []
       sensors_response.each do |id,value|
-        sensor = hue.request_sensor_info( id )
-        puts "[#{id}] #{sensor.name}"
+        sensors << hue.request_sensor_info( id )
+      end
+      c1w = sensors.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
+      c2w = sensors.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w)
+      puts "=" * (c1w+c2w)
+      sensors.each do |s| 
+        puts s.id.ljust(c1w) + s.name.ljust(c2w)
       end
     elsif ARGV[0] == "groups"
       groups_response = hue.request_group_list
@@ -106,7 +116,7 @@ class LightsCli
       c3w = 8 if c3w < 8
 
       puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
-      puts "=" * (c1w+c2w+c3w+6)
+      puts "=" * (c1w+c2w+c3w)
       groups.each do |g| 
         puts g.id.ljust(c1w) + g.name.ljust(c2w) + g.lights.join(',').ljust(c3w)
       end
@@ -125,7 +135,7 @@ class LightsCli
       c3w = 8 if c3w < 8
 
       puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
-      puts "=" * (c1w+c2w+c3w+6)
+      puts "=" * (c1w+c2w+c3w)
       scenes.each do |s| 
         puts s.id.ljust(c1w) + s.name.ljust(c2w) + s.lights.join(',').ljust(c3w)
       end
