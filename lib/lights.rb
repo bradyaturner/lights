@@ -9,6 +9,7 @@ require 'lights/group.rb'
 require 'lights/bridge.rb'
 require 'lights/exception.rb'
 require 'lights/sensor.rb'
+require 'lights/scene'
 require 'lights/loggerconfig.rb'
 
 def jp( s )
@@ -78,7 +79,7 @@ class Lights
   end
 
   def request_sensor_info( id )
-    response = get("sensors/#{id}")
+    response = get "sensors/#{id}"
     Sensor.new(id,response)
   end
 
@@ -92,6 +93,10 @@ class Lights
 
   def request_schedule_list
     get "schedules"
+  end
+
+  def request_scene_list
+    get "scenes"
   end
 
   def set_bulb_state( id, state )

@@ -87,6 +87,13 @@ class LightsCli
         group = lights.request_group_info( id )
         puts "[#{id}] #{group.name} (#{group.lights.join(',')})"
       end
+    elsif ARGV[0] == "scenes"
+      scenes_response = lights.request_scene_list
+      jp scenes_response
+      scenes_response.each do |id,value|
+        scene = Scene.new(id,value)
+        puts "[#{id}] #{scene.name} (#{scene.lights.join(',')})"
+      end
     end
   end
   
