@@ -2,7 +2,7 @@ lights
 ========
 A Ruby library & CLI for controlling Phillips Hue lightbulbs.
 
-Phillips Hue API Documentation: http://developers.meethue.com/index.html
+Phillips Hue API Documentation: http://www.developers.meethue.com/philips-hue-api
 
 Installation
 ----
