@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version       = LightsConst::VERSION
   s.authors       = ["Brady Turner"]
   s.email         = 'bradyaturner@gmail.com'
-  s.description   = "Client library and CLI for controlling Phillips Hue lights."
+  s.description   = "Client library and CLI for controlling Philips Hue lights."
   s.summary       = "lights"
   s.homepage      = 'http://rubygems.org/gems/lights'
   s.license       = 'MIT'
