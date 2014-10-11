@@ -79,7 +79,7 @@ class Lights
   end
 
   def request_sensor_info( id )
-    response = get("sensors/#{id}")
+    response = get "sensors/#{id}"
     Sensor.new(id,response)
   end
 
@@ -93,6 +93,10 @@ class Lights
 
   def request_schedule_list
     get "schedules"
+  end
+
+  def request_scene_list
+    get "scenes"
   end
 
   def set_bulb_state( id, state )
