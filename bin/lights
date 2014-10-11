@@ -83,9 +83,19 @@ class LightsCli
       end
     elsif ARGV[0] == "groups"
       groups_response = lights.request_group_list
+      groups = []
       groups_response.each do |id,value|
-        group = lights.request_group_info( id )
-        puts "[#{id}] #{group.name} (#{group.lights.join(',')})"
+        groups << lights.request_group_info( id )
+      end
+
+      c1w = groups.collect{|g|g.id.to_s}.group_by(&:size).max.first + 2
+      c2w = groups.collect{|g|g.name.to_s}.group_by(&:size).max.first + 2
+      c3w = groups.collect{|g|g.lights.to_s}.group_by(&:size).max.first + 2
+
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
+      puts "=" * (c1w+c2w+c3w+6)
+      groups.each do |g| 
+        puts g.id.ljust(c1w) + g.name.ljust(c2w) + g.lights.join(',').ljust(c3w)
       end
     elsif ARGV[0] == "scenes"
       scenes_response = lights.request_scene_list
@@ -94,14 +104,14 @@ class LightsCli
         scenes << Scene.new(id,value)
       end
 
-      c1w = scenes.collect{|s|s.id.to_s}.group_by(&:size).max.first
-      c2w = scenes.collect{|s|s.name.to_s}.group_by(&:size).max.first
-      c3w = scenes.collect{|s|s.lights.to_s}.group_by(&:size).max.first
+      c1w = scenes.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
+      c2w = scenes.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
+      c3w = scenes.collect{|s|s.lights.to_s}.group_by(&:size).max.first + 2
 
-      puts "ID".ljust(c1w) + "\tNAME".ljust(c2w) + "\t\tLIGHTS".ljust(c3w)
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
       puts "=" * (c1w+c2w+c3w+6)
       scenes.each do |s| 
-        puts s.id.ljust(c1w) + "\t" + s.name.ljust(c2w) + "\t" + s.lights.join(',').ljust(c3w)
+        puts s.id.ljust(c1w) + s.name.ljust(c2w) + s.lights.join(',').ljust(c3w)
       end
     end
   end
