@@ -68,29 +68,42 @@ class LightsCli
   end
   
   def list
-    lights = Lights.new @config["bridge_ip"], @config["username"]
+    hue = Lights.new @config["bridge_ip"], @config["username"]
     if !ARGV[0] || ARGV[0] == "lights"
-      bulbs_response = lights.request_bulb_list
+      bulbs_response = hue.request_bulb_list
+      bulbs = []
       bulbs_response.each do |id,value|
-        bulb = lights.request_bulb_info( id )
-        puts "[#{id}] #{bulb.name}"
+        bulbs << hue.request_bulb_info( id )
+      end
+      c1w = bulbs.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
+      c2w = bulbs.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w)
+      puts "=" * (c1w+c2w+4)
+      bulbs.each do |b| 
+        puts b.id.ljust(c1w) + b.name.ljust(c2w)
       end
     elsif ARGV[0] == "sensors"
-      sensors_response = lights.request_sensor_list
+      sensors_response = hue.request_sensor_list
       sensors_response.each do |id,value|
-        sensor = lights.request_sensor_info( id )
+        sensor = hue.request_sensor_info( id )
         puts "[#{id}] #{sensor.name}"
       end
     elsif ARGV[0] == "groups"
-      groups_response = lights.request_group_list
+      groups_response = hue.request_group_list
       groups = []
       groups_response.each do |id,value|
-        groups << lights.request_group_info( id )
+        groups << hue.request_group_info( id )
       end
 
       c1w = groups.collect{|g|g.id.to_s}.group_by(&:size).max.first + 2
       c2w = groups.collect{|g|g.name.to_s}.group_by(&:size).max.first + 2
       c3w = groups.collect{|g|g.lights.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+      c3w = 8 if c3w < 8
 
       puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
       puts "=" * (c1w+c2w+c3w+6)
@@ -98,7 +111,7 @@ class LightsCli
         puts g.id.ljust(c1w) + g.name.ljust(c2w) + g.lights.join(',').ljust(c3w)
       end
     elsif ARGV[0] == "scenes"
-      scenes_response = lights.request_scene_list
+      scenes_response = hue.request_scene_list
       scenes = []
       scenes_response.each do |id,value| 
         scenes << Scene.new(id,value)
@@ -107,6 +120,9 @@ class LightsCli
       c1w = scenes.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
       c2w = scenes.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
       c3w = scenes.collect{|s|s.lights.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+      c3w = 8 if c3w < 8
 
       puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
       puts "=" * (c1w+c2w+c3w+6)

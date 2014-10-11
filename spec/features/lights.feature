@@ -6,11 +6,11 @@ Feature: Lights
 
   Scenario: List Default
     When I run `lights list`
-    Then the output should contain "[1]"
+    Then the output should contain "ID"
 
-  Scenario: List Hue bulbs
+  Scenario: List Hue lights
     When I run `lights list lights`
-    Then the output should contain "[1]"
+    Then the output should contain "ID"
 
   Scenario: List Hue groups
     When I run `lights list groups`
