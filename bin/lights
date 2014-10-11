@@ -220,6 +220,9 @@ class LightsCli
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
         options[:lights] = l
       end
+      opts.on("-g", "--groups 1,2,...N", Array, "Which groups to control") do |g|
+        options[:groups] = g
+      end
       opts.on("-d", "--duration seconds", OptionParser::DecimalInteger, "Transition duration in seconds") do |d|
         options[:duration] = d
       end
@@ -234,8 +237,8 @@ class LightsCli
       puts "Must specify a state to set."
       bad_args = true
     end
-    if !options[:lights]
-      puts "Must specify which lights to control."
+    if !options[:lights] && !options[:groups]
+      puts "Must specify which lights/groups to control."
       bad_args = true
     end
     if (options[:hue] || options[:saturation]) \
@@ -275,18 +278,27 @@ class LightsCli
     if options[:xy]
       s.xy = options[:xy]
     end
-    set_state(s,options[:lights])
-    
+
+    if options[:lights]
+    set_bulb_state(s,options[:lights])
+    elsif options[:groups]
+      set_group_state(s,options[:groups])
+    end
   end
 
 private
-  def set_state(state,bulbs)
+  def set_bulb_state(state,bulbs)
     lights = Lights.new @config["bridge_ip"], @config["username"]
     if bulbs.first == "all"
       lights.set_group_state 0,state
     else
       bulbs.each { |l| lights.set_bulb_state(l,state) }
     end 
+  end
+  
+  def set_group_state(state,groups)
+    hue = Lights.new @config["bridge_ip"], @config["username"]
+    groups.each { |g| hue.set_group_state(g,state) }
   end
 
   def write_config
@@ -308,7 +320,7 @@ private
 
     s = BulbState.new
     s.on = is_on
-    set_state s, options[:lights]
+    set_bulb_state s, options[:lights]
   end
 end
 
