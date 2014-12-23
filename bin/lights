@@ -102,6 +102,32 @@ class LightsCli
       STDERR.puts "Don't know how to create type \"#{type}\"."
     end
   end
+
+  def delete
+    type = ARGV.shift
+    hue = Lights.new @config["bridge_ip"], @config["username"]
+    options = {}
+
+    case type
+    when "group"
+      OptionParser.new do |opts|
+        opts.on("-i", "--id <id>", String, "Group ID to delete") do |i|
+          options[:id] = i
+        end
+      end.parse!
+
+      if !options[:id]
+        puts "Must specify group id."
+        exit 1
+      end
+
+      hue.delete_group(options[:id])
+    when nil
+      STDERR.puts "Must specify a type to delete."
+    else
+      STDERR.puts "Don't know how to delete type \"#{type}\"."
+    end
+  end
  
   def list
     hue = Lights.new @config["bridge_ip"], @config["username"]
@@ -384,7 +410,7 @@ end
 
   
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (config, list, register, discover, on, off, set)"
+  STDERR.puts "Must specify a command. (config, list, register, discover, on, off, set, create, delete)"
   exit 1
 end
 
@@ -409,6 +435,8 @@ begin
     cli.set
   elsif command == "create"
     cli.create
+  elsif command == "delete"
+    cli.delete
   else
     puts "Cannot find command #{command}."
   end
