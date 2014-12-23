@@ -66,7 +66,69 @@ class LightsCli
       puts "Configuration settings saved."
     end
   end
-  
+ 
+  def create
+    type = ARGV.shift
+    hue = Lights.new @config["bridge_ip"], @config["username"]
+    options = {}    
+
+    case type
+    when "group"
+      OptionParser.new do |opts|
+        opts.on("-l", "--lights 1,2,...N", Array, "Which lights to put in group") do |l|
+          options[:lights] = l
+        end
+        opts.on("-n", "--name <name>", String, "Set group name") do |n|
+          options[:name] = n
+        end
+      end.parse!
+      
+      if !options[:lights]
+        puts "Must specify which lights to group."
+        exit 1
+      end
+      if !options[:name]
+        puts "Must specify group name."
+        exit 1
+      end
+
+      group = Group.new
+      group.name = options[:name]
+      group.lights = options[:lights] 
+      hue.create_group(group)   
+    when nil
+      STDERR.puts "Must specify a type to create."
+    else
+      STDERR.puts "Don't know how to create type \"#{type}\"."
+    end
+  end
+
+  def delete
+    type = ARGV.shift
+    hue = Lights.new @config["bridge_ip"], @config["username"]
+    options = {}
+
+    case type
+    when "group"
+      OptionParser.new do |opts|
+        opts.on("-i", "--id <id>", String, "Group ID to delete") do |i|
+          options[:id] = i
+        end
+      end.parse!
+
+      if !options[:id]
+        puts "Must specify group id."
+        exit 1
+      end
+
+      hue.delete_group(options[:id])
+    when nil
+      STDERR.puts "Must specify a type to delete."
+    else
+      STDERR.puts "Don't know how to delete type \"#{type}\"."
+    end
+  end
+ 
   def list
     hue = Lights.new @config["bridge_ip"], @config["username"]
     if !ARGV[0] || ARGV[0] == "lights"
@@ -348,7 +410,7 @@ end
 
   
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (config, list, register, discover, on, off, set)"
+  STDERR.puts "Must specify a command. (config, list, register, discover, on, off, set, create, delete)"
   exit 1
 end
 
@@ -371,6 +433,10 @@ begin
     cli.off
   elsif command == "set"
     cli.set
+  elsif command == "create"
+    cli.create
+  elsif command == "delete"
+    cli.delete
   else
     puts "Cannot find command #{command}."
   end

@@ -112,6 +112,13 @@ class Lights
     put "groups/#{id}/action", state
   end
 
+  def create_group( group )
+    post "groups", group
+  end
+
+  def delete_group( id )
+    delete "groups/#{id}"
+  end
 private
 
   def process_error(result)
@@ -143,6 +150,24 @@ private
     @logger.debug "==> PUT: #{path}"
     @logger.debug data.to_json 
     response = @http.put( "/api/#{@username}/#{path}", data.to_json )
+    @logger.debug "<== #{response.code}"
+    @logger.debug response.body
+    JSON.parse response.body
+  end
+
+  def post( path, data )
+    @logger.debug "==> POST: #{path}"
+    @logger.debug data.to_json
+    response = @http.post( "/api/#{@username}/#{path}", data.to_json )
+    @logger.debug "<== #{response.code}"
+    @logger.debug response.body
+    JSON.parse response.body
+  end
+
+  def delete( path )
+    @logger.debug "==> DELETE: #{path}"
+    request = Net::HTTP::Delete.new( "/api/#{@username}/#{path}" )
+    response = @http.request request
     @logger.debug "<== #{response.code}"
     @logger.debug response.body
     JSON.parse response.body
