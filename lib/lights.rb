@@ -112,6 +112,10 @@ class Lights
     put "groups/#{id}/action", state
   end
 
+  def create_group( group )
+    post "groups", group
+  end
+
 private
 
   def process_error(result)
@@ -148,5 +152,13 @@ private
     JSON.parse response.body
   end
 
+  def post( path, data )
+    @logger.debug "==> POST: #{path}"
+    @logger.debug data.to_json
+    response = @http.post( "/api/#{@username}/#{path}", data.to_json )
+    @logger.debug "<== #{response.code}"
+    @logger.debug response.body
+    JSON.parse response.body
+  end
 end
 
