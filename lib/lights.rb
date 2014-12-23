@@ -116,6 +116,9 @@ class Lights
     post "groups", group
   end
 
+  def delete_group( id )
+    delete "groups/#{id}"
+  end
 private
 
   def process_error(result)
@@ -160,5 +163,15 @@ private
     @logger.debug response.body
     JSON.parse response.body
   end
+
+  def delete( path )
+    @logger.debug "==> DELETE: #{path}"
+    request = Net::HTTP::Delete.new( "/api/#{@username}/#{path}" )
+    response = @http.request request
+    @logger.debug "<== #{response.code}"
+    @logger.debug response.body
+    JSON.parse response.body
+  end
+
 end
 
