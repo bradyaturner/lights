@@ -180,6 +180,11 @@ class LightsCli
       response.each {|id,value| objects << Rule.new(id,value)}
       titles = ["ID","NAME"]
       methods = [:id,:name]
+    when "schedules"
+      response = hue.request_schedules
+      response.each {|id,value| objects << Schedule.new(id,value)}
+      titles = ["ID","NAME","TIME","SCENE","STATUS"]
+      methods = [:id,:name,:time,:scene,:status]
     when "datastore"
       response = hue.request_datastore
       response["lights"].each {|id,value| objects << Bulb.new(id,value)}
@@ -187,7 +192,7 @@ class LightsCli
       response["config"]["whitelist"].each {|id,value| objects << User.new(id,value)}
       response["rules"].each {|id,value| objects << Rule.new(id,value)}
       response["scenes"].each {|id,value| objects << Scene.new(id,value)}
-      response["schedules"].each {|id,value| objects << Bulb.new(id,value)}
+      response["schedules"].each {|id,value| objects << Schedule.new(id,value)}
       titles = ["TYPE","ID","NAME"]
       methods = [:class,:id,:name]
     else
