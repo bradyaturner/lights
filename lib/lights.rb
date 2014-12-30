@@ -11,6 +11,7 @@ require 'lights/exception'
 require 'lights/sensor'
 require 'lights/scene'
 require 'lights/user'
+require 'lights/rule'
 require 'lights/loggerconfig'
 
 def jp( s )
@@ -102,6 +103,10 @@ class Lights
   
   def request_config
     get "config"
+  end
+
+  def request_rules
+    get "rules"
   end
 
   def set_bulb_state( id, state )
