@@ -140,10 +140,17 @@ class LightsCli
     objects = []
     titles = []
     methods = []
-    type = ARGV.shift
+
     options = {}
+    OptionParser.new do |opts|
+      opts.on("-j", "--json", "Print JSON response") do |j|
+        options[:json] = j
+      end
+    end.parse!
+
+    type = ARGV.shift
     case type
-    when nil,"lights"
+    when nil, "","lights"
       response = hue.request_bulb_list
       response.each{|id,value| objects << hue.request_bulb_info( id )}
       titles = ["ID","NAME"]
@@ -174,16 +181,7 @@ class LightsCli
       titles = ["ID","NAME"]
       methods = [:id,:name]
     when "datastore"
-      OptionParser.new do |opts|
-        opts.on("-j", "--json", "Print JSON response") do |j|
-          options[:json] = j
-        end
-      end.parse!
       response = hue.request_datastore
-      if options[:json]
-        jp response
-        return
-      end
       response["lights"].each {|id,value| objects << Bulb.new(id,value)}
       response["groups"].each {|id,value| objects << Group.new(id,value)}
       response["config"]["whitelist"].each {|id,value| objects << User.new(id,value)}
@@ -193,10 +191,14 @@ class LightsCli
       titles = ["TYPE","ID","NAME"]
       methods = [:class,:id,:name]
     else
-      puts "Don't know how to list \"#{ARGV[0]}\""
+      puts "Don't know how to list \"#{type}\""
       return
     end
-    SimpleTable.new.from_objects(objects,titles,methods).print_text
+    if options[:json]
+      jp response
+    else
+      SimpleTable.new.from_objects(objects,titles,methods).print_text
+    end
   end
   
   def register
