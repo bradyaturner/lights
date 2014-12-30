@@ -192,7 +192,7 @@ class LightsCli
       response["config"]["whitelist"].each {|id,value| objects << User.new(id,value)}
       response["rules"].each {|id,value| objects << Rule.new(id,value)}
       response["scenes"].each {|id,value| objects << Scene.new(id,value)}
-      response["schedules"].each {|id,value| objects << Bulb.new(id,value)}
+      response["schedules"].each {|id,value| objects << Schedule.new(id,value)}
       titles = ["TYPE","ID","NAME"]
       methods = [:class,:id,:name]
     else
