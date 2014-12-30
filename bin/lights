@@ -202,7 +202,7 @@ class LightsCli
     if options[:json]
       jp response
     else
-      SimpleTable.new.from_objects(objects,titles,methods).print_text
+      puts SimpleTable.new.from_objects(objects,titles,methods).text
     end
   end
   
