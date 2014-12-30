@@ -111,18 +111,23 @@ class LightsCli
 
     case type
     when "group"
-      OptionParser.new do |opts|
-        opts.on("-i", "--id <id>", String, "Group ID to delete") do |i|
-          options[:id] = i
-        end
-      end.parse!
+      id = ARGV.shift
 
-      if !options[:id]
+      if !id
         puts "Must specify group id."
         exit 1
       end
 
-      hue.delete_group(options[:id])
+      hue.delete_group id
+    when "user"
+      id = ARGV.shift
+
+      if !id
+        puts "Must specify user id."
+        exit 1
+      end
+
+      hue.delete_user id
     when nil
       STDERR.puts "Must specify a type to delete."
     else

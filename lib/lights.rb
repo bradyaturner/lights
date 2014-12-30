@@ -124,8 +124,12 @@ class Lights
   def delete_group( id )
     delete "groups/#{id}"
   end
-private
 
+  def delete_user( username )
+    delete "config/whitelist/#{username}"
+  end
+
+private
   def process_error(result)
     type = result["error"]["type"]
     case type
