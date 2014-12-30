@@ -223,6 +223,23 @@ class LightsCli
       users.each do |u| 
         puts u.id.ljust(c1w) + u.name.ljust(c2w) + u.create_date.ljust(c3w) + u.last_use_date.ljust(c4w)
       end
+    elsif ARGV[0] == "rules"
+      rules_response = hue.request_rules
+
+      rules = []
+      rules_response.each do |id,value|
+        rules << Rule.new(id,value)
+      end
+
+      c1w = rules.collect{|r|r.id.to_s}.group_by(&:size).max.first + 2
+      c2w = rules.collect{|r|r.name.to_s}.group_by(&:size).max.first + 2
+      c1w = 4 if c1w < 4
+      c2w = 6 if c2w < 6
+      puts "ID".ljust(c1w) + "NAME".ljust(c2w)
+      puts "=" * (c1w+c2w)
+      rules.each do |r|
+        puts r.id.ljust(c1w) + r.name.ljust(c2w)
+      end
     end
   end
   

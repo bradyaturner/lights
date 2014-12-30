@@ -1,7 +1,6 @@
 class Rule
 
-  attr_reader :id, :data, :name, :lights
-  attr_writer :name, :lights
+  attr_reader :id, :data, :name
   def initialize( id = nil, data = {} )
     @id = id
     @data = data
