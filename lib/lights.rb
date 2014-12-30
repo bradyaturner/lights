@@ -109,6 +109,10 @@ class Lights
     get "rules"
   end
 
+  def request_datastore
+    get ""
+  end
+
   def set_bulb_state( id, state )
     put "lights/#{id}/state", state
   end
