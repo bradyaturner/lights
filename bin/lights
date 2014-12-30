@@ -2,6 +2,8 @@
 
 require 'lights'
 require 'optparse'
+require 'simpletable'
+include SimpleTable
 
 LIGHTS_CONFIG_PATH = "#{ENV["HOME"]}/.lightsconfig"
 
@@ -137,32 +139,20 @@ class LightsCli
       bulbs_response.each do |id,value|
         bulbs << hue.request_bulb_info( id )
       end
-      c1w = bulbs.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
-      c2w = bulbs.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
-      c1w = 4 if c1w < 4
-      c2w = 6 if c2w < 6
-
-      puts "ID".ljust(c1w) + "NAME".ljust(c2w)
-      puts "=" * (c1w+c2w)
-      bulbs.each do |b| 
-        puts b.id.ljust(c1w) + b.name.ljust(c2w)
-      end
+      
+      titles = ["ID","NAME"]
+      methods = [:id,:name]
+      SimpleTable.create(bulbs,titles,methods)
     elsif ARGV[0] == "sensors"
       sensors_response = hue.request_sensor_list
       sensors = []
       sensors_response.each do |id,value|
         sensors << hue.request_sensor_info( id )
       end
-      c1w = sensors.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
-      c2w = sensors.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
-      c1w = 4 if c1w < 4
-      c2w = 6 if c2w < 6
 
-      puts "ID".ljust(c1w) + "NAME".ljust(c2w)
-      puts "=" * (c1w+c2w)
-      sensors.each do |s| 
-        puts s.id.ljust(c1w) + s.name.ljust(c2w)
-      end
+      titles = ["ID","NAME"]
+      methods = [:id,:name]
+      SimpleTable.create(sensors,titles,methods)
     elsif ARGV[0] == "groups"
       groups_response = hue.request_group_list
       groups = []
@@ -170,18 +160,9 @@ class LightsCli
         groups << hue.request_group_info( id )
       end
 
-      c1w = groups.collect{|g|g.id.to_s}.group_by(&:size).max.first + 2
-      c2w = groups.collect{|g|g.name.to_s}.group_by(&:size).max.first + 2
-      c3w = groups.collect{|g|g.lights.to_s}.group_by(&:size).max.first + 2
-      c1w = 4 if c1w < 4
-      c2w = 6 if c2w < 6
-      c3w = 8 if c3w < 8
-
-      puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
-      puts "=" * (c1w+c2w+c3w)
-      groups.each do |g| 
-        puts g.id.ljust(c1w) + g.name.ljust(c2w) + g.lights.join(',').ljust(c3w)
-      end
+      titles = ["ID","NAME","LIGHTS"]
+      methods = [:id,:name,:lights]
+      SimpleTable.create(groups,titles,methods)
     elsif ARGV[0] == "scenes"
       scenes_response = hue.request_scene_list
       scenes = []
@@ -189,57 +170,29 @@ class LightsCli
         scenes << Scene.new(id,value)
       end
 
-      c1w = scenes.collect{|s|s.id.to_s}.group_by(&:size).max.first + 2
-      c2w = scenes.collect{|s|s.name.to_s}.group_by(&:size).max.first + 2
-      c3w = scenes.collect{|s|s.lights.to_s}.group_by(&:size).max.first + 2
-      c1w = 4 if c1w < 4
-      c2w = 6 if c2w < 6
-      c3w = 8 if c3w < 8
-
-      puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "LIGHTS".ljust(c3w)
-      puts "=" * (c1w+c2w+c3w)
-      scenes.each do |s| 
-        puts s.id.ljust(c1w) + s.name.ljust(c2w) + s.lights.join(',').ljust(c3w)
-      end
+      titles = ["ID","NAME","LIGHTS"]
+      methods = [:id,:name,:lights]
+      SimpleTable.create(scenes,titles,methods)
     elsif ARGV[0] == "users"
       config_response = hue.request_config
-      
       users = []
       config_response["whitelist"].each do |id,value| 
         users << User.new(id,value)
       end
-
-      c1w = users.collect{|u|u.id.to_s}.group_by(&:size).max.first + 2
-      c2w = users.collect{|u|u.name.to_s}.group_by(&:size).max.first + 2
-      c3w = users.collect{|u|u.create_date.to_s}.group_by(&:size).max.first + 2
-      c4w = users.collect{|u|u.last_use_date.to_s}.group_by(&:size).max.first + 2
-      c1w = 4 if c1w < 4
-      c2w = 6 if c2w < 6
-      c3w = 15 if c3w < 15
-      c4w = 15 if c4w < 15
-
-      puts "ID".ljust(c1w) + "NAME".ljust(c2w) + "CREATE DATE".ljust(c3w) + "LAST USE DATE".ljust(c4w)
-      puts "=" * (c1w+c2w+c3w+c4w)
-      users.each do |u| 
-        puts u.id.ljust(c1w) + u.name.ljust(c2w) + u.create_date.ljust(c3w) + u.last_use_date.ljust(c4w)
-      end
+      
+      titles = ["ID","NAME","CREATE DATE","LAST USE DATE"]
+      methods = [:id,:name,:create_date,:last_use_date]
+      SimpleTable.create(users,titles,methods)
     elsif ARGV[0] == "rules"
       rules_response = hue.request_rules
-
       rules = []
       rules_response.each do |id,value|
         rules << Rule.new(id,value)
       end
 
-      c1w = rules.collect{|r|r.id.to_s}.group_by(&:size).max.first + 2
-      c2w = rules.collect{|r|r.name.to_s}.group_by(&:size).max.first + 2
-      c1w = 4 if c1w < 4
-      c2w = 6 if c2w < 6
-      puts "ID".ljust(c1w) + "NAME".ljust(c2w)
-      puts "=" * (c1w+c2w)
-      rules.each do |r|
-        puts r.id.ljust(c1w) + r.name.ljust(c2w)
-      end
+      titles = ["ID","NAME"]
+      methods = [:id,:name]
+      SimpleTable.create(rules,titles,methods)
     end
   end
   
