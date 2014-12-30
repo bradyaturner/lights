@@ -2,7 +2,6 @@ class User
 
   attr_reader :id, :name, :create_date, :last_use_date
   def initialize( id, data = {} )
-    puts data.inspect
     @id = id
     @data = data
     @name = data["name"]
