@@ -140,36 +140,58 @@ class LightsCli
     objects = []
     titles = []
     methods = []
-    if !ARGV[0] || ARGV[0] == "lights"
+    type = ARGV.shift
+    options = {}
+    case type
+    when nil,"lights"
       response = hue.request_bulb_list
       response.each{|id,value| objects << hue.request_bulb_info( id )}
       titles = ["ID","NAME"]
       methods = [:id,:name]
-    elsif ARGV[0] == "sensors"
+    when "sensors"
       response = hue.request_sensor_list
       response.each { |id,value| objects << hue.request_sensor_info( id )}
       titles = ["ID","NAME"]
       methods = [:id,:name]
-    elsif ARGV[0] == "groups"
+    when "groups"
       response = hue.request_group_list
       response.each {|id,value| objects << hue.request_group_info( id )}
       titles = ["ID","NAME","LIGHTS"]
       methods = [:id,:name,:lights]
-    elsif ARGV[0] == "scenes"
+    when "scenes"
       response = hue.request_scene_list
       response.each {|id,value| objects << Scene.new(id,value)}
       titles = ["ID","NAME","LIGHTS"]
       methods = [:id,:name,:lights]
-    elsif ARGV[0] == "users"
+    when "users"
       response = hue.request_config
       response["whitelist"].each {|id,value| objects << User.new(id,value)}
       titles = ["ID","NAME","CREATE DATE","LAST USE DATE"]
       methods = [:id,:name,:create_date,:last_use_date]
-    elsif ARGV[0] == "rules"
+    when "rules"
       response = hue.request_rules
       response.each {|id,value| objects << Rule.new(id,value)}
       titles = ["ID","NAME"]
       methods = [:id,:name]
+    when "datastore"
+      OptionParser.new do |opts|
+        opts.on("-j", "--json", "Print JSON response") do |j|
+          options[:json] = j
+        end
+      end.parse!
+      response = hue.request_datastore
+      if options[:json]
+        jp response
+        return
+      end
+      response["lights"].each {|id,value| objects << Bulb.new(id,value)}
+      response["groups"].each {|id,value| objects << Group.new(id,value)}
+      response["config"]["whitelist"].each {|id,value| objects << User.new(id,value)}
+      response["rules"].each {|id,value| objects << Rule.new(id,value)}
+      response["scenes"].each {|id,value| objects << Scene.new(id,value)}
+      response["schedules"].each {|id,value| objects << Bulb.new(id,value)}
+      titles = ["TYPE","ID","NAME"]
+      methods = [:class,:id,:name]
     else
       puts "Don't know how to list \"#{ARGV[0]}\""
       return
