@@ -12,6 +12,7 @@ require 'lights/sensor'
 require 'lights/scene'
 require 'lights/user'
 require 'lights/rule'
+require 'lights/schedule'
 require 'lights/loggerconfig'
 
 def jp( s )
@@ -107,6 +108,10 @@ class Lights
 
   def request_rules
     get "rules"
+  end
+
+  def request_schedules
+    get "schedules"
   end
 
   def request_datastore
