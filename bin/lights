@@ -3,7 +3,6 @@
 require 'lights'
 require 'optparse'
 require 'simpletable'
-include SimpleTable
 
 LIGHTS_CONFIG_PATH = "#{ENV["HOME"]}/.lightsconfig"
 
@@ -133,67 +132,44 @@ class LightsCli
  
   def list
     hue = Lights.new @config["bridge_ip"], @config["username"]
+    objects = []
+    titles = []
+    methods = []
     if !ARGV[0] || ARGV[0] == "lights"
-      bulbs_response = hue.request_bulb_list
-      bulbs = []
-      bulbs_response.each do |id,value|
-        bulbs << hue.request_bulb_info( id )
-      end
-      
+      response = hue.request_bulb_list
+      response.each{|id,value| objects << hue.request_bulb_info( id )}
       titles = ["ID","NAME"]
       methods = [:id,:name]
-      SimpleTable.create(bulbs,titles,methods)
     elsif ARGV[0] == "sensors"
-      sensors_response = hue.request_sensor_list
-      sensors = []
-      sensors_response.each do |id,value|
-        sensors << hue.request_sensor_info( id )
-      end
-
+      response = hue.request_sensor_list
+      response.each { |id,value| objects << hue.request_sensor_info( id )}
       titles = ["ID","NAME"]
       methods = [:id,:name]
-      SimpleTable.create(sensors,titles,methods)
     elsif ARGV[0] == "groups"
-      groups_response = hue.request_group_list
-      groups = []
-      groups_response.each do |id,value|
-        groups << hue.request_group_info( id )
-      end
-
+      response = hue.request_group_list
+      response.each {|id,value| objects << hue.request_group_info( id )}
       titles = ["ID","NAME","LIGHTS"]
       methods = [:id,:name,:lights]
-      SimpleTable.create(groups,titles,methods)
     elsif ARGV[0] == "scenes"
-      scenes_response = hue.request_scene_list
-      scenes = []
-      scenes_response.each do |id,value| 
-        scenes << Scene.new(id,value)
-      end
-
+      response = hue.request_scene_list
+      response.each {|id,value| objects << Scene.new(id,value)}
       titles = ["ID","NAME","LIGHTS"]
       methods = [:id,:name,:lights]
-      SimpleTable.create(scenes,titles,methods)
     elsif ARGV[0] == "users"
-      config_response = hue.request_config
-      users = []
-      config_response["whitelist"].each do |id,value| 
-        users << User.new(id,value)
-      end
-      
+      response = hue.request_config
+      response["whitelist"].each {|id,value| objects << User.new(id,value)}
       titles = ["ID","NAME","CREATE DATE","LAST USE DATE"]
       methods = [:id,:name,:create_date,:last_use_date]
-      SimpleTable.create(users,titles,methods)
     elsif ARGV[0] == "rules"
-      rules_response = hue.request_rules
-      rules = []
-      rules_response.each do |id,value|
-        rules << Rule.new(id,value)
-      end
-
+      response = hue.request_rules
+      response.each {|id,value| objects << Rule.new(id,value)}
       titles = ["ID","NAME"]
       methods = [:id,:name]
-      SimpleTable.create(rules,titles,methods)
+    else
+      puts "Don't know how to list \"#{ARGV[0]}\""
+      return
     end
+    SimpleTable.new.from_objects(objects,titles,methods).print_text
   end
   
   def register
