@@ -22,18 +22,10 @@ class LightsCli
   def config
     options = {}
     OptionParser.new do |opts|
-      opts.on("-u", "--user <username>", String, "Username") do |url|
-        options[:user] = url
-      end
-      opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address") do |ip|
-        options[:ip] = ip
-      end
-      opts.on("-f", "--force", "Force write to config file") do |f|
-        options[:force] = f
-      end
-      opts.on("-l", "--list", "List saved configuration settings") do |l|
-        options[:list] = l
-      end
+      opts.on("-u", "--user <username>", String, "Username"){|url| options[:user]=url}
+      opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address"){|ip| options[:ip]=ip}
+      opts.on("-f", "--force", "Force write to config file"){|f| options[:force]=f}
+      opts.on("-l", "--list", "List saved configuration settings") {|l| options[:list]=l}
     end.parse!
  
     if !options[:user] && !options[:ip] && !options[:list]
@@ -76,12 +68,8 @@ class LightsCli
     case type
     when "group"
       OptionParser.new do |opts|
-        opts.on("-l", "--lights 1,2,...N", Array, "Which lights to put in group") do |l|
-          options[:lights] = l
-        end
-        opts.on("-n", "--name <name>", String, "Set group name") do |n|
-          options[:name] = n
-        end
+        opts.on("-l", "--lights 1,2,...N", Array, "Which lights to put in group"){|l| options[:lights]=l}
+        opts.on("-n", "--name <name>", String, "Set group name"){|n| options[:name]=n}
       end.parse!
       
       if !options[:lights]
@@ -143,9 +131,7 @@ class LightsCli
 
     options = {}
     OptionParser.new do |opts|
-      opts.on("-j", "--json", "Print JSON response") do |j|
-        options[:json] = j
-      end
+      opts.on("-j", "--json", "Print JSON response"){|j| options[:json] = j}
     end.parse!
 
     type = ARGV.shift
@@ -214,9 +200,7 @@ class LightsCli
   def discover 
     options = {}
     OptionParser.new do |opts|
-      opts.on("-s", "--save", "Save discovered bridge to configuration file") do |s|
-        options[:save] = s
-      end
+      opts.on("-s", "--save", "Save discovered bridge to configuration file"){|s| options[:save]=s}
     end.parse!
 
     lights = Lights.new @config["bridge_ip"], @config["username"]
@@ -254,42 +238,18 @@ class LightsCli
   def set
     options = {}
     OptionParser.new do |opts|
-      opts.on("-o", "--on", "Turn lights on") do |o|
-        options[:on] = o
-      end
-      opts.on("-f", "--off", "Turn lights off") do |f|
-        options[:off] = f
-      end
-      opts.on("-c", "--ct color_temp", OptionParser::DecimalInteger, "Set color temperature") do |c|
-        options[:ct] = c
-      end
-      opts.on("-b", "--brightness brightness", OptionParser::DecimalInteger, "Set brightness") do |b|
-        options[:brightness] = b
-      end
-      opts.on("-s", "--saturation saturation", OptionParser::DecimalInteger, "Set saturation") do |s|
-        options[:saturation] = s
-      end
-      opts.on("-h", "--hue hue", OptionParser::DecimalInteger, "Set hue") do |h|
-        options[:hue] = h
-      end
-      opts.on("-e", "--effect none|colorloop", String, "Set effect") do |e|
-        options[:effect] = e
-      end
-      opts.on("-a", "--alert none|select|lselect", String, "Set alert") do |a|
-        options[:alert] = a
-      end
-      opts.on("-z", "--xy x,y", Array, "Set xy") do |z|
-        options[:xy] = z
-      end
-      opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
-        options[:lights] = l
-      end
-      opts.on("-g", "--groups 1,2,...N", Array, "Which groups to control") do |g|
-        options[:groups] = g
-      end
-      opts.on("-d", "--duration seconds", OptionParser::DecimalInteger, "Transition duration in seconds") do |d|
-        options[:duration] = d
-      end
+      opts.on("-o", "--on", "Turn lights on"){|o| options[:on]=o}
+      opts.on("-f", "--off", "Turn lights off"){|f| options[:off]=f}
+      opts.on("-c", "--ct color_temp", OptionParser::DecimalInteger, "Set color temperature"){|c| options[:ct]=c}
+      opts.on("-b", "--brightness brightness", OptionParser::DecimalInteger, "Set brightness"){|b| options[:brightness]=b}
+      opts.on("-s", "--saturation saturation", OptionParser::DecimalInteger, "Set saturation"){|s| options[:saturation]=s}
+      opts.on("-h", "--hue hue", OptionParser::DecimalInteger, "Set hue"){|h| options[:hue]=h}
+      opts.on("-e", "--effect none|colorloop", String, "Set effect"){|e| options[:effect]=e}
+      opts.on("-a", "--alert none|select|lselect", String, "Set alert"){|a| options[:alert]=a}
+      opts.on("-z", "--xy x,y", Array, "Set xy"){|z| options[:xy]=z}
+      opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control"){|l| options[:lights]=l}
+      opts.on("-g", "--groups 1,2,...N", Array, "Which groups to control"){|g| options[:groups]=g}
+      opts.on("-d", "--duration seconds", OptionParser::DecimalInteger, "Transition duration in seconds"){|d| options[:duration]=d}
     end.parse!
 
     bad_args = false
@@ -372,9 +332,7 @@ private
   def on_off(is_on)
     options = {}
     OptionParser.new do |opts|
-      opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control") do |l|
-        options[:lights] = l 
-      end
+      opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control"){|l| options[:lights]=l}
     end.parse!
 
     if !options[:lights]
