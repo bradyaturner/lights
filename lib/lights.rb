@@ -4,15 +4,9 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-require 'lights/bulb'
-require 'lights/group'
 require 'lights/bridge'
 require 'lights/exception'
-require 'lights/sensor'
-require 'lights/scene'
-require 'lights/user'
-require 'lights/rule'
-require 'lights/schedule'
+require 'lights/datastore'
 require 'lights/loggerconfig'
 
 def jp( s )
