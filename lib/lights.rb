@@ -35,7 +35,7 @@ class Lights
 
   def discover_hubs
     http = Net::HTTP.new("www.meethue.com",443)
-    http.use_ssl = tlights
+    http.use_ssl = true
     request = Net::HTTP::Get.new( "/api/nupnp" )
     response = http.request request
     
