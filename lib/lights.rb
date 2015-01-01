@@ -61,6 +61,14 @@ class Lights
     get "lights"
   end
 
+  def request_new_bulb_list
+    get "lights/new"
+  end
+
+  def request_new_sensor_list
+    get "sensors/new"
+  end
+
   def request_bulb_info( id )
     response = get "lights/#{id}"
     Bulb.new(id,response)
@@ -142,10 +150,12 @@ private
     case type
     when 1
       raise UsernameException
+    when 3
+      raise ResourceUnavailableException, result["error"]["description"]
     when 101
       raise BridgeConnectException
     else
-      puts "Unknown Error."
+      raise "Unknown Error: #{result["error"]["description"]}"
     end
   end
 

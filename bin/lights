@@ -180,17 +180,18 @@ class LightsCli
     options = {}
     OptionParser.new do |opts|
       opts.on("-j", "--json", "Print JSON response"){|j| options[:json] = j}
+      opts.on("-n", "--new", "Only list new"){|n| options[:new] = n}
     end.parse!
 
     type = ARGV.shift
     case type
     when nil, "","lights"
-      response = hue.request_bulb_list
+      response = options[:new] ? hue.request_new_bulb_list : hue.request_bulb_list
       response.each{|id,value| objects << hue.request_bulb_info( id )}
       titles = ["ID","NAME"]
       methods = [:id,:name]
     when "sensors"
-      response = hue.request_sensor_list
+      response = options[:new] ? hue.request_new_sensor_list : hue.request_sensor_list
       response.each { |id,value| objects << hue.request_sensor_info( id )}
       titles = ["ID","NAME"]
       methods = [:id,:name]
@@ -425,6 +426,7 @@ begin
   end
 rescue BridgeConnectException,
         UsernameException,
+        ResourceUnavailableException,
         BulbStateValueOutOfRangeException,
         BulbStateValueTypeException => e
   puts e.message
