@@ -57,6 +57,10 @@ class Lights
     @bulbs << Bulb.new( id, bulb_data )
   end
 
+  def search_new
+    post "lights"
+  end
+
   def request_bulb_list
     get "lights"
   end
@@ -172,7 +176,7 @@ private
     result
   end
 
-  def put( path, data )
+  def put( path, data={} )
     @logger.debug "==> PUT: #{path}"
     @logger.debug data.to_json 
     response = @http.put( "/api/#{@username}/#{path}", data.to_json )
@@ -181,7 +185,7 @@ private
     JSON.parse response.body
   end
 
-  def post( path, data )
+  def post( path, data={} )
     @logger.debug "==> POST: #{path}"
     @logger.debug data.to_json
     response = @http.post( "/api/#{@username}/#{path}", data.to_json )
