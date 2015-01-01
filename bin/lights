@@ -187,37 +187,37 @@ class LightsCli
     case type
     when nil, "","lights"
       response = options[:new] ? hue.request_new_bulb_list : hue.request_bulb_list
-      response.each{|id,value| objects << hue.request_bulb_info( id )}
+      objects = BulbList.new(response).list
       titles = ["ID","NAME"]
       methods = [:id,:name]
     when "sensors"
       response = options[:new] ? hue.request_new_sensor_list : hue.request_sensor_list
-      response.each { |id,value| objects << hue.request_sensor_info( id )}
+      objects = SensorList.new(response).list
       titles = ["ID","NAME"]
       methods = [:id,:name]
     when "groups"
       response = hue.request_group_list
-      response.each {|id,value| objects << hue.request_group_info( id )}
+      objects = GroupList.new(response).list
       titles = ["ID","NAME","LIGHTS"]
       methods = [:id,:name,:lights]
     when "scenes"
       response = hue.request_scene_list
-      response.each {|id,value| objects << Scene.new(id,value)}
+      objects = SceneList.new(response).list
       titles = ["ID","NAME","LIGHTS"]
       methods = [:id,:name,:lights]
     when "users"
       response = hue.request_config
-      response["whitelist"].each {|id,value| objects << User.new(id,value)}
+      objects = UserList.new(response["whitelist"]).list
       titles = ["ID","NAME","CREATE DATE","LAST USE DATE"]
       methods = [:id,:name,:create_date,:last_use_date]
     when "rules"
       response = hue.request_rules
-      response.each {|id,value| objects << Rule.new(id,value)}
+      objects = RuleList.new(response).list
       titles = ["ID","NAME"]
       methods = [:id,:name]
     when "schedules"
       response = hue.request_schedules
-      response.each {|id,value| objects << Schedule.new(id,value)}
+      objects = ScheduleList.new(response).list
       titles = ["ID","NAME","TIME","SCENE","STATUS"]
       methods = [:id,:name,:time,:scene,:status]
     when "datastore"
