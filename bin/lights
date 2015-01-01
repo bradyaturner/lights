@@ -92,10 +92,39 @@ class LightsCli
     end
   end
 
-  def delete
+  def edit
     type = ARGV.shift
     hue = Lights.new @config["bridge_ip"], @config["username"]
     options = {}
+
+    case type
+    when "light"
+      id = ARGV.shift
+      if !id
+        puts "Must specify light id."
+        exit 1
+      end
+
+      OptionParser.new do |opts|
+        opts.on("--name", "--name <name>", String, "Set light name"){|n| options[:name]=n}
+      end.parse!
+      if !options[:name]
+        puts "Must specify new light name."
+        exit 1
+      end
+
+      light = Bulb.new(id,{"name"=>options[:name]})
+      hue.edit_bulb light
+    when nil
+      STDERR.puts "Must specify a type to edit."
+    else
+      STDERR.puts "Don't know how to edit type \"#{type}\"."
+    end
+  end
+
+  def delete
+    type = ARGV.shift
+    hue = Lights.new @config["bridge_ip"], @config["username"]
 
     case type
     when "group"
@@ -343,7 +372,7 @@ end
 
   
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (config, list, register, discover, on, off, set, create, delete)"
+  STDERR.puts "Must specify a command. (config, list, register, discover, on, off, set, create, edit, delete)"
   exit 1
 end
 
@@ -370,6 +399,8 @@ begin
     cli.create
   elsif command == "delete"
     cli.delete
+  elsif command == "edit"
+    cli.edit
   else
     puts "Cannot find command #{command}."
   end
