@@ -1,22 +1,10 @@
 require 'lights/user'
+require 'lights/list'
 
-class UserList
-
-  attr_reader :users
+class UserList < List
   def initialize(data = {})
-    @users = []
-    data.each{|id,value| @users << User.new(id,value)} if data
-    @data = data
-  end
-
-  def data
-    data = @data
-    @users.each {|u| data[u.id] = u.data} if @users
-    data
-  end
-  
-  def to_json(options={})
-    data.to_json
+    super
+    data.each{|id,value| @list << User.new(id,value)} if data
   end
 end
 

@@ -22,13 +22,13 @@ class Datastore
   end
 
   def all
-    @lights.bulbs + \
-      @groups.groups + \
+    @lights.list + \
+      @groups.list + \
       [@config] + \
-      @schedules.schedules + \
-      @scenes.scenes + \
-      @rules.rules + \
-      @sensors.sensors
+      @schedules.list + \
+      @scenes.list + \
+      @rules.list + \
+      @sensors.list
   end
 
   def data

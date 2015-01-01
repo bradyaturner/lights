@@ -1,22 +1,10 @@
 require 'lights/group'
+require 'lights/list'
 
-class GroupList
-
-  attr_reader :groups
+class GroupList < List
   def initialize(data = {})
-    @groups = []
-    data.each{|id,value| @groups << Group.new(id,value)} if data
-    @data = data
-  end
-
-  def data
-    data = @data
-    @groups.each {|g| data[g.id] = g.data} if @groups
-    data
-  end
-  
-  def to_json(options={})
-    data.to_json
+    super
+    data.each{|id,value| @list << Group.new(id,value)} if data
   end
 end
 

@@ -1,22 +1,10 @@
 require 'lights/scene'
+require 'lights/list'
 
-class SceneList
-
-  attr_reader :scenes
+class SceneList < List
   def initialize(data = {})
-    @scenes = []
-    data.each{|id,value| @scenes << Scene.new(id,value)} if data
-    @data = data
-  end
-
-  def data
-    data = @data
-    @scenes.each {|b| data[b.id] = b.data} if @scenes
-    data
-  end
-  
-  def to_json(options={})
-    data.to_json
+    super
+    data.each{|id,value| @list << Scene.new(id,value)} if data
   end
 end
 
