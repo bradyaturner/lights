@@ -9,10 +9,6 @@ require 'lights/exception'
 require 'lights/datastore'
 require 'lights/loggerconfig'
 
-def jp( s )
-  puts JSON.pretty_generate( s )
-end
-
 class Lights 
 
   attr_reader :bulbs
