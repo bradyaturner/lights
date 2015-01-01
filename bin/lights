@@ -284,7 +284,8 @@ class LightsCli
     OptionParser.new do |opts|
       opts.on("-o", "--on", "Turn lights on"){|o| options[:on]=o}
       opts.on("-f", "--off", "Turn lights off"){|f| options[:off]=f}
-      opts.on("-c", "--ct color_temp", OptionParser::DecimalInteger, "Set color temperature"){|c| options[:ct]=c}
+      opts.on("-c", "--color <red|blue|purple|yellow|green|lgreen>", String, "Set color"){|c| options[:color]=c}
+      opts.on("-t", "--ct color_temp", OptionParser::DecimalInteger, "Set color temperature"){|c| options[:ct]=c}
       opts.on("-b", "--brightness brightness", OptionParser::DecimalInteger, "Set brightness"){|b| options[:brightness]=b}
       opts.on("-s", "--saturation saturation", OptionParser::DecimalInteger, "Set saturation"){|s| options[:saturation]=s}
       opts.on("-h", "--hue hue", OptionParser::DecimalInteger, "Set hue"){|h| options[:hue]=h}
@@ -301,7 +302,7 @@ class LightsCli
         && !options[:ct] && !options[:brightness] \
         && !options[:hue] && !options[:saturation] \
         && !options[:effect] && !options[:alert] \
-        && !options[:xy]
+        && !options[:xy] && !options[:color]
       puts "Must specify a state to set."
       bad_args = true
     end
@@ -321,6 +322,14 @@ class LightsCli
       s.on = true
     elsif options[:off]
       s.on = false
+    end
+    if options[:color]
+      begin
+        s.hue = BulbState::Hue.const_get options[:color].upcase
+      rescue NameError
+        puts "Unrecognized color: #{options[:color]}"
+        exit 1
+      end
     end
     if options[:ct]
       s.ct = options[:ct]
