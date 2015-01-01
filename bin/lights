@@ -306,10 +306,6 @@ class LightsCli
       puts "Must specify a state to set."
       bad_args = true
     end
-    if !options[:lights] && !options[:groups]
-      puts "Must specify which lights/groups to control."
-      bad_args = true
-    end
     if (options[:hue] || options[:saturation]) \
         && options[:ct]
       puts "Cannot set both color temperature and hue/saturation."
@@ -357,9 +353,11 @@ class LightsCli
     end
 
     if options[:lights]
-    set_bulb_state(s,options[:lights])
+      set_bulb_state(s,options[:lights])
     elsif options[:groups]
       set_group_state(s,options[:groups])
+    else
+      set_group_state(s,[0])
     end
   end
 
@@ -398,10 +396,7 @@ private
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control"){|l| options[:lights]=l}
     end.parse!
 
-    if !options[:lights]
-      puts "Must specify which lights to control."
-      exit 1
-    end
+    options[:lights] = ["all"] if !options[:lights]
 
     s = BulbState.new
     s.on = is_on
