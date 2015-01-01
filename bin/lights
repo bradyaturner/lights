@@ -181,7 +181,7 @@ class LightsCli
       return
     end
     if options[:json]
-      jp response
+      puts JSON.pretty_generate response
     else
       puts SimpleTable.new.from_objects(objects,titles,methods).text
     end
