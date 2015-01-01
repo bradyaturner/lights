@@ -21,3 +21,9 @@ class BulbStateValueTypeException < Exception
     super
   end
 end
+
+class ResourceUnavailableException < Exception
+  def initialize(msg = "ResourceUnavailable")
+    super
+  end
+end
