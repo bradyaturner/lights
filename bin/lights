@@ -354,6 +354,16 @@ class LightsCli
     end
   end
 
+  def search
+    lights = Lights.new @config["bridge_ip"], @config["username"]
+    response = lights.search_new
+    if response.first["success"]
+      puts "Started search."
+    else
+      puts "Unknown error. Did not begin search."
+    end
+  end
+
 private
   def set_bulb_state(state,bulbs)
     lights = Lights.new @config["bridge_ip"], @config["username"]
@@ -392,7 +402,7 @@ end
 
   
 if !ARGV[0]
-  STDERR.puts "Must specify a command. (config, list, register, discover, on, off, set, create, edit, delete)"
+  STDERR.puts "Must specify a command. (config, list, register, discover, search, on, off, set, create, edit, delete)"
   exit 1
 end
 
@@ -421,6 +431,8 @@ begin
     cli.delete
   elsif command == "edit"
     cli.edit
+  elsif command == "search"
+    cli.search
   else
     puts "Cannot find command #{command}."
   end
