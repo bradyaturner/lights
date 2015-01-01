@@ -5,13 +5,13 @@ require 'lights/scenelist'
 require 'lights/rulelist'
 require 'lights/schedulelist'
 require 'lights/sensorlist'
+require 'lights/hobject'
 
-class Datastore
-
+class Datastore < HObject
   attr_reader :lights, :groups, :config, :rules,
                 :scenes, :schedules, :sensors
   def initialize(data = {})
-    @data = {}
+    super
     @lights = BulbList.new(data["lights"]) 
     @groups = GroupList.new(data["groups"])
     @config = HueConfig.new(data["config"])
@@ -41,10 +41,6 @@ class Datastore
     data["rules"] = @rules.data if !@rules.data.empty?
     data["sensors"] = @sensors.data if !@sensors.data.empty?
     data
-  end
-
-  def to_json(options={})
-    data.to_json
   end
 end
 

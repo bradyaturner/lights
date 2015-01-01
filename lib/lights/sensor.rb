@@ -1,7 +1,7 @@
-class SensorState
-  attr_reader :data, :last_updated
+class SensorState < HObject
+  attr_reader :last_updated
   def initialize(data)
-    @data = data
+    super
     @last_updated = data["lastupdated"]
   end
 
@@ -10,17 +10,13 @@ class SensorState
     data["lastupdated"] = @last_updated if @last_updated
     data
   end
-
-  def to_json(options={})
-    data.to_json
-  end
 end
 
 class TapState < SensorState
   attr_reader :button_event
   def initialize(data)
-    @button_event = data["button_event"]
     super
+    @button_event = data["button_event"]
   end
 
   def data
@@ -28,17 +24,13 @@ class TapState < SensorState
     data["button_event"] = @button_event if @button_event
     data
   end
-
-  def to_json(options={})
-    data.to_json
-  end
 end
 
-class Sensor 
+class Sensor < HObject
   attr_reader :id, :data, :name, :type, :model_id, :manufacturer_name, :unique_id, :sw_version, :state
   def initialize( id, data = {} )
+    super(data)
     @id = id
-    @data = data
     @name = data["name"]
     @type = data["type"]
     @model_id = data["modelid"]
@@ -59,9 +51,5 @@ class Sensor
     data["swversion"] = @sw_version if @sw_version
     data["state"] = @state.data if @state.data if !@state.data.empty?
     data
-  end
-
-  def to_json(options={})
-    data.to_json
   end
 end

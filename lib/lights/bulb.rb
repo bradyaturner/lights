@@ -1,17 +1,15 @@
 require 'lights/bulbstate'
+require 'lights/hobject'
 
-class Bulb
-
-  attr_reader :id, :name, :type, :swversion,
-              :state
-
+class Bulb < HObject
+  attr_reader :id, :name, :type, :swversion, :state
   def initialize(id,data = {})
+    super(data)
     @id = id
     @name = data["name"]
     @type = data["type"]
     @swversion = data["swversion"]
     @state = BulbState.new data["state"]
-    @data = data
   end
 
   def data
@@ -21,10 +19,6 @@ class Bulb
     data["swversion"] = @swversion if @swversion
     data["state"] = @state.data if !@state.data.empty?
     data
-  end
-
-  def to_json(options={})
-    data.to_json
   end
 end
 

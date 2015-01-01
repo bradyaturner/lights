@@ -1,4 +1,6 @@
-class BulbState 
+require 'lights/hobject'
+
+class BulbState < HObject
 
   MAX_CT = 500
   MIN_CT = 153
@@ -42,7 +44,8 @@ class BulbState
               :alert, :effect, :color_mode, 
               :reachable, :transition_time
   def initialize( data = {} ) 
-    data = {} if data == nil 
+    data = {} if data == nil
+    super
     @on = data["on"] 
     set_bri data["bri"]
     set_hue data["hue"]
@@ -54,7 +57,6 @@ class BulbState
     set_color_mode data["colormode"] 
     @reachable = data["reachable"] 
     set_transition_time data["transitiontime"]
-    @data = data
   end
  
   def color_mode=(value) set_color_mode(value) end
@@ -184,9 +186,5 @@ class BulbState
     data["transitiontime"] = @transition_time if @transition_time
     data 
   end 
-
-  def to_json(options={})
-    data.to_json
-  end
 end
 
