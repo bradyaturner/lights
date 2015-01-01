@@ -16,15 +16,13 @@ class Group
 
   def data
     data = @data
-    data["id"] = @id if @id
     data["name"] = @name if @name
     data["lights"] = @lights if @lights
     data["action"] = @action.data if @action.data != {}
     data
   end
 
-  def to_json
+  def to_json(options={})
     data.to_json
   end
-
 end

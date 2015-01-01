@@ -15,7 +15,7 @@ class Command
     data
   end
 
-  def to_json
+  def to_json(options={})
     data.to_json
   end
 end

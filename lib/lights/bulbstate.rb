@@ -46,6 +46,7 @@ class BulbState
     set_color_mode data["colormode"] 
     @reachable = data["reachable"] 
     set_transition_time data["transitiontime"]
+    @data = data
   end
  
   def color_mode=(value) set_color_mode(value) end
@@ -55,7 +56,7 @@ class BulbState
         || value == ColorMode::CT
       @color_mode = value
     else
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires 'hs', 'xy', or 'ct'"
+      raise BulbStateValueTypeException, "Color mode value has incorrect type. Requires 'hs', 'xy', or 'ct'. Was #{value.inspect}"
     end
   end
 
@@ -66,7 +67,7 @@ class BulbState
         || value == Alert::LSELECT
       @alert = value
     else
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires 'none', 'select', or 'lselect'"
+      raise BulbStateValueTypeException, "Alert value has incorrect type. Requires 'none', 'select', or 'lselect'. Was #{value.inspect}"
     end
   end
 
@@ -75,7 +76,7 @@ class BulbState
     if value.nil? || value == Effect::NONE || value == Effect::COLORLOOP
       @effect = value
     else
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires 'none' or 'colorloop'"
+      raise BulbStateValueTypeException, "Effect value has incorrect type. Requires 'none' or 'colorloop'. Was #{value.inspect}"
     end
   end
 
@@ -85,7 +86,7 @@ class BulbState
     if !!value == value
       @on = value
     else
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires boolean, got #{value.class}"
+      raise BulbStateValueTypeException, "On value has incorrect type. Requires boolean, got #{value.class}. Was #{value.inspect}"
     end
   end
  
@@ -94,58 +95,58 @@ class BulbState
     if value.nil? || value.between?(MIN_BRI,MAX_BRI)
       @bri = value
     else
-      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_BRI},#{MAX_BRI}]"
+      raise BulbStateValueOutOfRangeException, "Brightness value out of range. Must be [#{MIN_BRI},#{MAX_BRI}]. Was #{value.inspect}"
     end
   end 
 
   def ct=(value); set_ct(value) end
   def set_ct(value)
     if !value.nil? && (!value.is_a? Integer)
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+      raise BulbStateValueTypeException, "Color temperature value has incorrect type. Requires integer, got #{value.class}"
     elsif value.nil? || value.between?(MIN_CT,MAX_CT)
       @ct = value
     else
-      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_CT},#{MAX_CT}]"
+      raise BulbStateValueOutOfRangeException, "Color temperature value out of range. Must be [#{MIN_CT},#{MAX_CT}]. Was #{value.inspect}"
     end
   end
   
   def sat=(value); set_sat(value) end
   def set_sat(value)
     if !value.nil? && (!value.is_a? Integer)
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+      raise BulbStateValueTypeException, "Saturation value has incorrect type. Requires integer, got #{value.class}"
     elsif value.nil? || value.between?(MIN_SAT,MAX_SAT)
       @sat = value
     else
-      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_SAT},#{MAX_SAT}]"
+      raise BulbStateValueOutOfRangeException, "Saturation alue out of range. Must be [#{MIN_SAT},#{MAX_SAT}]. Was #{value.inspect}"
     end
   end
  
   def hue=(value); set_hue(value) end
   def set_hue(value)
     if !value.nil? && (!value.is_a? Integer)
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires integer, got #{value.class}"
+      raise BulbStateValueTypeException, "Hue value has incorrect type. Requires integer, got #{value.class}"
     elsif value.nil? || value.between?(MIN_HUE,MAX_HUE)
       @hue = value
     else
-      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]"
+      raise BulbStateValueOutOfRangeException, "Hue value out of range. Must be [#{MIN_HUE},#{MAX_HUE}]. Was #{value.inspect}"
     end
   end
 
   def transition_time=(value); set_transition_time(value) end
   def set_transition_time(value)
     if !value.nil? && (!value.is_a? Numeric)
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires decimal, got #{value.class}"
+      raise BulbStateValueTypeException, "Transition time value has incorrect type. Requires decimal, got #{value.class}"
     elsif value.nil? || value >= MIN_TRANSITION_TIME
       @transition_time = value
     else
-      raise BulbStateValueOutOfRangeException, "Value out of range. Must be > #{MIN_TRANSITION_TIME}"
+      raise BulbStateValueOutOfRangeException, "Transition time value out of range. Must be > #{MIN_TRANSITION_TIME}. Was #{value.inspect}"
     end
   end  
 
   def xy=(value); set_xy(value) end
   def set_xy(value)
     if !value.nil? && (!value.is_a? Array)
-      raise BulbStateValueTypeException, "Value has incorrect type. Requires array, got #{value.class}"
+      raise BulbStateValueTypeException, "XY value has incorrect type. Requires array, got #{value.class}"
     elsif value.nil?
       return
     elsif value.length == 2 && value[0].is_a?(Numeric) \
@@ -156,12 +157,12 @@ class BulbState
       @xy[0] = value[0].to_f
       @xy[1] = value[1].to_f
     else
-      raise BulbStateValueOutOfRangeException, "Value out of range. Must be [#{MIN_XY},#{MAX_XY}]"
+      raise BulbStateValueOutOfRangeException, "XY value out of range. Must be [#{MIN_XY},#{MAX_XY}]. Was #{value.inspect}"
     end
   end
 
   def data 
-    data = {} 
+    data = @data
     data["on"] = @on if (@on!=nil) 
     data["bri"] = @bri if @bri 
     data["hue"] = @hue if @hue 
@@ -176,7 +177,7 @@ class BulbState
     data 
   end 
 
-  def to_json
+  def to_json(options={})
     data.to_json
   end
 end

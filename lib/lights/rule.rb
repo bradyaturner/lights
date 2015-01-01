@@ -9,13 +9,11 @@ class Rule
 
   def data
     data = @data
-    data["id"] = @id if @id
     data["name"] = @name if @name
     data
   end
 
-  def to_json
+  def to_json(options={})
     data.to_json
   end
-
 end
