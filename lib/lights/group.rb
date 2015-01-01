@@ -1,17 +1,14 @@
-class Group
+require 'lights/hobject'
 
-  attr_reader :id, :data, :name, :lights
-  attr_writer :name, :lights
+class Group < HObject
+  attr_reader :id, :data, :name, :lights, :action
+  attr_writer :name, :lights, :action
   def initialize( id = nil, data = {} )
+    super(data)
     @id = id
-    @data = data
     @action = BulbState.new(data["action"]) 
     @name = data["name"]
     @lights = data["lights"]
-  end
-
-  def action
-    @action.data
   end
 
   def data
@@ -20,9 +17,5 @@ class Group
     data["lights"] = @lights if @lights
     data["action"] = @action.data if @action.data != {}
     data
-  end
-
-  def to_json(options={})
-    data.to_json
   end
 end

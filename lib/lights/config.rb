@@ -1,14 +1,13 @@
 require 'lights/userlist'
+require 'lights/hobject'
 
-class HueConfig
-
+class HueConfig < HObject
   attr_reader :name, :swversion, :whitelist
-
   def initialize(data = {})
+    super
     @name = data["name"]
     @swversion = data["swversion"]
     @whitelist = UserList.new(data["whitelist"])
-    @data = data
   end
 
   def data
@@ -17,10 +16,6 @@ class HueConfig
     data["swversion"] = @swversion if @swversion
     data["whitelist"] = @whitelist.data if !@whitelist.data.empty?
     data
-  end
-
-  def to_json(options={})
-    data.to_json
   end
 end
 

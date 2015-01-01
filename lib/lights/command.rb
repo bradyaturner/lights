@@ -1,10 +1,12 @@
-class Command
+require 'lights/hobject'
+
+class Command < HObject
   attr_reader :address, :method, :body
   def initialize(data = {})
+    super
     @address = data["address"]
     @body = data["body"]
     @method = data["method"]
-    @data = data
   end
 
   def data
@@ -14,10 +16,5 @@ class Command
     data["method"] = @method if @method
     data
   end
-
-  def to_json(options={})
-    data.to_json
-  end
 end
-
 

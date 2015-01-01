@@ -1,14 +1,15 @@
 require 'lights/command'
+require 'lights/hobject'
 
-class Schedule
+class Schedule < HObject
   attr_reader :id, :name, :time, :status
   def initialize(id,data = {})
+    super(data)
     @id = id
     @name = data["name"]
     @time = data["time"]
     @status = data["status"]
     @command = Command.new(data["command"])
-    @data = data
   end
 
   def scene
@@ -22,10 +23,6 @@ class Schedule
     data["status"] = @status if @status
     data["command"] = @command.data if !@command.data.empty?
     data
-  end
-
-  def to_json(options={})
-    data.to_json
   end
 end
 

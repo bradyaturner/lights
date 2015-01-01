@@ -1,8 +1,9 @@
-class Scene
+require 'lights/hobject'
 
+class Scene < HObject
   attr_reader :id, :name, :active, :lights
-
   def initialize(id,data = {})
+    super(data)
     @id = id
     @name = data["name"]
     @active = data["active"]
@@ -15,10 +16,6 @@ class Scene
     data["active"] = @active if @active 
     data["lights"] = @lights if @lights
     data
-  end
-
-  def to_json(options={})
-    data.to_json
   end
 end
 
