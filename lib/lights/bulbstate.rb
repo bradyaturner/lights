@@ -29,10 +29,18 @@ class BulbState
     CT = "ct"
   end
 
+  module Hue
+    YELLOW = 12750
+    LGREEN = 22500
+    GREEN = 25500
+    BLUE = 46920
+    PURPLE = 56100
+    RED = 65535
+  end
+
   attr_reader :on, :bri, :hue, :sat, :xy, :ct,  
               :alert, :effect, :color_mode, 
               :reachable, :transition_time
- 
   def initialize( data = {} ) 
     data = {} if data == nil 
     @on = data["on"] 
