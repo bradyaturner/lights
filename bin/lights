@@ -115,6 +115,25 @@ class LightsCli
 
       light = Bulb.new(id,{"name"=>options[:name]})
       hue.edit_bulb light
+    when "group"
+      id = ARGV.shift
+      if !id
+        puts "Must specify group id."
+        exit 1
+      end
+
+      OptionParser.new do |opts|
+        opts.on("--name", "--name <name>", String, "Set light name"){|n| options[:name]=n}
+        opts.on("-l", "--lights 1,2,...N", Array, "Which lights to put in group"){|l| options[:lights]=l}
+      end.parse!
+      if !options[:name] && !options[:lights]
+        puts "Must specify a value to edit."
+        exit 1
+      end
+      group = Group.new(id)
+      group.name = options[:name] if options[:name]
+      group.lights = options[:lights] if options[:lights]
+      hue.edit_group group
     when nil
       STDERR.puts "Must specify a type to edit."
     else
