@@ -128,6 +128,10 @@ class Lights
     put "lights/#{bulb.id}", bulb
   end
 
+  def edit_group( group )
+    put "groups/#{group.id}", group
+  end
+
   def delete_user( username )
     delete "config/whitelist/#{username}"
   end
