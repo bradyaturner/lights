@@ -26,7 +26,7 @@ CLI Quick Setup
 
 ```
 lights discover -s
-lights config -f --user username
+lights config -f --user <username>
 lights register
 lights list
 lights on -l all
