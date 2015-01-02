@@ -173,7 +173,6 @@ class LightsCli
  
   def list
     hue = Lights.new @config["bridge_ip"], @config["username"]
-    objects = []
     titles = []
     methods = []
 
@@ -187,42 +186,42 @@ class LightsCli
     case type
     when nil, "","lights"
       response = options[:new] ? hue.request_new_bulb_list : hue.request_bulb_list
-      objects = BulbList.new(response).list
+      objects = BulbList.new(response)
       titles = ["ID","NAME"]
       methods = [:id,:name]
     when "sensors"
       response = options[:new] ? hue.request_new_sensor_list : hue.request_sensor_list
-      objects = SensorList.new(response).list
+      objects = SensorList.new(response)
       titles = ["ID","NAME"]
       methods = [:id,:name]
     when "groups"
       response = hue.request_group_list
-      objects = GroupList.new(response).list
+      objects = GroupList.new(response)
       titles = ["ID","NAME","LIGHTS"]
       methods = [:id,:name,:lights]
     when "scenes"
       response = hue.request_scene_list
-      objects = SceneList.new(response).list
+      objects = SceneList.new(response)
       titles = ["ID","NAME","LIGHTS"]
       methods = [:id,:name,:lights]
     when "users"
       response = hue.request_config
-      objects = UserList.new(response["whitelist"]).list
+      objects = UserList.new(response["whitelist"])
       titles = ["ID","NAME","CREATE DATE","LAST USE DATE"]
       methods = [:id,:name,:create_date,:last_use_date]
     when "rules"
       response = hue.request_rules
-      objects = RuleList.new(response).list
+      objects = RuleList.new(response)
       titles = ["ID","NAME"]
       methods = [:id,:name]
     when "schedules"
       response = hue.request_schedules
-      objects = ScheduleList.new(response).list
+      objects = ScheduleList.new(response)
       titles = ["ID","NAME","TIME","SCENE","STATUS"]
       methods = [:id,:name,:time,:scene,:status]
     when "datastore"
       response = hue.request_datastore
-      objects = Datastore.new(response).all
+      objects = Datastore.new(response)
       titles = ["TYPE","ID","NAME"]
       methods = [:class,:id,:name]
     else
@@ -230,9 +229,9 @@ class LightsCli
       return
     end
     if options[:json]
-      puts JSON.pretty_generate response
+      puts JSON.pretty_generate objects.data
     else
-      puts SimpleTable.new.from_objects(objects,titles,methods).text
+      puts SimpleTable.new.from_objects(objects.list,titles,methods).text
     end
   end
   

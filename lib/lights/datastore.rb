@@ -21,7 +21,7 @@ class Datastore < HObject
     @sensors = SensorList.new(data["sensors"])
   end
 
-  def all
+  def list
     @lights.list + \
       @groups.list + \
       [@config] + \
