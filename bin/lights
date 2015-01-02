@@ -226,7 +226,7 @@ class LightsCli
       titles = ["TYPE","ID","NAME"]
       methods = [:class,:id,:name]
     else
-      puts "Don't know how to list \"#{type}\""
+      puts "Don't know how to list type \"#{type}\"."
       return
     end
     if options[:json]
