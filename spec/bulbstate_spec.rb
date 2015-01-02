@@ -19,11 +19,13 @@ describe BulbState do
     data = { "on" => true }
     bulb = BulbState.new(data)
     bulb.on.should eql true
+    bulb.data["on"].should eql true
   end
   it "should properly set on value" do
     b = BulbState.new
     b.on = true
     b.on.should eq true
+    b.data["on"].should eq true
   end
   it "should raise exception when on has invalid type" do
     b = BulbState.new
@@ -35,24 +37,28 @@ describe BulbState do
     data = { "bri" => BulbState::MAX_BRI }
     b = BulbState.new(data)
     b.bri.should eq BulbState::MAX_BRI
+    b.data["bri"].should eq BulbState::MAX_BRI
   end
 
   it "should properly set brightness value in constructor" do
     data = { "bri" => BulbState::MIN_BRI }
     b = BulbState.new(data)
     b.bri.should eq BulbState::MIN_BRI
+    b.data["bri"].should eq BulbState::MIN_BRI
   end
 
   it "should properly set brightness value" do
     b = BulbState.new
     b.bri = BulbState::MAX_BRI
     b.bri.should eq BulbState::MAX_BRI
+    b.data["bri"].should eq BulbState::MAX_BRI
   end
 
   it "should properly set brightness value" do
     b = BulbState.new
     b.bri = BulbState::MIN_BRI
     b.bri.should eq BulbState::MIN_BRI
+    b.data["bri"].should eq BulbState::MIN_BRI
   end
 
   it "should raise exception when brightness value is not an integer" do
@@ -85,24 +91,28 @@ describe BulbState do
     data = { "sat" => BulbState::MAX_SAT }
     b = BulbState.new(data)
     b.sat.should eq BulbState::MAX_SAT
+    b.data["sat"].should eq BulbState::MAX_SAT
   end
 
   it "should properly set saturation value in constructor" do
     data = { "sat" => BulbState::MIN_SAT }
     b = BulbState.new(data)
     b.sat.should eq BulbState::MIN_SAT
+    b.data["sat"].should eq BulbState::MIN_SAT
   end
 
   it "should properly set saturation value" do
     b = BulbState.new
     b.sat = BulbState::MAX_SAT
     b.sat.should eq BulbState::MAX_SAT
+    b.data["sat"].should eq BulbState::MAX_SAT
   end
 
   it "should properly set saturation value" do
     b = BulbState.new
     b.sat = BulbState::MIN_SAT
     b.sat.should eq BulbState::MIN_SAT
+    b.data["sat"].should eq BulbState::MIN_SAT
   end
 
   it "should raise exception when sat value is not an integer" do
@@ -134,25 +144,29 @@ describe BulbState do
   it "should properly set hue value in constructor" do
     data = { "hue" => BulbState::MAX_HUE }
     b = BulbState.new(data)
-    b.hue.should eq BulbState::MAX_HUE    
+    b.hue.should eq BulbState::MAX_HUE
+    b.data["hue"].should eq BulbState::MAX_HUE
   end
 
   it "should properly set hue value in constructor" do
     data = { "hue" => BulbState::MIN_HUE }
     b = BulbState.new(data)
-    b.hue.should eq BulbState::MIN_HUE    
+    b.hue.should eq BulbState::MIN_HUE
+    b.data["hue"].should eq BulbState::MIN_HUE
   end
 
   it "should properly set hue value" do
     b = BulbState.new
     b.hue = BulbState::MAX_HUE
-    b.hue.should eq BulbState::MAX_HUE    
+    b.hue.should eq BulbState::MAX_HUE
+    b.data["hue"].should eq BulbState::MAX_HUE
   end
 
   it "should properly set hue value" do
     b = BulbState.new
     b.hue = BulbState::MIN_HUE
-    b.hue.should eq BulbState::MIN_HUE    
+    b.hue.should eq BulbState::MIN_HUE
+    b.data["hue"].should eq BulbState::MIN_HUE
   end
 
   it "should raise exception when hue value is not an integer" do
@@ -185,24 +199,28 @@ describe BulbState do
     data = { "ct" => BulbState::MAX_CT }
     b = BulbState.new(data)
     b.ct.should eq BulbState::MAX_CT   
+    b.data["ct"].should eq BulbState::MAX_CT
   end
 
   it "should properly set color temperature value in constructor" do
     data = { "ct" => BulbState::MIN_CT }
     b = BulbState.new(data)
     b.ct.should eq BulbState::MIN_CT    
+    b.data["ct"].should eq BulbState::MIN_CT
   end
 
   it "should properly set color temperature value" do
     b = BulbState.new
     b.ct = BulbState::MAX_CT
     b.ct.should eq BulbState::MAX_CT    
+    b.data["ct"].should eq BulbState::MAX_CT
   end
 
   it "should properly set color temperature value" do
     b = BulbState.new
     b.ct = BulbState::MIN_CT
     b.ct.should eq BulbState::MIN_CT    
+    b.data["ct"].should eq BulbState::MIN_CT
   end
 
   it "should raise exception when color temperature value is not an integer" do
@@ -235,24 +253,28 @@ describe BulbState do
     data = { "effect" => BulbState::Effect::COLORLOOP }
     b = BulbState.new(data)
     b.effect.should eq BulbState::Effect::COLORLOOP
+    b.data["effect"].should eq BulbState::Effect::COLORLOOP
   end
 
   it "should properly set effect value in constructor" do
     data = { "effect" => BulbState::Effect::COLORLOOP }
     b = BulbState.new(data)
     b.effect.should eq BulbState::Effect::COLORLOOP
+    b.data["effect"].should eq BulbState::Effect::COLORLOOP
   end
 
   it "should properly set effect value" do
     b = BulbState.new
     b.effect = BulbState::Effect::COLORLOOP
     b.effect.should eq BulbState::Effect::COLORLOOP
+    b.data["effect"].should eq BulbState::Effect::COLORLOOP
   end
 
   it "should properly set effect value" do
     b = BulbState.new
     b.effect = BulbState::Effect::NONE
     b.effect.should eq BulbState::Effect::NONE
+    b.data["effect"].should eq BulbState::Effect::NONE
   end
 
   it "should raise exception when effect value is invalid" do
@@ -265,12 +287,14 @@ describe BulbState do
     data = { "transitiontime" => 0.1 }
     b = BulbState.new(data)
     b.transition_time.should eq 0.1
+    b.data["transitiontime"].should eq 0.1
   end
 
  it "should properly set transition time value" do
     b = BulbState.new
     b.transition_time = BulbState::MIN_TRANSITION_TIME
     b.transition_time.should eq BulbState::MIN_TRANSITION_TIME
+    b.data["transitiontime"].should eq BulbState::MIN_TRANSITION_TIME
   end
 
   it "should raise exception when transition time value is invalid" do
@@ -288,18 +312,21 @@ describe BulbState do
     data = { "alert" => BulbState::Alert::SELECT }
     b = BulbState.new(data)
     b.alert.should eq BulbState::Alert::SELECT
+    b.data["alert"].should eq BulbState::Alert::SELECT
   end
 
  it "should properly set alert value" do
     b = BulbState.new
     b.alert = BulbState::Alert::LSELECT
     b.alert.should eq BulbState::Alert::LSELECT
+    b.data["alert"].should eq BulbState::Alert::LSELECT
   end
 
  it "should properly set alert value" do
     b = BulbState.new
     b.alert = BulbState::Alert::NONE
     b.alert.should eq BulbState::Alert::NONE
+    b.data["alert"].should eq BulbState::Alert::NONE
   end
 
   it "should raise exception when alert value is invalid" do
@@ -312,18 +339,21 @@ describe BulbState do
     data = { "colormode" => BulbState::ColorMode::HS }
     b = BulbState.new(data)
     b.color_mode.should eq BulbState::ColorMode::HS
+    b.data["colormode"].should eq BulbState::ColorMode::HS
   end
 
  it "should properly set color mode value" do
     b = BulbState.new
     b.color_mode = BulbState::ColorMode::XY
     b.color_mode.should eq BulbState::ColorMode::XY
+    b.data["colormode"].should eq BulbState::ColorMode::XY
   end
 
  it "should properly set color mode value" do
     b = BulbState.new
     b.color_mode = BulbState::ColorMode::CT
     b.color_mode.should eq BulbState::ColorMode::CT
+    b.data["colormode"].should eq BulbState::ColorMode::CT
   end
 
   it "should raise exception when alert value is invalid" do
@@ -337,6 +367,7 @@ describe BulbState do
     data = { "xy" => xy }
     b = BulbState.new(data)
     b.xy.should eq xy
+    b.data["xy"].should eq xy
   end
 
   it "should properly set xy value in constructor" do
@@ -344,6 +375,7 @@ describe BulbState do
     data = { "xy" => xy }
     b = BulbState.new(data)
     b.xy.should eq xy 
+    b.data["xy"].should eq xy
   end
 
   it "should properly set xy value" do
@@ -351,6 +383,7 @@ describe BulbState do
     xy = [BulbState::MAX_XY,BulbState::MAX_XY]
     b.xy = xy
     b.xy.should eq xy
+    b.data["xy"].should eq xy
   end
 
   it "should properly set xy value" do
@@ -358,6 +391,7 @@ describe BulbState do
     xy = [BulbState::MIN_XY,BulbState::MIN_XY]
     b.xy = xy
     b.xy.should eq xy 
+    b.data["xy"].should eq xy
   end
 
   it "should raise exception when xy value is not an array" do
