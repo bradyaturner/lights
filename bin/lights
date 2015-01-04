@@ -293,6 +293,7 @@ class LightsCli
       opts.on("-z", "--xy x,y", Array, "Set xy"){|z| options[:xy]=z}
       opts.on("-l", "--lights 1,2,...N", Array, "Which lights to control"){|l| options[:lights]=l}
       opts.on("-g", "--groups 1,2,...N", Array, "Which groups to control"){|g| options[:groups]=g}
+      opts.on("-S", "--scene <id>", String, "Which scene to recall"){|s| options[:scene]=s}
       opts.on("-d", "--duration seconds", OptionParser::DecimalInteger, "Transition duration in seconds"){|d| options[:duration]=d}
     end.parse!
 
@@ -301,7 +302,8 @@ class LightsCli
         && !options[:ct] && !options[:brightness] \
         && !options[:hue] && !options[:saturation] \
         && !options[:effect] && !options[:alert] \
-        && !options[:xy] && !options[:color]
+        && !options[:xy] && !options[:color] \
+        && !options[:scene]
       puts "Must specify a state to set."
       bad_args = true
     end
@@ -312,7 +314,7 @@ class LightsCli
     end
     exit 1 if bad_args    
    
-    s = BulbState.new 
+    s = GroupState.new
     if options[:on]
       s.on = true
     elsif options[:off]
@@ -349,6 +351,9 @@ class LightsCli
     end
     if options[:xy]
       s.xy = options[:xy]
+    end
+    if options[:scene]
+      s.scene = options[:scene]
     end
 
     if options[:lights]
@@ -442,6 +447,7 @@ begin
 rescue BridgeConnectException,
         UsernameException,
         ResourceUnavailableException,
+        ParameterUnavailableException,
         BulbStateValueOutOfRangeException,
         BulbStateValueTypeException => e
   puts e.message

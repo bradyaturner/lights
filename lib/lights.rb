@@ -7,6 +7,7 @@ require 'json'
 require 'lights/bridge'
 require 'lights/exception'
 require 'lights/datastore'
+require 'lights/groupstate'
 require 'lights/loggerconfig'
 
 class Lights 
@@ -156,6 +157,8 @@ private
       raise UsernameException
     when 3
       raise ResourceUnavailableException, result["error"]["description"]
+    when 6
+      raise ParameterUnavailableException, result["error"]["description"]
     when 101
       raise BridgeConnectException
     else
@@ -180,27 +183,39 @@ private
     @logger.debug "==> PUT: #{path}"
     @logger.debug data.to_json 
     response = @http.put( "/api/#{@username}/#{path}", data.to_json )
+    result = JSON.parse( response.body )
     @logger.debug "<== #{response.code}"
     @logger.debug response.body
-    JSON.parse response.body
+    if result.first.kind_of?(Hash) && result.first.has_key?("error")
+      process_error result.first
+    end
+    result
   end
 
   def post( path, data={} )
     @logger.debug "==> POST: #{path}"
     @logger.debug data.to_json
     response = @http.post( "/api/#{@username}/#{path}", data.to_json )
+    result = JSON.parse( response.body )
     @logger.debug "<== #{response.code}"
     @logger.debug response.body
-    JSON.parse response.body
+    if result.first.kind_of?(Hash) && result.first.has_key?("error")
+      process_error result.first
+    end
+    result
   end
 
   def delete( path )
     @logger.debug "==> DELETE: #{path}"
     request = Net::HTTP::Delete.new( "/api/#{@username}/#{path}" )
     response = @http.request request
+    result = JSON.parse( response.body )
     @logger.debug "<== #{response.code}"
     @logger.debug response.body
-    JSON.parse response.body
+    if result.first.kind_of?(Hash) && result.first.has_key?("error")
+      process_error result.first
+    end
+    result
   end
 
 end

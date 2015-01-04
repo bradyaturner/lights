@@ -27,3 +27,9 @@ class ResourceUnavailableException < Exception
     super
   end
 end
+
+class ParameterUnavailableException < Exception
+  def intialize(msg = "Parameter unavailable")
+    super
+  end
+end
