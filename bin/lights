@@ -66,6 +66,30 @@ class LightsCli
     options = {}    
 
     case type
+    when "scene"
+      OptionParser.new do |opts|
+        opts.on("-l", "--lights 1,2,...N", Array, "Which lights are in the scene"){|l| options[:lights]=l}
+        opts.on("-n", "--name <name>", String, "Set scene name"){|n| options[:name]=n}
+        opts.on("-i", "--id <id>", String, "Set scene ID"){|i| options[:id]=i}
+      end.parse!
+
+      if !options[:lights]
+        puts "Must specify which lights are in the scene."
+        exit 1
+      end
+      if !options[:name]
+        puts "Must specify scene name."
+        exit 1
+      end
+      if !options[:id]
+        puts "Must specify scene id."
+        exit 1
+      end
+
+      s = Scene.new options[:id]
+      s.name = options[:name]
+      s.lights = options[:lights]
+      hue.create_scene s
     when "group"
       OptionParser.new do |opts|
         opts.on("-l", "--lights 1,2,...N", Array, "Which lights to put in group"){|l| options[:lights]=l}
@@ -164,6 +188,8 @@ class LightsCli
       end
 
       hue.delete_user id
+    when "scene"
+      STDERR.puts "Cannot delete scenes."
     when nil
       STDERR.puts "Must specify a type to delete."
     else
