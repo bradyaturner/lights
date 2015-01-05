@@ -172,7 +172,7 @@ class BulbState < HObject
   end
 
   def data 
-    data = @data
+    data = {}
     data["on"] = @on if (@on!=nil) 
     data["bri"] = @bri if @bri 
     data["hue"] = @hue if @hue 

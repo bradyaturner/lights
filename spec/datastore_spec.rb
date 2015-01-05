@@ -1,16 +1,41 @@
 require 'lights'
 
 describe Datastore do
-  it "properly reconstructs sub objects" do
+  #it "properly reconstructs sub objects" do
+  #  data = JSON.parse(DATASTORE_JSON)
+  #  ds = Datastore.new data
+  #  ds.data.should eql data
+  #end
+
+  it "properly reconstructs light objects" do
     data = JSON.parse(DATASTORE_JSON)
     ds = Datastore.new data
     ds.lights.data.should eql data["lights"]
+  end
+  it "properly reconstructs group objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
     ds.groups.data.should eql data["groups"]
+  end
+  it "properly reconstructs rule objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
     ds.rules.data.should eql data["rules"]
+  end
+  it "properly reconstructs scene objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
     ds.scenes.data.should eql data["scenes"]
+  end
+  it "properly reconstructs schedule objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
     ds.schedules.data.should eql data["schedules"]
+  end
+  it "properly reconstructs sensor objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
     ds.sensors.data.should eql data["sensors"]
-    ds.data.should eql data
   end
 end
 

@@ -1,55 +1,40 @@
 class SensorState < HObject
-  attr_reader :last_updated
+  attr_reader :lastupdated, :daylight, :buttonevent
   def initialize(data)
     super
-    @last_updated = data["lastupdated"]
+    keys = %W{ lastupdated daylight buttonevent }
+    keys.each {|key| instance_variable_set("@#{key}",data[key])}
   end
 
   def data
-    data = @data
-    data["lastupdated"] = @last_updated if @last_updated
-    data
-  end
-end
-
-class TapState < SensorState
-  attr_reader :button_event
-  def initialize(data)
-    super
-    @button_event = data["button_event"]
-  end
-
-  def data
-    data = @data
-    data["button_event"] = @button_event if @button_event
+    data = {}
+    data["lastupdated"] = @lastupdated if @lastupdated
+    data["buttonevent"] = @buttonevent if @buttonevent
+    data["daylight"] = @daylight unless @daylight.nil?
     data
   end
 end
 
 class Sensor < HObject
-  attr_reader :id, :data, :name, :type, :model_id, :manufacturer_name, :unique_id, :sw_version, :state
+  attr_reader :id, :data, :name, :type, :modelid, :manufacturername, :uniqueid, :swversion, :state
   def initialize( id, data = {} )
-    super(data)
+    super
     @id = id
-    @name = data["name"]
-    @type = data["type"]
-    @model_id = data["modelid"]
-    @manufacturer_name = data["manufacturername"]
-    @unique_id = data["uniqueid"]
-    @sw_version = data["swversion"]
+    keys = %W{ config name type modelid manufacturername uniqueid swversion }
+    keys.each {|key| instance_variable_set("@#{key}",data[key])}
     @state = SensorState.new(data["state"])
-    #@config = SensorConfig.new(data["config"])
   end
   
   def data
-    data = @data
+    data = {}
     data["name"] = @name if @name
     data["type"] = @type if @type
-    data["modelid"] = @model_id if @model_id
-    data["manufacturername"] = @manufacturer_name if @manufacturer_name
-    data["uniqueid"] = @unique_id if @unique_id
-    data["swversion"] = @sw_version if @sw_version
-    data["state"] = @state.data if @state.data if !@state.data.empty?
+    data["modelid"] = @modelid if @modelid
+    data["manufacturername"] = @manufacturername if @manufacturername
+    data["uniqueid"] = @uniqueid if @uniqueid
+    data["swversion"] = @swversion if @swversion
+    data["state"] = @state.data unless @state.data.empty?
+    data["config"] = @config if @config
     data
   end
 end

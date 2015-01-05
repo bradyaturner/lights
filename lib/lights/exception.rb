@@ -12,7 +12,7 @@ end
 
 class BulbStateValueOutOfRangeException < Exception
   def initalize(msg = "Value out of range.")
-    super(msg)
+    super
   end
 end
 

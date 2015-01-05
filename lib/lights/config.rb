@@ -5,13 +5,13 @@ class HueConfig < HObject
   attr_reader :name, :swversion, :whitelist
   def initialize(data = {})
     super
-    @name = data["name"]
-    @swversion = data["swversion"]
+    keys = %W{ name swversion }
+    keys.each {|key| instance_variable_set("@#{key}",data[key])}
     @whitelist = UserList.new(data["whitelist"])
   end
 
   def data
-    data = @data
+    data = {}
     data["name"] = @name if @name
     data["swversion"] = @swversion if @swversion
     data["whitelist"] = @whitelist.data if !@whitelist.data.empty?

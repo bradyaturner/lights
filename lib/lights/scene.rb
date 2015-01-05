@@ -3,11 +3,10 @@ require 'lights/hobject'
 class Scene < HObject
   attr_accessor :id, :name, :active, :lights
   def initialize(id,data = {})
-    super(data)
+    super
     @id = id
-    @name = data["name"]
-    @active = data["active"]
-    @lights = data["lights"]
+    keys = %W{ name active lights }
+    keys.each {|key| instance_variable_set("@#{key}",data[key])}
   end
 
   def data

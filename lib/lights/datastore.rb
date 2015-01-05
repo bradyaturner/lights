@@ -32,7 +32,7 @@ class Datastore < HObject
   end
 
   def data
-    data = @data
+    data = {}
     data["lights"] = @lights.data if !@lights.data.empty?
     data["groups"] = @groups.data if !@groups.data.empty?
     data["config"] = @config.data if !@config.data.empty?
