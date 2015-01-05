@@ -1,7 +1,7 @@
 require 'lights/hobject'
 
 class Scene < HObject
-  attr_reader :id, :name, :active, :lights
+  attr_accessor :id, :name, :active, :lights
   def initialize(id,data = {})
     super(data)
     @id = id

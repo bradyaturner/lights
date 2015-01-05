@@ -133,6 +133,10 @@ class Lights
     post "groups", group
   end
 
+  def create_scene( scene )
+    put "scenes/#{scene.id}", scene
+  end
+
   def delete_group( id )
     delete "groups/#{id}"
   end
