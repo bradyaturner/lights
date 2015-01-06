@@ -1,16 +1,21 @@
 require 'lights/hobject'
 
 class Rule < HObject
-  attr_reader :id, :data, :name
+  KEYS = %W{name owner created lasttriggered timestriggered status conditions actions} 
+  attr_reader :id, :data, :name, :owner, :created,
+                :lasttriggered, :timestriggered,
+                :status, :conditions, :actions 
   def initialize( id = nil, data = {} )
-    super(data)
     @id = id
-    @name = data["name"]
+    KEYS.each {|key| instance_variable_set("@#{key}",data[key])}
   end
 
   def data
-    data = @data
-    data["name"] = @name if @name
+    data = {}
+    KEYS.each do |k|
+      v = instance_variable_get("@#{k}")
+      data[k] = v unless v.nil?
+    end
     data
   end
 end

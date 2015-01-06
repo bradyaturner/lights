@@ -1,21 +1,22 @@
 require 'lights/hobject'
 
 class Group < HObject
-  attr_reader :id, :data, :name, :lights, :action
+  KEYS = %w{ name type lights }
+  attr_reader :id, :name, :lights, :action, :type
   attr_writer :name, :lights, :action
   def initialize( id = nil, data = {} )
-    super(data)
     @id = id
     @action = BulbState.new(data["action"]) 
-    @name = data["name"]
-    @lights = data["lights"]
+    KEYS.each {|key| instance_variable_set("@#{key}",data[key])}
   end
 
   def data
-    data = @data
-    data["name"] = @name if @name
-    data["lights"] = @lights if @lights
-    data["action"] = @action.data if @action.data != {}
+    data = {}
+    data["action"] = @action.data unless @action.data.empty?
+    KEYS.each do |k|
+      v = instance_variable_get("@#{k}")
+      data[k] = v unless v.nil?
+    end
     data
   end
 end

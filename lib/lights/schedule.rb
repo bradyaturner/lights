@@ -2,13 +2,12 @@ require 'lights/command'
 require 'lights/hobject'
 
 class Schedule < HObject
-  attr_reader :id, :name, :time, :status
+  KEYS = %W{name time status description localtime created}
+  attr_reader :id, :name, :time, :status,
+                :description, :localtime, :created
   def initialize(id,data = {})
-    super(data)
     @id = id
-    @name = data["name"]
-    @time = data["time"]
-    @status = data["status"]
+    KEYS.each {|key| instance_variable_set("@#{key}",data[key])}
     @command = Command.new(data["command"])
   end
 
@@ -17,11 +16,12 @@ class Schedule < HObject
   end
 
   def data
-    data = @data
-    data["name"] = @name if @name
-    data["time"] = @time if @time
-    data["status"] = @status if @status
+    data = {}
     data["command"] = @command.data if !@command.data.empty?
+    KEYS.each do |k|
+      v = instance_variable_get("@#{k}")
+      data[k] = v unless v.nil?
+    end
     data
   end
 end

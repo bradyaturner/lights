@@ -1,20 +1,19 @@
 require 'lights/hobject'
 
 class Scene < HObject
+  KEYS = %W{ name active lights }
   attr_accessor :id, :name, :active, :lights
   def initialize(id,data = {})
-    super(data)
     @id = id
-    @name = data["name"]
-    @active = data["active"]
-    @lights = data["lights"]
+    KEYS.each {|key| instance_variable_set("@#{key}",data[key])}
   end
 
   def data
     data = {}
-    data["name"] = @name if @name
-    data["active"] = @active if @active 
-    data["lights"] = @lights if @lights
+    KEYS.each do |k|
+      v = instance_variable_get("@#{k}")
+      data[k] = v unless v.nil?
+    end
     data
   end
 end

@@ -45,7 +45,6 @@ class BulbState < HObject
               :reachable, :transition_time
   def initialize( data = {} ) 
     data = {} if data == nil
-    super
     @on = data["on"] 
     set_bri data["bri"]
     set_hue data["hue"]
@@ -172,7 +171,7 @@ class BulbState < HObject
   end
 
   def data 
-    data = @data
+    data = {}
     data["on"] = @on if (@on!=nil) 
     data["bri"] = @bri if @bri 
     data["hue"] = @hue if @hue 

@@ -2,22 +2,23 @@ require 'lights/bulbstate'
 require 'lights/hobject'
 
 class Bulb < HObject
-  attr_reader :id, :name, :type, :swversion, :state
+  KEYS = %W{name type swversion pointsymbol modelid uniqueid}
+  attr_reader :id, :name, :type, :swversion, :state,
+                :pointsymbol, :modelid, :uniqueid
+  attr_writer :name, :state
   def initialize(id,data = {})
-    super(data)
     @id = id
-    @name = data["name"]
-    @type = data["type"]
-    @swversion = data["swversion"]
+    KEYS.each {|key| instance_variable_set("@#{key}",data[key])}
     @state = BulbState.new data["state"]
   end
 
   def data
-    data = @data
-    data["name"] = @name if @name
-    data["type"] = @type if @type
-    data["swversion"] = @swversion if @swversion
-    data["state"] = @state.data if !@state.data.empty?
+    data = {}
+    data["state"] = @state.data unless @state.data.empty?
+    KEYS.each do |k|
+      v = instance_variable_get("@#{k}")
+      data[k] = v unless v.nil?
+    end
     data
   end
 end
