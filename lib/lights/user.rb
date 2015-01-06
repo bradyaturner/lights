@@ -2,6 +2,7 @@ require 'lights/hobject'
 
 class User < HObject
   attr_reader :id, :name, :create_date, :last_use_date
+  attr_writer :name
   def initialize( id, data = {} )
     super
     @id = id

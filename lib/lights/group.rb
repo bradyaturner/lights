@@ -1,7 +1,7 @@
 require 'lights/hobject'
 
 class Group < HObject
-  attr_reader :id, :data, :name, :lights, :action, :type
+  attr_reader :id, :name, :lights, :action, :type
   attr_writer :name, :lights, :action
   def initialize( id = nil, data = {} )
     super

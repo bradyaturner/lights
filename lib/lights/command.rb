@@ -2,6 +2,7 @@ require 'lights/hobject'
 
 class Command < HObject
   attr_reader :address, :method, :body
+  attr_writer :address, :method, :body
   def initialize(data = {})
     super
     keys = %W{ address method body }

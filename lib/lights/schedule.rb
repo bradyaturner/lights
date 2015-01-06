@@ -2,7 +2,8 @@ require 'lights/command'
 require 'lights/hobject'
 
 class Schedule < HObject
-  attr_reader :id, :name, :time, :status
+  attr_reader :id, :name, :time, :status,
+                :description, :localtime, :created
   def initialize(id,data = {})
     super
     @id = id

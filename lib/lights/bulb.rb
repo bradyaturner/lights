@@ -2,8 +2,9 @@ require 'lights/bulbstate'
 require 'lights/hobject'
 
 class Bulb < HObject
-  attr_reader :id, :name, :type, :swversion, :state
-  attr_writer :name
+  attr_reader :id, :name, :type, :swversion, :state,
+                :pointsymbol, :modelid, :uniqueid
+  attr_writer :name, :state
   def initialize(id,data = {})
     super
     @id = id

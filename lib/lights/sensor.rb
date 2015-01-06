@@ -16,7 +16,8 @@ class SensorState < HObject
 end
 
 class Sensor < HObject
-  attr_reader :id, :data, :name, :type, :modelid, :manufacturername, :uniqueid, :swversion, :state
+  attr_reader :id, :name, :type, :modelid, :manufacturername,
+                :uniqueid, :swversion, :state
   def initialize( id, data = {} )
     super
     @id = id

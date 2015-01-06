@@ -1,7 +1,9 @@
 require 'lights/hobject'
 
 class Rule < HObject
-  attr_reader :id, :data, :name
+  attr_reader :id, :data, :name, :owner, :created,
+                :lasttriggered, :timestriggered,
+                :status, :conditions, :actions 
   def initialize( id = nil, data = {} )
     super
     @id = id
