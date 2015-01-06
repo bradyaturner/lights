@@ -5,7 +5,6 @@ class Schedule < HObject
   attr_reader :id, :name, :time, :status,
                 :description, :localtime, :created
   def initialize(id,data = {})
-    super
     @id = id
     keys = %W{name time status description localtime created}
     keys.each {|key| instance_variable_set("@#{key}",data[key])}

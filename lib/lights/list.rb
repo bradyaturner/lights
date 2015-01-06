@@ -9,7 +9,6 @@ class List < HObject
 
   attr_reader :list
   def initialize(data = {})
-    super
     @list = []
   end
 

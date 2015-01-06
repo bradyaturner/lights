@@ -5,7 +5,6 @@ class Rule < HObject
                 :lasttriggered, :timestriggered,
                 :status, :conditions, :actions 
   def initialize( id = nil, data = {} )
-    super
     @id = id
     keys = %W{name owner created lasttriggered timestriggered status conditions actions} 
     keys.each {|key| instance_variable_set("@#{key}",data[key])}

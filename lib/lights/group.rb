@@ -4,7 +4,6 @@ class Group < HObject
   attr_reader :id, :name, :lights, :action, :type
   attr_writer :name, :lights, :action
   def initialize( id = nil, data = {} )
-    super
     @id = id
     @action = BulbState.new(data["action"]) 
     keys = %w{ name type lights }

@@ -4,7 +4,6 @@ require 'lights/hobject'
 class HueConfig < HObject
   attr_reader :name, :swversion, :whitelist
   def initialize(data = {})
-    super
     keys = %W{ name swversion }
     keys.each {|key| instance_variable_set("@#{key}",data[key])}
     @whitelist = UserList.new(data["whitelist"])

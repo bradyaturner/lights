@@ -11,7 +11,6 @@ class Datastore < HObject
   attr_reader :lights, :groups, :config, :rules,
                 :scenes, :schedules, :sensors
   def initialize(data = {})
-    super
     @lights = BulbList.new(data["lights"]) 
     @groups = GroupList.new(data["groups"])
     @config = HueConfig.new(data["config"])

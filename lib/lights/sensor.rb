@@ -1,7 +1,6 @@
 class SensorState < HObject
   attr_reader :lastupdated, :daylight, :buttonevent
   def initialize(data)
-    super
     keys = %W{ lastupdated daylight buttonevent }
     keys.each {|key| instance_variable_set("@#{key}",data[key])}
   end
@@ -19,7 +18,6 @@ class Sensor < HObject
   attr_reader :id, :name, :type, :modelid, :manufacturername,
                 :uniqueid, :swversion, :state
   def initialize( id, data = {} )
-    super
     @id = id
     keys = %W{ config name type modelid manufacturername uniqueid swversion }
     keys.each {|key| instance_variable_set("@#{key}",data[key])}

@@ -6,7 +6,6 @@ class Bulb < HObject
                 :pointsymbol, :modelid, :uniqueid
   attr_writer :name, :state
   def initialize(id,data = {})
-    super
     @id = id
     keys = %W{name type swversion pointsymbol modelid uniqueid}
     keys.each {|key| instance_variable_set("@#{key}",data[key])}
