@@ -3,14 +3,13 @@ require 'lights/hobject'
 class Command < HObject
   attr_reader :address, :method, :body
   def initialize(data = {})
-    super
     @address = data["address"]
     @body = data["body"]
     @method = data["method"]
   end
 
   def data
-    data = @data
+    data = {}
     data["address"] = @address if @address
     data["body"] = @body if @body
     data["method"] = @method if @method

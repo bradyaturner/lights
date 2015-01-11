@@ -9,12 +9,11 @@ class List < HObject
 
   attr_reader :list
   def initialize(data = {})
-    super
     @list = []
   end
 
   def data
-    data = @data
+    data = {}
     @list.each {|b| data[b.id] = b.data} if @list
     data
   end

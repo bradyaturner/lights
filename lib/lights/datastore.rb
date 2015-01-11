@@ -11,7 +11,6 @@ class Datastore < HObject
   attr_reader :lights, :groups, :config, :rules,
                 :scenes, :schedules, :sensors
   def initialize(data = {})
-    super
     @lights = BulbList.new(data["lights"]) 
     @groups = GroupList.new(data["groups"])
     @config = HueConfig.new(data["config"])
@@ -32,7 +31,7 @@ class Datastore < HObject
   end
 
   def data
-    data = @data
+    data = {}
     data["lights"] = @lights.data if !@lights.data.empty?
     data["groups"] = @groups.data if !@groups.data.empty?
     data["config"] = @config.data if !@config.data.empty?
