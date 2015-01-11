@@ -4,13 +4,43 @@ describe Datastore do
   it "properly reconstructs sub objects" do
     data = JSON.parse(DATASTORE_JSON)
     ds = Datastore.new data
-    ds.lights.data.should eql data["lights"]
-    ds.groups.data.should eql data["groups"]
-    ds.rules.data.should eql data["rules"]
-    ds.scenes.data.should eql data["scenes"]
-    ds.schedules.data.should eql data["schedules"]
-    ds.sensors.data.should eql data["sensors"]
     ds.data.should eql data
+  end
+
+  it "properly reconstructs light objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
+    ds.lights.data.should eql data["lights"]
+  end
+  it "properly reconstructs group objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
+    ds.groups.data.should eql data["groups"]
+  end
+  it "properly reconstructs rule objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
+    ds.rules.data.should eql data["rules"]
+  end
+  it "properly reconstructs scene objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
+    ds.scenes.data.should eql data["scenes"]
+  end
+  it "properly reconstructs schedule objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
+    ds.schedules.data.should eql data["schedules"]
+  end
+  it "properly reconstructs sensor objects" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
+    ds.sensors.data.should eql data["sensors"]
+  end
+  it "properly reconstructs config object" do
+    data = JSON.parse(DATASTORE_JSON)
+    ds = Datastore.new data
+    ds.config.data.should eql data["config"]
   end
 end
 
@@ -19,7 +49,7 @@ DATASTORE_JSON = %Q{
   "lights": {
     "1": {
       "state": {
-        "on": true,
+        "on": false,
         "bri": 254,
         "hue": 34495,
         "sat": 232,
@@ -31,7 +61,7 @@ DATASTORE_JSON = %Q{
         "ct": 155,
         "alert": "none",
         "colormode": "xy",
-        "reachable": true
+        "reachable": false
       },
       "type": "Extended color light",
       "name": "Hue Lamp 1",
@@ -227,7 +257,7 @@ DATASTORE_JSON = %Q{
     "name": "Philips hue",
     "zigbeechannel": 25,
     "mac": "00:11:22:33:44:55",
-    "dhcp": true,
+    "dhcp": false,
     "ipaddress": "192.168.1.27",
     "netmask": "255.255.255.0",
     "gateway": "192.168.1.1",
@@ -269,7 +299,7 @@ DATASTORE_JSON = %Q{
       "notify": false
     },
     "linkbutton": false,
-    "portalservices": true,
+    "portalservices": false,
     "portalconnection": "connected",
     "portalstate": {
       "signedon": true,
@@ -320,7 +350,7 @@ DATASTORE_JSON = %Q{
         "4",
         "5"
       ],
-      "active": true
+      "active": false
     },
     "da01b1eaf-on-0": {
       "name": "Purple on 0",

@@ -4,7 +4,6 @@ class Bridge < HObject
 
   attr_reader :id, :ip, :name, :mac
   def initialize(data = {})
-    super
     @id = data["id"]
     @ip = data["internalipaddress"]
     @mac = data["macaddress"]
