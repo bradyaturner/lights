@@ -213,8 +213,8 @@ class LightsCli
     when nil, "","lights"
       response = options[:new] ? hue.request_new_bulb_list : hue.request_bulb_list
       objects = BulbList.new(response)
-      titles = ["ID","NAME"]
-      methods = [:id,:name]
+      titles = ["ID","NAME","REACHABLE?"]
+      methods = [:id,:name,[:state,:reachable]]
     when "sensors"
       response = options[:new] ? hue.request_new_sensor_list : hue.request_sensor_list
       objects = SensorList.new(response)

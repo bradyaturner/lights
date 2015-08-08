@@ -248,6 +248,16 @@ describe BulbState do
     expect { b.ct = BulbState::MIN_CT - 1 }.to raise_error
   end
 
+  it "should ignore out of range color temperature when 'reachable'= false" do
+    state = {
+      "reachable" => false,
+      "ct" => 0
+    }
+    b = BulbState.new state
+    b.data["ct"].should eq nil
+    b.data["reachable"].should eq false
+  end
+
 # EFFECT
   it "should properly set effect value in constructor" do
     data = { "effect" => BulbState::Effect::COLORLOOP }
