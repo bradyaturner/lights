@@ -29,8 +29,8 @@ lights discover -s
 lights config -f --user <username>
 lights register
 lights list
-lights on -l all
-lights off -l all
+lights on
+lights off
 ```
 
 See [Sample Usage (Implemented)](https://github.com/turnerba/lights/wiki/Sample-Usage-(Implemented)) for more usage examples.
