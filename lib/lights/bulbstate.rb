@@ -45,17 +45,21 @@ class BulbState < HObject
               :reachable, :transition_time
   def initialize( data = {} ) 
     data = {} if data == nil
-    @on = data["on"] 
-    set_bri data["bri"]
-    set_hue data["hue"]
-    set_sat data["sat"]
-    set_xy data["xy"] 
-    set_ct data["ct"]
-    set_alert data["alert"] 
-    set_effect data["effect"] 
-    set_color_mode data["colormode"] 
     @reachable = data["reachable"] 
-    set_transition_time data["transitiontime"]
+
+    # bridge returns invaild values for state variables when reachable is false
+    unless @reachable == false
+      @on = data["on"]
+      set_bri data["bri"]
+      set_hue data["hue"]
+      set_sat data["sat"]
+      set_xy data["xy"]
+      set_ct data["ct"]
+      set_alert data["alert"]
+      set_effect data["effect"]
+      set_color_mode data["colormode"]
+      set_transition_time data["transitiontime"]
+    end
   end
  
   def color_mode=(value) set_color_mode(value) end

@@ -61,7 +61,7 @@ DATASTORE_JSON = %Q{
         "ct": 155,
         "alert": "none",
         "colormode": "xy",
-        "reachable": false
+        "reachable": true
       },
       "type": "Extended color light",
       "name": "Hue Lamp 1",
