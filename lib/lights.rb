@@ -13,7 +13,7 @@ require 'lights/loggerconfig'
 class Lights 
 
   attr_reader :bulbs, :username
-  def initialize(ip,username)
+  def initialize(ip,username=nil)
     @ip = ip 
     @username = username
     @http = Net::HTTP.new(ip,80)
@@ -177,6 +177,7 @@ private
 
   def get( path )
     @logger.debug "==> GET: #{path}"
+    raise UsernameException unless @username
     request = Net::HTTP::Get.new( "/api/#{@username}/#{path}" )
     response = @http.request request
     result = JSON.parse( response.body )
@@ -190,6 +191,7 @@ private
 
   def put( path, data={} )
     @logger.debug "==> PUT: #{path}"
+    raise UsernameException unless @username
     @logger.debug data.to_json 
     response = @http.put( "/api/#{@username}/#{path}", data.to_json )
     result = JSON.parse( response.body )
@@ -203,6 +205,7 @@ private
 
   def post( path, data={} )
     @logger.debug "==> POST: #{path}"
+    raise UsernameException unless @username
     @logger.debug data.to_json
     response = @http.post( "/api/#{@username}/#{path}", data.to_json )
     result = JSON.parse( response.body )
@@ -216,6 +219,7 @@ private
 
   def delete( path )
     @logger.debug "==> DELETE: #{path}"
+    raise UsernameException unless @username
     request = Net::HTTP::Delete.new( "/api/#{@username}/#{path}" )
     response = @http.request request
     result = JSON.parse( response.body )
