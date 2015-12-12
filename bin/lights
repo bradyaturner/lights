@@ -27,8 +27,9 @@ class LightsCli
       opts.on("-l", "--list", "List saved configuration settings") {|l| options[:list]=l}
     end.parse!
  
-    if !options[:ip] && !options[:list]
-      puts "Must specify bridge IP: --ip <IP addr. of bridge>"
+    unless options[:ip] || options[:list]
+      puts "usage:"
+      puts "  #{File.basename(__FILE__)} config (--ip <bridge IP> | --list)"
       exit 1
     end
  
