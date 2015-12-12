@@ -12,7 +12,7 @@ require 'lights/loggerconfig'
 
 class Lights 
 
-  attr_reader :bulbs
+  attr_reader :bulbs, :username
   def initialize(ip,username)
     @ip = ip 
     @username = username
@@ -40,15 +40,20 @@ class Lights
     @bridges
   end
 
-  def register_username
-    data = { "devicetype"=>"lights",
-              "username"=>@username }
+  def register
+    data = { "devicetype"=>"lights" }
     response = @http.post "/api", data.to_json
     result = JSON.parse(response.body).first
     if result.has_key? "error"
       process_error result
+    elsif result["success"]
+      @username = result["success"]["username"]
     end
+    result
   end
+
+  # backwards compatibility
+  alias_method :register_username, :register
 
   def request_config
     get "config"

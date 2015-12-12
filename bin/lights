@@ -22,14 +22,13 @@ class LightsCli
   def config
     options = {}
     OptionParser.new do |opts|
-      opts.on("-u", "--user <username>", String, "Username"){|url| options[:user]=url}
       opts.on("-i", "--ip <bridge ip>", String, "Bridge ip address"){|ip| options[:ip]=ip}
       opts.on("-f", "--force", "Force write to config file"){|f| options[:force]=f}
       opts.on("-l", "--list", "List saved configuration settings") {|l| options[:list]=l}
     end.parse!
  
-    if !options[:user] && !options[:ip] && !options[:list]
-      puts "Must specify username and/or bridge IP: --user <username> --ip <IP addr. of bridge>"
+    if !options[:ip] && !options[:list]
+      puts "Must specify bridge IP: --ip <IP addr. of bridge>"
       exit 1
     end
  
@@ -52,7 +51,6 @@ class LightsCli
         end
       end
   
-      @config["username"] = options[:user] || @config["username"]
       @config["bridge_ip"] = options[:ip] || @config["bridge_ip"]
   
       write_config
@@ -263,7 +261,9 @@ class LightsCli
   
   def register
     lights = Lights.new @config["bridge_ip"], @config["username"]
-    response = lights.register_username
+    response = lights.register
+    @config["username"] = lights.username
+    write_config
   end
 
   def discover 
