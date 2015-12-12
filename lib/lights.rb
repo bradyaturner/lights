@@ -12,8 +12,8 @@ require 'lights/loggerconfig'
 
 class Lights 
 
-  attr_reader :bulbs
-  def initialize(ip,username)
+  attr_reader :bulbs, :username
+  def initialize(ip,username=nil)
     @ip = ip 
     @username = username
     @http = Net::HTTP.new(ip,80)
@@ -40,15 +40,20 @@ class Lights
     @bridges
   end
 
-  def register_username
-    data = { "devicetype"=>"lights",
-              "username"=>@username }
+  def register
+    data = { "devicetype"=>"lights" }
     response = @http.post "/api", data.to_json
     result = JSON.parse(response.body).first
     if result.has_key? "error"
       process_error result
+    elsif result["success"]
+      @username = result["success"]["username"]
     end
+    result
   end
+
+  # backwards compatibility
+  alias_method :register_username, :register
 
   def request_config
     get "config"
@@ -172,6 +177,7 @@ private
 
   def get( path )
     @logger.debug "==> GET: #{path}"
+    raise UsernameException unless @username
     request = Net::HTTP::Get.new( "/api/#{@username}/#{path}" )
     response = @http.request request
     result = JSON.parse( response.body )
@@ -185,6 +191,7 @@ private
 
   def put( path, data={} )
     @logger.debug "==> PUT: #{path}"
+    raise UsernameException unless @username
     @logger.debug data.to_json 
     response = @http.put( "/api/#{@username}/#{path}", data.to_json )
     result = JSON.parse( response.body )
@@ -198,6 +205,7 @@ private
 
   def post( path, data={} )
     @logger.debug "==> POST: #{path}"
+    raise UsernameException unless @username
     @logger.debug data.to_json
     response = @http.post( "/api/#{@username}/#{path}", data.to_json )
     result = JSON.parse( response.body )
@@ -211,6 +219,7 @@ private
 
   def delete( path )
     @logger.debug "==> DELETE: #{path}"
+    raise UsernameException unless @username
     request = Net::HTTP::Delete.new( "/api/#{@username}/#{path}" )
     response = @http.request request
     result = JSON.parse( response.body )
