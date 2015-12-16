@@ -16,7 +16,7 @@ Basic Usage
 ```ruby
 require 'lights'
 client = Lights.new( '192.168.x.x', 'username' )
-client.register_username
+client.register
 client.request_bulb_list
 ```
 See [lights-examples](https://github.com/turnerba/lights-examples) for more usage examples.
@@ -26,7 +26,6 @@ CLI Quick Setup
 
 ```
 lights discover -s
-lights config -f --user <username>
 lights register
 lights list
 lights on
