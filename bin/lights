@@ -18,6 +18,10 @@ class LightsCli
   def configured?
     @config["username"] && @config["bridge_ip"]
   end
+
+  def ip_configured?
+    @config["bridge_ip"]
+  end
   
   def config
     options = {}
@@ -448,12 +452,14 @@ begin
     cli.config
   elsif command == "discover"
     cli.discover
-  elsif !cli.configured?
-    puts "Please run 'lights config' before using."
-  elsif command == "list"
-    cli.list
+  elsif !cli.ip_configured?
+    puts "Please run 'lights discover -s' or 'lights config --ip <IP>' before using."
   elsif command == "register"
     cli.register
+  elsif !cli.configured?
+    puts "Please run 'lights register' before using."
+  elsif command == "list"
+    cli.list
   elsif command == "on"
     cli.on
   elsif command == "off"
