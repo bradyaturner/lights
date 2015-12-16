@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary       = "lights"
   s.homepage      = 'http://rubygems.org/gems/lights'
   s.license       = 'MIT'
-  s.date          = '2014-10-11'
+  s.date          = '2015-12-15'
 
   s.files         = `git ls-files`.split($/)
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
