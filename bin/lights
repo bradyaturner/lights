@@ -74,6 +74,7 @@ class LightsCli
         opts.on("-l", "--lights 1,2,...N", Array, "Which lights are in the scene"){|l| options[:lights]=l}
         opts.on("-n", "--name <name>", String, "Set scene name"){|n| options[:name]=n}
         opts.on("-r", "--recycle", "Can bridge recycle scene"){|r| options[:recycle]=r}
+        opts.on("-d", "--duration seconds", OptionParser::DecimalInteger, "Transition duration in seconds"){|d| options[:duration]=d}
       end.parse!
 
       if !options[:lights]
@@ -93,6 +94,7 @@ class LightsCli
       s.name = options[:name]
       s.lights = options[:lights]
       s.recycle = options[:recycle]
+      s.transition_time = options[:duration]
       hue.create_scene s
     when "group"
       OptionParser.new do |opts|
