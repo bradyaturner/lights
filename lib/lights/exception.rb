@@ -33,3 +33,9 @@ class ParameterUnavailableException < Exception
     super
   end
 end
+
+class SceneLockedException < Exception
+  def initialize(msg = "Scene could not be removed, because it's locked.")
+    super
+  end
+end

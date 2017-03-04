@@ -174,6 +174,8 @@ private
       raise ParameterUnavailableException, result["error"]["description"]
     when 101
       raise BridgeConnectException
+    when 403
+      raise SceneLockedException, result["error"]["description"]
     else
       raise "Unknown Error: #{result["error"]["description"]}"
     end
