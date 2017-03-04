@@ -139,7 +139,11 @@ class Lights
   end
 
   def create_scene( scene )
-    put "scenes/#{scene.id}", scene
+    post "scenes/#{scene.id}", scene
+  end
+
+  def delete_scene( id )
+    delete "scenes/#{id}"
   end
 
   def delete_group( id )

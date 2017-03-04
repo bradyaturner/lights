@@ -73,7 +73,7 @@ class LightsCli
       OptionParser.new do |opts|
         opts.on("-l", "--lights 1,2,...N", Array, "Which lights are in the scene"){|l| options[:lights]=l}
         opts.on("-n", "--name <name>", String, "Set scene name"){|n| options[:name]=n}
-        opts.on("-i", "--id <id>", String, "Set scene ID"){|i| options[:id]=i}
+        opts.on("-r", "--recycle", "Can bridge recycle scene"){|r| options[:recycle]=r}
       end.parse!
 
       if !options[:lights]
@@ -84,14 +84,15 @@ class LightsCli
         puts "Must specify scene name."
         exit 1
       end
-      if !options[:id]
-        puts "Must specify scene id."
-        exit 1
+      if !options[:recycle]
+        puts "Must specify if scene can be recycled by bridge. --recycle [true|false]"
+        exit
       end
 
-      s = Scene.new options[:id]
+      s = Scene.new
       s.name = options[:name]
       s.lights = options[:lights]
+      s.recycle = options[:recycle]
       hue.create_scene s
     when "group"
       OptionParser.new do |opts|
@@ -192,7 +193,14 @@ class LightsCli
 
       hue.delete_user id
     when "scene"
-      STDERR.puts "Cannot delete scenes."
+      id = ARGV.shift
+
+      if !id
+        puts "Must specify scene id."
+        exit 1
+      end
+
+      hue.delete_scene id
     when nil
       STDERR.puts "Must specify a type to delete."
     else
@@ -231,8 +239,8 @@ class LightsCli
     when "scenes"
       response = hue.request_scene_list
       objects = SceneList.new(response)
-      titles = ["ID","NAME","LIGHTS"]
-      methods = [:id,:name,:lights]
+      titles = ["ID","NAME","LIGHTS","RECYCLE"]
+      methods = [:id,:name,:lights,:recycle]
     when "users"
       response = hue.request_config
       objects = UserList.new(response["whitelist"])
