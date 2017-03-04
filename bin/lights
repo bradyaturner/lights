@@ -85,15 +85,11 @@ class LightsCli
         puts "Must specify scene name."
         exit 1
       end
-      if !options[:recycle]
-        puts "Must specify if scene can be recycled by bridge. --recycle [true|false]"
-        exit
-      end
 
       s = Scene.new
       s.name = options[:name]
       s.lights = options[:lights]
-      s.recycle = options[:recycle]
+      s.recycle = options[:recycle] || false
       s.transition_time = options[:duration]
       hue.create_scene s
     when "group"

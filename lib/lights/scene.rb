@@ -16,7 +16,7 @@ class Scene < HObject
     data["name"] = @name if @name
     data["active"] = @active unless @active.nil?
     data["lights"] = @lights if @lights
-    data["recycle"] = @recycle if @recycle
+    data["recycle"] = @recycle unless @recycle.nil?
     data["transitiontime"] = @transition_time if @transition_time
     data
   end
