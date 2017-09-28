@@ -1,9 +1,10 @@
 lights
 ========
-A Ruby library & CLI for interacting with Philips Hue.
+A Ruby library & CLI for interacting with Philips Hue and Nanoleaf Aurora lighting systems.
 
-* Philips Hue API Documentation: http://www.developers.meethue.com/philips-hue-api
 * lights on RubyGems: https://rubygems.org/gems/lights
+* Philips Hue API Documentation: http://www.developers.meethue.com/philips-hue-api
+* Nanoleaf Aurora API Documentation: http://forum.nanoleaf.me/docs/openapi
 
 Installation
 ----
