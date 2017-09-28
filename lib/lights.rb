@@ -139,7 +139,11 @@ class Lights
   end
 
   def create_scene( scene )
-    put "scenes/#{scene.id}", scene
+    post "scenes/#{scene.id}", scene
+  end
+
+  def delete_scene( id )
+    delete "scenes/#{id}"
   end
 
   def delete_group( id )
@@ -170,6 +174,8 @@ private
       raise ParameterUnavailableException, result["error"]["description"]
     when 101
       raise BridgeConnectException
+    when 403
+      raise SceneLockedException, result["error"]["description"]
     else
       raise "Unknown Error: #{result["error"]["description"]}"
     end
