@@ -3,6 +3,7 @@
 require 'dnssd'
 require 'logger'
 require_relative '../loggerconfig'
+require './auroradevice'
 
 TYPE = "_nanoleafapi._tcp."
 
@@ -30,9 +31,9 @@ class AuroraDiscoverer
 
 private
   def node_resolver(node,resolved)
-    address = get_device_address(resolved)
-    @logger.info "#{node.name}: #{address}"
-    @devices << address
+    address = get_device_host(resolved.target)
+    @logger.info "#{node.name}: #{address}:#{resolved.port}"
+    @devices << AuroraDevice.new(node.name,address,resolved.port)
     resolved.flags.more_coming?
   end
 
@@ -41,11 +42,6 @@ private
     status = DNSSD.resolve!(service) do |resolved|
       break unless node_resolver(service, resolved)
     end
-  end
-
-  def get_device_address(resolved)
-    host = get_device_host(resolved.target)
-    "#{host}:#{resolved.port}"
   end
 
   def get_device_host(target)
