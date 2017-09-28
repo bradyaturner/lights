@@ -20,13 +20,28 @@ class AuroraClient
   end
 
   def authorize
-    data = post("new")
+    data = post "new"
     @auth_token = data["auth_token"]
   end
 
   def get_all_info
-    data = get("/")
-    @logger.debug JSON.pretty_generate data
+    data = get ""
+  end
+
+  def get_effects_list
+    data = get "effects/effectsList"
+  end
+
+  def select_effect(effect)
+    put("effects", {"select"=>effect})
+  end
+
+  def turn_on
+    put("state/on", {"on"=>{"value"=>true}})
+  end
+
+  def turn_off
+    put("state/on", {"on"=>{"value"=>false}})
   end
 
 private
@@ -36,9 +51,22 @@ private
     request = Net::HTTP::Get.new( "#{PATH_PREFIX}#{@auth_token}/#{path}" )
     response = @http.request request
     @logger.debug "<== #{response.code}"
-    result = JSON.parse( response.body )
     @logger.debug response.body
-    result
+    JSON.parse( response.body )
+  end
+
+  def put( path, data={} )
+    @logger.debug "==> PUT: #{path}"
+    raise AuroraAuthorizationException unless @auth_token
+    @logger.debug data.to_json
+    response = @http.put( "#{PATH_PREFIX}#{@auth_token}/#{path}", data.to_json )
+    @logger.debug "<== #{response.code}"
+    @logger.debug response.body
+    if response.code == 200
+      JSON.parse( response.body )
+    else
+      response.body
+    end
   end
 
   def post( path, data={} )
@@ -47,9 +75,8 @@ private
     response = @http.post( "#{PATH_PREFIX}#{path}", data.to_json )
     @logger.debug "<== #{response.code}"
     raise AuroraConnectionException if response.code.to_i == 403
-    result = JSON.parse( response.body )
     @logger.debug response.body
-    result
+    JSON.parse( response.body )
   end
 end
 
@@ -70,17 +97,20 @@ end
 if __FILE__==$0
   ad = AuroraDiscoverer.new
   ad.discover
-  devices = ad.devices
-  a1 = devices.first
-
-  puts a1.name
-  puts a1.ip
-  puts a1.port
+  a1 = ad.devices.first
 
   ch = ConfigHelper.new
-
   client = AuroraClient.new(a1.ip,a1.port)
+
   #client.authorize
   client.auth_token = ch.config["auth_token"]
-  client.get_all_info
+  puts JSON.pretty_generate client.get_all_info
+  #client.turn_off
+  #sleep 2
+  #client.turn_on
+  #effects = client.get_effects_list
+  #puts effects.inspect
+  #effect = effects[rand(effects.length)]
+  #puts "Selected #{effect}"
+  #client.select_effect effect
 end
