@@ -1,22 +1,23 @@
 #!/usr/bin/env ruby
 
-# Nanoleaf API: http://forum.nanoleaf.me/docs/openapi
-# mDNS discovery: http://soohwan.blogspot.com/2011/02/rubys-mdns-dnssd.html
-
-require 'dnssd' #v2.0.1
+require 'dnssd'
+require 'logger'
+require_relative '../loggerconfig'
 
 TYPE = "_nanoleafapi._tcp."
 
 class AuroraDiscoverer
+  attr_reader :devices
   def initialize
-    @found = false
-    @search_count = 0
+    @logger = Logger.new(STDERR)
+    @logger.level = LoggerConfig::AURORADISCOVERER_LEVEL
+    @devices = []
   end
 
   def discover
     services = []
     DNSSD.browse! TYPE do |reply|
-      puts "Time: #{Time.new.to_f} reply: #{reply.fullname}"
+      @logger.info "Time: #{Time.new.to_f} reply: #{reply.fullname}"
       services << reply
       next if reply.flags.more_coming?
 
@@ -27,29 +28,19 @@ class AuroraDiscoverer
     end
   end
 
+private
   def node_resolver(node,resolved)
-    puts "Inside node resolver"
     address = get_device_address(resolved)
-    puts "AFTER"
-
-    puts "#{node.name}: #{address}"
-    @found = true
-
+    @logger.info "#{node.name}: #{address}"
+    @devices << address
     resolved.flags.more_coming?
   end
 
   def resolve(service)
-    puts "Resolving #{service.fullname}"
-    #loop do
-      status = DNSSD.resolve!(service) do |resolved|
-        puts "INSIDE"
-        break unless node_resolver(service, resolved)
-      end
-      #sleep 0.1
-      #break if @found
-      #@search_count += 1
-    #end
-    puts "END OF RESOLVE, search_count: #{@search_count}"
+    @logger.info "Resolving #{service.fullname}"
+    status = DNSSD.resolve!(service) do |resolved|
+      break unless node_resolver(service, resolved)
+    end
   end
 
   def get_device_address(resolved)
@@ -63,13 +54,10 @@ class AuroraDiscoverer
   rescue SocketError
     target
   end
-  
-  def run
-    discover
-  end
 end
 
 if __FILE__==$0
   ad = AuroraDiscoverer.new
-  ad.run
+  ad.discover
+  puts ad.devices
 end
