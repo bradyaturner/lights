@@ -8,6 +8,11 @@ A Ruby library & CLI for interacting with Philips Hue and Nanoleaf Aurora lighti
 
 Installation
 ----
+* Linux usage requires dependency for dnssd gem:
+```
+sudo apt-get install libavahi-compat-libdnssd-dev
+```
+
 ```
 gem install lights 
 ```
