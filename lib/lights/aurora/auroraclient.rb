@@ -3,10 +3,11 @@
 require 'net/http'
 require 'json'
 require 'logger'
-require './auroradiscoverer'
-require './auroradevice'
-require './exception'
-require_relative '../loggerconfig'
+require 'lights/loggerconfig'
+require 'lights/aurora/aurorastate'
+require 'lights/aurora/auroradiscoverer'
+require 'lights/aurora/auroradevice'
+require 'lights/aurora/exception'
 
 PATH_PREFIX = "/api/v1/"
 
@@ -42,6 +43,55 @@ class AuroraClient
 
   def turn_off
     put("state/on", {"on"=>{"value"=>false}})
+  end
+
+  def set_brightness(value)
+    brightness = {"brightness"=>{"value"=>value}}
+    send_brightness_update brightness
+  end
+
+  def increment_brightness(increment)
+    data = {"brightness"=>{"increment"=>increment}}
+    update_state data
+  end
+
+  def set_hue(value)
+    data = {"hue"=>{"value"=>value}}
+    update_state data
+  end
+
+  def increment_hue(increment)
+    data = {"hue"=>{"increment"=>increment}}
+    update_state data
+  end
+
+  def set_saturation(value)
+    data = {"sat"=>{"value"=>value}}
+    update_state data
+  end
+
+  def increment_saturation(increment)
+    data = {"sat"=>{"increment"=>increment}}
+    update_state data
+  end
+
+  def set_color_temperature(value)
+    data = {"ct"=>{"value"=>value}}
+    update_state data
+  end
+
+  def increment_color_temperature(increment)
+    data = {"ct"=>{"increment"=>increment}}
+    update_state data
+  end
+
+  def update_state(data)
+    put("state",data)
+  end
+
+  def test
+    data = {"brightness"=>{"value"=>100,"min"=>0,"max"=>100}}
+    update_state data
   end
 
 private
@@ -105,9 +155,14 @@ if __FILE__==$0
   #client.authorize
   client.auth_token = ch.config["auth_token"]
   puts JSON.pretty_generate client.get_all_info
-  #client.turn_off
+  client.turn_off
   #sleep 2
   #client.turn_on
+
+  #client.increment_brightness(-20)
+
+  #client.set_hue(20)
+  #client.test
   #effects = client.get_effects_list
   #puts effects.inspect
   #effect = effects[rand(effects.length)]
