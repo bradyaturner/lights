@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency "simpletable", "~> 0.3.2"
-  s.add_runtime_dependency "dnssd", "~>3.0.1"
+  s.add_runtime_dependency 'dnssd', '~> 3.0', '>= 3.0.1'
 
   s.add_development_dependency "bundler", "~> 1.3"
   s.add_development_dependency "rake"
