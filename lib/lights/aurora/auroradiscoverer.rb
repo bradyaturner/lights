@@ -2,10 +2,13 @@
 
 require 'dnssd'
 require 'logger'
+require 'timeout'
 require_relative '../loggerconfig'
 require './auroradevice'
 
 TYPE = "_nanoleafapi._tcp."
+DISCOVER_TIMEOUT = 5 #seconds
+RESOLVE_TIMEOUT = 5 #seconds
 
 class AuroraDiscoverer
   attr_reader :devices
@@ -17,16 +20,18 @@ class AuroraDiscoverer
 
   def discover
     services = []
-    DNSSD.browse! TYPE do |reply|
-      @logger.info "Time: #{Time.new.to_f} reply: #{reply.fullname}"
-      services << reply
-      next if reply.flags.more_coming?
+    Timeout::timeout(DISCOVER_TIMEOUT) {
+      DNSSD.browse! TYPE do |reply|
+        @logger.info "Time: #{Time.new.to_f} reply: #{reply.fullname}"
+        services << reply
+        next if reply.flags.more_coming?
 
-      services.each do |service|
-        resolve service
+        services.each do |service|
+          resolve service
+        end
+        break
       end
-      break  
-    end
+    }
   end
 
 private
@@ -39,9 +44,11 @@ private
 
   def resolve(service)
     @logger.info "Resolving #{service.fullname}"
-    status = DNSSD.resolve!(service) do |resolved|
-      break unless node_resolver(service, resolved)
-    end
+    Timeout::timeout(RESOLVE_TIMEOUT) {
+      status = DNSSD.resolve!(service) do |resolved|
+        break unless node_resolver(service, resolved)
+      end
+    }
   end
 
   def get_device_host(target)
