@@ -5,11 +5,11 @@ class AuroraState < HObject
   def initialize( data = {} )
     data = {} if data == nil
     @on = data["on"]
-    set_bri data["bri"]
-    set_hue data["hue"]
-    set_sat data["sat"]
-    set_ct data["ct"]
-    set_color_mode data["colorMode"]
+    @bri = data["brightness"]
+    @hue = data["hue"]
+    @sat = data["sat"]
+    @ct = data["ct"]
+    @color_mode = data["colorMode"]
   end
 
   #TODO create setter functions for values, check types and ranges -- raise appropriate exceptions, see BulbState classs
@@ -17,7 +17,7 @@ class AuroraState < HObject
   def data
     data = {}
     data["on"] = @on unless @on.nil?
-    data["bri"] = @bri if @bri
+    data["brightness"] = @bri if @bri
     data["hue"] = @hue if @hue
     data["sat"] = @sat if @sat
     data["ct"] = @ct if @ct

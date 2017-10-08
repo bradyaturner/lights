@@ -38,21 +38,24 @@ class AuroraClient
   end
 
   def turn_on
-    put("state/on", {"on"=>{"value"=>true}})
+    state = AuroraState.new({"on"=>{"value"=>true}})
+    update_state state
   end
 
   def turn_off
-    put("state/on", {"on"=>{"value"=>false}})
+    state = AuroraState.new({"on"=>{"value"=>false}})
+    update_state state
   end
 
   def set_brightness(value)
-    brightness = {"brightness"=>{"value"=>value}}
-    send_brightness_update brightness
+    state = AuroraState.new({"brightness"=>{"value"=>value}})
+    update_state state
   end
 
+  # TODO how to support increment commands?
   def increment_brightness(increment)
     data = {"brightness"=>{"increment"=>increment}}
-    update_state data
+    send_update_state data
   end
 
   def set_hue(value)
@@ -62,7 +65,7 @@ class AuroraClient
 
   def increment_hue(increment)
     data = {"hue"=>{"increment"=>increment}}
-    update_state data
+    send_update_state data
   end
 
   def set_saturation(value)
@@ -72,7 +75,7 @@ class AuroraClient
 
   def increment_saturation(increment)
     data = {"sat"=>{"increment"=>increment}}
-    update_state data
+    send_update_state data
   end
 
   def set_color_temperature(value)
@@ -82,11 +85,11 @@ class AuroraClient
 
   def increment_color_temperature(increment)
     data = {"ct"=>{"increment"=>increment}}
-    update_state data
+    send_update_state data
   end
 
-  def update_state(data)
-    put("state",data)
+  def update_state(state)
+    send_update_state state.data
   end
 
   def test
@@ -95,6 +98,10 @@ class AuroraClient
   end
 
 private
+  def send_update_state(data)
+    put("state",data)
+  end
+
   def get( path )
     @logger.debug "==> GET: #{path}"
     raise AuroraAuthorizationException unless @auth_token
@@ -156,10 +163,10 @@ if __FILE__==$0
   client.auth_token = ch.config["auth_token"]
   puts JSON.pretty_generate client.get_all_info
   client.turn_off
-  #sleep 2
-  #client.turn_on
+  sleep 2
+  client.turn_on
 
-  #client.increment_brightness(-20)
+  client.set_brightness(50)
 
   #client.set_hue(20)
   #client.test
@@ -168,4 +175,12 @@ if __FILE__==$0
   #effect = effects[rand(effects.length)]
   #puts "Selected #{effect}"
   #client.select_effect effect
+
+  data = {"on"=>{"value"=>true}}
+  s = AuroraState.new(data)
+  puts s.data
+
+  
+  
+
 end
