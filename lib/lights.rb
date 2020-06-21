@@ -25,9 +25,9 @@ class Lights
   end
 
   def discover_hubs
-    http = Net::HTTP.new("www.meethue.com",443)
+    http = Net::HTTP.new("discovery.meethue.com",443)
     http.use_ssl = true
-    request = Net::HTTP::Get.new( "/api/nupnp" )
+    request = Net::HTTP::Get.new( "/" )
     response = http.request request
     
     case response.code.to_i
@@ -35,6 +35,8 @@ class Lights
       result = JSON.parse( response.body )
       result.each { |b| @bridges << Bridge.new(b) } 
     else
+      @logger.fatal "Could not discover bridge. HTTP error #{response.code}"
+      @logger.fatal "Response: #{response.body}"
       raise "Unknown error" 
     end
     @bridges
